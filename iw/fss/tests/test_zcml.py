@@ -32,14 +32,14 @@ def test_typewithfss():
     Test fss:typeWithFSS directive
 
         >>> from Products.Five import zcml
-        >>> import Products.FileSystemStorage
+        >>> import iw.fss
         >>> template = '''
         ... <configure
         ...   xmlns="http://namespaces.zope.org/zope"
         ...   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
         ...   %s
         ... </configure>'''
-        >>> zcml.load_config('meta.zcml', Products.FileSystemStorage)
+        >>> zcml.load_config('meta.zcml', iw.fss)
 
     Existing product configuration
 

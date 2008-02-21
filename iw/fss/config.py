@@ -28,7 +28,7 @@ try:
 except ImportError:
     from Products.CMFCore import CMFCorePermissions
 
-PROJECTNAME = 'FileSystemStorage'
+PROJECTNAME = 'iw.fss'
 GLOBALS = globals()
 SKINS_DIR = 'skins'
 DEBUG = False
@@ -55,7 +55,7 @@ def loadConfig():
     import os
     from Globals import INSTANCE_HOME
     from ZConfig.loader import ConfigLoader
-    from Products.FileSystemStorage.configuration.schema import fssSchema
+    from iw.fss.configuration.schema import fssSchema
 
     # Configuration directories
     INSTANCE_ETC = os.path.join(INSTANCE_HOME, 'etc')
@@ -85,7 +85,7 @@ def loadConfig():
     # Dirty but we need to reinit datatypes control globals since this
     # initialisation seems to be called more than once with Zope 2.8
     # (why ???)
-    from Products.FileSystemStorage.configuration import datatypes
+    from iw.fss.configuration import datatypes
     datatypes._paths = []
     return
 

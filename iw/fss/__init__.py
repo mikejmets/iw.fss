@@ -39,7 +39,7 @@ from Products.CMFCore.DirectoryView import registerDirectory
 from Products.Archetypes.public import process_types, listTypes
 
 # Products imports
-from Products.FileSystemStorage.config import \
+from iw.fss.config import \
     SKINS_DIR, \
     GLOBALS, \
     PROJECTNAME, \
@@ -48,7 +48,7 @@ from Products.FileSystemStorage.config import \
     PLONE_VERSION
 
 
-from Products.FileSystemStorage import patches
+from iw.fss import patches
 
 registerDirectory(SKINS_DIR, GLOBALS)
 
@@ -58,8 +58,7 @@ def initialize(context):
     
     if install_types:
         # Import example types
-        from Products.FileSystemStorage.examples import FSSItem
-    
+        from iw.fss.examples import FSSItem
         content_types, constructors, ftis = process_types(listTypes(PROJECTNAME),
                                                           PROJECTNAME)
         ContentInit('%s Content' % PROJECTNAME,
@@ -70,8 +69,7 @@ def initialize(context):
                     ).initialize(context)
     
     # Import tool
-    from Products.FileSystemStorage.FSSTool import FSSTool
-    
+    from iw.fss.FSSTool import FSSTool
     ToolInit(
         '%s Tool' % PROJECTNAME,
         tools=(FSSTool,),

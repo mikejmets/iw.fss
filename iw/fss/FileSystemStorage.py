@@ -52,7 +52,7 @@ except:
     from OFS.Image import Image
 
 # Products imports
-from Products.FileSystemStorage.rdf import RDFWriter
+from iw.fss.rdf import RDFWriter
 from FileUtils import copy_file, move_file, rm_file
 
 from ZPublisher.Iterators import IStreamIterator

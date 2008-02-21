@@ -33,7 +33,8 @@ except ImportError:
     from Products.Archetypes.public import *
 
 # Products imports
-from Products.FileSystemStorage.FileSystemStorage import FileSystemStorage
+from iw.fss.FileSystemStorage import FileSystemStorage
+from iw.fss.config import PROJECTNAME
 
 #try:
 #    from Products.AttachmentField.AttachmentField import AttachmentField as FileField
@@ -73,5 +74,5 @@ class FSSItem(BaseContent):
     schema = schema
     _at_rename_after_creation = True
 
+registerType(FSSItem, PROJECTNAME)
 
-registerType(FSSItem)

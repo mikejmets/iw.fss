@@ -37,7 +37,7 @@ from Products.PloneTestCase import PloneTestCase
 from Products.PloneTestCase.setup import PLONE21, PLONE25
 
 # Products imports
-from Products.FileSystemStorage.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE, \
+from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE, \
      ZOPE_VERSION
 
 if ZOPE_VERSION[:2] >= (2, 9):
@@ -52,7 +52,7 @@ default_password = PloneTestCase.default_password
 STORAGE_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'unittests_storage')
 BACKUP_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'unittests_backup')
 
-DATA_PATH = os.path.join(Globals.INSTANCE_HOME, 'Products', 'FileSystemStorage', 'tests', 'data')
+DATA_PATH = os.path.join(os.path.dirname(__file__), 'data')
 CONTENT_PATH = os.path.join(DATA_PATH, 'word.doc')
 IMAGE_PATH = os.path.join(DATA_PATH, 'image.jpg')
 CONTENT_TXT = """mytestfile"""
@@ -67,6 +67,24 @@ def commit_transaction():
         get_transaction().commit(1)  
     return
 
+
+from Products.PloneTestCase.layer import onsetup
+from Products.Five import fiveconfigure
+from Products.Five import zcml
+from Testing import ZopeTestCase as ztc
+
+@onsetup
+def setup_fss():
+
+    fiveconfigure.debug_mode = True
+    import iw.fss
+    zcml.load_config('meta.zcml', iw.fss)
+    zcml.load_config('configure.zcml', iw.fss)
+    fiveconfigure.debug_mode = False
+
+    ztc.installPackage('iw.fss')
+
+setup_fss()
 
 class FSSTestCase(PloneTestCase.PloneTestCase):
 
@@ -90,7 +108,7 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         def getStorageStrategy(self):
             return strategy_klass(STORAGE_PATH, BACKUP_PATH)
         
-        from Products.FileSystemStorage.FSSTool import FSSTool
+        from iw.fss.FSSTool import FSSTool
         FSSTool.getStorageStrategy = getStorageStrategy
         
         # Check if fss is switched
@@ -123,7 +141,6 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
     def addFileByString(self, folder, content_id):
         """Adds a file by string.
         """
-        
         folder.invokeFactory('FSSItem', id=content_id)
         content = getattr(folder, content_id)
         commit_transaction()
@@ -163,7 +180,7 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         kw = {field: fu}
         content.edit(**kw)
 
-DEFAULT_PRODUCTS = ['kupu', 'FileSystemStorage']
+DEFAULT_PRODUCTS = ['kupu', 'iw.fss'] # 'FileSystemStorage']
 
 # We need Five (zope 2.8) and require kupu under plone 2.1
 if PLONE21 and not PLONE25:
@@ -176,17 +193,18 @@ if not PLONE21 and not PLONE25:
     ZopeTestCase.installProduct('Archetypes')
     ZopeTestCase.installProduct('PortalTransforms')
     ZopeTestCase.installProduct('MimetypesRegistry')
-    DEFAULT_PRODUCTS = ['ATContentTypes', 'kupu', 'FileSystemStorage']
+    DEFAULT_PRODUCTS = ['ATContentTypes', 'kupu', 'iw.fss'] # 'FileSystemStorage']
 
 # Install FSS Example types
 os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True' 
 ## ZopeTestCase.installProduct('PortalTransforms')
 ## ZopeTestCase.installProduct('MimetypesRegistry')
 ## ZopeTestCase.installProduct('Archetypes')
-ZopeTestCase.installProduct('FileSystemStorage')
+
+#ZopeTestCase.installProduct('FileSystemStorage')
 
 HAS_ATCT = True
 ZopeTestCase.installProduct('ATContentTypes')
 
-# Setup Plone site   
+# Setup Plone site  
 PloneTestCase.setupPloneSite(products=DEFAULT_PRODUCTS)

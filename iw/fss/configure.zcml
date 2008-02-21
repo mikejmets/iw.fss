@@ -22,6 +22,8 @@ $Id$
            xmlns:five="http://namespaces.zope.org/five"
 	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
 
+  <five:registerPackage package="." initialize=".initialize" />
+
   <adapter
       for="Products.Archetypes.atapi.BaseObject"
       factory=".traversable.FSSTraversable"

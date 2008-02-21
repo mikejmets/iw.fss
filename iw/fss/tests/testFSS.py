@@ -619,7 +619,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         from FSSTestCase import CONTENT_PATH
 
         # Create range file stream iterator
-        from Products.FileSystemStorage.FileSystemStorage import \
+        from iw.fss.FileSystemStorage import \
             range_filestream_iterator
 
         iterator = range_filestream_iterator(CONTENT_PATH,start,end,mode='rb')
@@ -696,10 +696,10 @@ class TestFSS(FSSTestCase.FSSTestCase):
 
 # Test all content metadata
 strategies = (
-    ('FlatStorageStrategy', 'from Products.FileSystemStorage.strategy import FlatStorageStrategy'),
-    ('DirectoryStorageStrategy', 'from Products.FileSystemStorage.strategy import DirectoryStorageStrategy'),
-    ('SiteStorageStrategy', 'from Products.FileSystemStorage.strategy import SiteStorageStrategy'),
-    ('SiteStorageStrategy2', 'from Products.FileSystemStorage.strategy import SiteStorageStrategy2'),
+    ('FlatStorageStrategy', 'from iw.fss.strategy import FlatStorageStrategy'),
+    ('DirectoryStorageStrategy', 'from iw.fss.strategy import DirectoryStorageStrategy'),
+    ('SiteStorageStrategy', 'from iw.fss.strategy import SiteStorageStrategy'),
+    ('SiteStorageStrategy2', 'from iw.fss.strategy import SiteStorageStrategy2'),
     )
 
 

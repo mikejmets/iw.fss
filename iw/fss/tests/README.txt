@@ -14,11 +14,11 @@ Common::
 
 With Zope 2.8::
 
-  $ bin/zopectl test [-v] [-p] [--nowarnings] Products.FileSystemStorage
+  $ bin/zopectl test [-v] [-p] [--nowarnings] iw.fss
 
 With Zope 2.9::
 
-  $ bin/zopectl test [-v] [-p] [--nowarnings] -s Products.FileSystemStorage
+  $ bin/zopectl test [-v] [-p] [--nowarnings] -s iw.fss
 
 Run "zopectl help test" for other Zope versions.
 

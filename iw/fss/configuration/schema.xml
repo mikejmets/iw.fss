@@ -18,7 +18,7 @@ USA.
 ===============================================================
 $Id$
 -->
-<schema prefix="Products.FileSystemStorage.configuration.datatypes"
+<schema prefix="iw.fss.configuration.datatypes"
 	datatype=".GlobalConfig">
 
   <description format="plain">

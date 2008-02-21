@@ -53,10 +53,10 @@ from Products.CMFCore.Expression import Expression
 
 # Products imports
 from FileUtils import rm_file
-from Products.FileSystemStorage.FileSystemStorage import FileSystemStorage
-from Products.FileSystemStorage.utils import getFieldValue
-from Products.FileSystemStorage.config import ZCONFIG, CONFIG_FILE
-from Products.FileSystemStorage import strategy as fss_strategy
+from iw.fss.FileSystemStorage import FileSystemStorage
+from iw.fss.utils import getFieldValue
+from iw.fss.config import ZCONFIG, CONFIG_FILE
+from iw.fss import strategy as fss_strategy
 
 _zmi = os.path.join(os.path.dirname(__file__), 'zmi')
 

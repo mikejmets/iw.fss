@@ -34,8 +34,8 @@ from Products.Archetypes.Extensions.utils import installTypes, install_subskin
 from Products.Archetypes.public import listTypes
 
 # Products imports
-from Products.FileSystemStorage.config import PROJECTNAME, GLOBALS, fss_prefs_configlet
-from Products.FileSystemStorage.FSSTool import FSSTool
+from iw.fss.config import PROJECTNAME, GLOBALS, fss_prefs_configlet
+from iw.fss.FSSTool import FSSTool
 
 def install(self):
     out = StringIO()

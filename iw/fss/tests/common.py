@@ -39,8 +39,8 @@ from Products.PloneTestCase.setup import PLONE21, PLONE25
 from Products.Archetypes.interfaces.base import IBaseUnit
 
 # Products imports
-from Products.FileSystemStorage.tests import FSSTestCase
-from Products.FileSystemStorage.FileSystemStorage import VirtualBinary
+from iw.fss.tests import FSSTestCase
+from iw.fss.FileSystemStorage import VirtualBinary
 
 FOLDER_TYPE = "Folder"
 

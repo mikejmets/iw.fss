@@ -23,8 +23,7 @@ from setuptools import setup, find_packages
 version = '0.1.0'
 
 README = os.path.join(os.path.dirname(__file__),
-          'iw',
-          'fss', 'docs', 'README.txt')
+                      'iw', 'fss', 'README.txt')
 
 long_description = open(README).read() + '\n\n'
 

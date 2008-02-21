@@ -42,7 +42,7 @@ FSS_BOBO_PATCH = PLONE25
 
 if not FSS_BOBO_PATCH:
 
-    from Products.FileSystemStorage.utils import getFieldValue       
+    from iw.fss.utils import getFieldValue       
     def new_bobo_traverse(self, REQUEST, name):
         """Access to field values that are not using AttributeStorage
         """

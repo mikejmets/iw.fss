@@ -28,7 +28,7 @@ import os
 from StringIO import StringIO
 import ZConfig
 
-from Products.FileSystemStorage.configuration import datatypes
+from iw.fss.configuration import datatypes
 
 # Test configurations
 GOOD_CONFIG1 = """# Two distinct directories
@@ -86,7 +86,7 @@ class ConfigSchemaTest(unittest.TestCase):
     def testSchemaConformance(self):
         """Our schema.xml conforms ZConfig schema"""
 
-        from Products.FileSystemStorage.configuration import schema
+        from iw.fss.configuration import schema
         self.schema = schema.fssSchema
         # self.schema = ZConfig.loadSchema(self.schema_path)
         return
@@ -97,7 +97,7 @@ class BaseConfigTest(unittest.TestCase):
 
     def setUp(self):
 
-        from Products.FileSystemStorage.configuration import schema
+        from iw.fss.configuration import schema
         self.schema = schema.fssSchema
         return
 
@@ -200,7 +200,7 @@ class DefaultConfigTest(unittest.TestCase):
     (etc/plone-filesystemstorage.conf.in)"""
 
     def testDefaultConfig(self):
-        from Products.FileSystemStorage.config import ZCONFIG
+        from iw.fss.config import ZCONFIG
 
         self.assertEqual(ZCONFIG.storagePathForSite('/any/site'),
                          os.path.normpath(os.path.expandvars('$INSTANCE_HOME/var/fss_storage')))

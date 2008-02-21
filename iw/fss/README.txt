@@ -373,7 +373,7 @@ Here is a small example that doesn't need much comments::
 
   # Usual Zope/CMF/Plone/Archetypes imports
   ...
-  from Products.FileSystemStorage.FileSystemStorage import FileSystemStorage
+  from iw.fss.FileSystemStorage import FileSystemStorage
   ...
   my_schema = Schema((
       FileField('file',
@@ -407,7 +407,7 @@ any custom product. Let's say we're in the `__init__.py` of your
 custom product::
 
   ...
-  from Products.FileSystemStorage.FileSystemStorage import FileSystemStorage
+  from iw.fss.FileSystemStorage import FileSystemStorage
   from Products.ATContentTypes import atct
   ...
   field = atct.ATFile.schema['file']
@@ -599,7 +599,7 @@ Downloads
 
 You may find newer stable versions of FSS and pointers to related
 informations (tracker, doc, ...) from
-http://plone.org/products/filesystemstorage
+http://plone.org/iw.fss
 
 
 Subversion repository
@@ -621,7 +621,7 @@ Localisation issues - other than french - should be reported to the
 relevant translators (see Credits_ below).
 
 Report bugs using the tracker (the `Tracker` link from
-http://plone.org/products/filesystemstorage). Please provide in your
+http://plone.org/iw.fss). Please provide in your
 bug report:
 
 * Your configuration (Operating system+Zope+Plone+Products/versions).

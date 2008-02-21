@@ -22,7 +22,7 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.Archetypes.Field import FileField, StringField, TextField
 from Products.Archetypes.Storage import AttributeStorage
-from Products.FileSystemStorage.FileSystemStorage import FileSystemStorage
+from iw.fss.FileSystemStorage import FileSystemStorage
 
 #
 # This method is here for giving an example of storage migration.
