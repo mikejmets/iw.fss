@@ -15,7 +15,7 @@
 # along with this program; see the file COPYING. If not, write to the
 # Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-Generic Test case for iw.fss doctest
+Generic Test case for iw.fss doc strings
 """
 __docformat__ = 'restructuredtext'
 
@@ -26,10 +26,10 @@ import os
 
 from zope.testing import doctest
 
-current_dir = os.path.dirname(__file__)
+current_dir = os.path.abspath(os.path.dirname(__file__))
 
-def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
-    """Returns a test suite, based on doctests found in /doctest."""
+def doc_suite(test_dir, globs=None):
+    """Returns a test suite, based on doc tests strings found in /*.py"""
     suite = []
     if globs is None:
         globs = globals()
@@ -41,17 +41,21 @@ def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
     if package_dir not in sys.path:
         sys.path.append(package_dir)
 
-    doctest_dir = os.path.join(package_dir, 'doctests')
-
     # filtering files on extension
-    docs = [os.path.join(doctest_dir, doc) for doc in
-            os.listdir(doctest_dir) if doc.endswith('.txt')]
+    docs = [doc for doc in
+            os.listdir(package_dir) if doc.endswith('.py')]
+    docs = [doc for doc in docs if not doc.startswith('__')]
 
     for test in docs:
-        suite.append(doctest.DocFileSuite(test, optionflags=flags, 
-                                          globs=globs, setUp=setUp, 
-                                          tearDown=tearDown,
-                                          module_relative=False))
+        fd = open(os.path.join(package_dir, test))
+        content = fd.read()
+        fd.close()
+        if '>>> ' not in content:
+            continue
+        test = test.replace('.py', '')
+        location = 'iw.fss.%s' % test
+        suite.append(doctest.DocTestSuite(location, optionflags=flags,
+                                          globs=globs))
 
     return unittest.TestSuite(suite)
 
