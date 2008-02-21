@@ -1,5 +1,5 @@
-## -*- coding: utf-8 -*-
-## Copyright (C) 2006 Ingeniweb
+# -*- coding: utf-8 -*-
+## Copyright (C) 2007 Ingeniweb
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -14,8 +14,10 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program; see the file COPYING. If not, write to the
 ## Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""\
-Unit test package for CMFPlone
-
-To run all tests type 'python runalltests.py'
 """
+The configuration subpackage
+$Id: __init__.py 43824 2007-06-15 17:08:16Z glenfant $
+"""
+
+__author__  = 'Gilles Lenfant <gilles.lenfant@ingeniweb.com>'
+__docformat__ = 'restructuredtext'

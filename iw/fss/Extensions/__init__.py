@@ -14,8 +14,10 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program; see the file COPYING. If not, write to the
 ## Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""\
-Unit test package for CMFPlone
+"""FileSystemStorage extensions 
 
-To run all tests type 'python runalltests.py'
+$Id: __init__.py 43824 2007-06-15 17:08:16Z glenfant $
 """
+
+__author__ = ''
+__docformat__ = 'restructuredtext'

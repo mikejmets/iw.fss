@@ -14,8 +14,38 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program; see the file COPYING. If not, write to the
 ## Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""\
-Unit test package for CMFPlone
-
-To run all tests type 'python runalltests.py'
 """
+Stubs for testing
+$Id$
+"""
+
+from OFS.SimpleItem import SimpleItem
+from ZPublisher.HTTPRequest import FileUpload
+
+
+class FileUpload(FileUpload):
+    """Dummy upload object.
+
+    Used to fake uploaded files and images.
+    """
+
+    __allow_access_to_unprotected_subobjects__ = 1
+
+    filename = 'dummy.gif'
+    headers = {}
+
+    def __init__(self, filename=None, headers=None, file=None):
+        self.file = file
+        if filename is not None:
+            self.filename = filename
+        if headers is not None:
+            self.headers = headers
+
+    def seek(self,*args):
+        return self.file.seek(*args)
+
+    def tell(self,*args):
+        return self.file.tell(*args)
+
+    def read(self,*args):
+        return self.file.read(*args)

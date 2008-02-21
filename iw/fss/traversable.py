@@ -1,4 +1,6 @@
-## -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+## FileSystemStorage
+## 
 ## Copyright (C) 2006 Ingeniweb
 
 ## This program is free software; you can redistribute it and/or modify
@@ -14,8 +16,17 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program; see the file COPYING. If not, write to the
 ## Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""\
-Unit test package for CMFPlone
 
-To run all tests type 'python runalltests.py'
-"""
+from Products.Five.traversable import FiveTraversable
+from utils import getFieldValue
+
+class FSSTraversable(FiveTraversable):
+
+    def traverse(self, name, furtherPath):
+
+        obj = self._subject
+        field = obj.getField(name)
+        if field:
+            return getFieldValue(obj, name)
+
+        return super(FSSTraversable, self).traverse(name, furtherPath)
