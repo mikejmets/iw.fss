@@ -38,8 +38,8 @@ storage-strategy directory
 """
 
 GOOD_CONFIG2 = """# Two distinct directories, two plone sites
-storage-path $$INSTANCE_HOME/var/fss_storage
-backup-path $$INSTANCE_HOME/var/fss_backup
+storage-path $$INSTANCE_HOME/lib
+backup-path $$INSTANCE_HOME/var
 # default storage-strategy (flat)
 <site /foo/bar>
   storage-path $$INSTANCE_HOME/bin
@@ -139,8 +139,8 @@ class ConfigObjectTest(BaseConfigTest):
     def testGlobalAttrs(self):
         """Attributes of global config"""
 
-        self.assertEqual(self.zconf.storage_path, os.path.expandvars('$INSTANCE_HOME/var/fss_storage'))
-        self.assertEqual(self.zconf.backup_path, os.path.expandvars('$INSTANCE_HOME/var/fss_backup'))
+        self.assertEqual(self.zconf.storage_path, os.path.expandvars('$INSTANCE_HOME/lib'))
+        self.assertEqual(self.zconf.backup_path, os.path.expandvars('$INSTANCE_HOME/var'))
         self.assertEqual(self.zconf.storage_strategy, 'flat')
         self.assertEqual(len(self.zconf.sites), 2)
         return
@@ -174,9 +174,9 @@ class ConfigObjectTest(BaseConfigTest):
 
         # Default config for /any/site
         self.assertEqual(self.zconf.storagePathForSite('/any/site'),
-                         os.path.expandvars('$INSTANCE_HOME/var/fss_storage'))
+                         os.path.expandvars('$INSTANCE_HOME/lib'))
         self.assertEqual(self.zconf.backupPathForSite('/any/site'),
-                         os.path.expandvars('$INSTANCE_HOME/var/fss_backup'))
+                         os.path.expandvars('$INSTANCE_HOME/var'))
         self.assertEqual(self.zconf.storageStrategyForSite('/any/site'), 'flat')
 
         # /foo/bar specific config
