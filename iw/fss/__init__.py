@@ -55,7 +55,7 @@ registerDirectory(SKINS_DIR, GLOBALS)
 def initialize(context):
     install_types = DEBUG or \
         os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
-    
+
     if install_types:
         # Import example types
         from iw.fss.examples import FSSItem
@@ -67,7 +67,7 @@ def initialize(context):
                     extra_constructors = constructors,
                     fti = ftis,
                     ).initialize(context)
-    
+
     # Import tool
     from iw.fss.FSSTool import FSSTool
     ToolInit(
@@ -75,3 +75,6 @@ def initialize(context):
         tools=(FSSTool,),
         product_name=PROJECTNAME,
         icon='tool.gif').initialize(context)
+
+    # setup module aliases to bind all Zope2 products
+    import modulealiases
