@@ -66,10 +66,9 @@ configuration`_.
 Installation
 ############
 
-* Inflate FileSystemStorage product in any of your zope instance
-  Products directory. I'm sure it's already done.
-* Remove `configure.zcml` and `meta.zcml` if you're running a Zope
-  version older than 2.9.6.
+* Inflate iw.fss package into your zope instance lib/python directory.
+  I'm sure it's already done.
+* Include `configure.zcml` and `meta.zcml`.
 * **Read carefully** `Storage strategies`_ and `FSS main
   configuration`_ below and configure your instance in
   `plone-filesystemstorage.conf` accordingly.
@@ -265,8 +264,8 @@ FSS is mainly configured the ZConfig way. At startup, the
 configuration file will be searched (in that order) in:
 
 * $INSTANCE_HOME/etc/plone-filesystemstorage.conf
-* /path/to/FileSystemStorage/etc/plone-filesystemstorage.conf
-* /path/to/FileSystemStorage/etc/plone-filesystemstorage.conf.in
+* /path/to/iw/fss/etc/plone-filesystemstorage.conf
+* /path/to/iw/fss/etc/plone-filesystemstorage.conf.in
 
 A sample working configuration in provided in this last file. It
 assumes you have $INSTANCE_HOME/var/fss_storage and
@@ -298,7 +297,7 @@ If you select the `Flat storage strategy`_, the RDF files may be used
 to build a files tree as close as possible of the Plone tree structure
 from the storage back-end, with the `build_fs_tree.py` utility::
 
-  $ cd /path/to/FileSystemStorage/bin
+  $ cd /path/to/iw/fss/bin
   $ python build_fs_tree.py --help
 
 
@@ -591,7 +590,7 @@ Please read `./tests/README.txt`.
 Other documentation
 ###################
 
-See `FileSystemStorage/doc`.
+See `iw/fss/doc`.
 
 
 Downloads
@@ -608,7 +607,7 @@ Subversion repository
 Stay in tune with the freshest (maybe unstable) versions or participate to
 the FileSystemStorage evolutions:
 
-https://svn.plone.org/svn/collective/FileSystemStorage
+https://svn.plone.org/svn/collective/iw.fss
 
 
 Support and feedback
