@@ -25,6 +25,7 @@ import logging
 
 # Archetypes imports
 from Products.Archetypes.Field import ImageField
+from FileSystemStorage import FileSystemStorage
 
 import config
 
@@ -61,3 +62,17 @@ def getFieldValue(self, name):
 
 logger = logging.getLogger(config.PROJECTNAME)
 LOG = logger.info
+
+def patchATType(class_, fields):
+    """Processing the type patch"""
+
+    for fieldname in fields:
+        field = class_.schema[fieldname]
+        field.storage = FileSystemStorage()
+        field.registerLayer('storage', field.storage)
+        LOG("Field '%s' of %s is stored in file system.", fieldname, class_.meta_type)
+    return
+
+
+# We register here the types that have been patched
+patchedTypesRegistry = {}

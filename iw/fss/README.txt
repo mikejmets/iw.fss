@@ -432,12 +432,10 @@ any custom product. Let's say we're in the `__init__.py` of your
 custom product::
 
   ...
-  from iw.fss.FileSystemStorage import FileSystemStorage
+  from iw.fss import utils as fss_utils
   from Products.ATContentTypes import atct
   ...
-  field = atct.ATFile.schema['file']
-  field.storage = FileSystemStorage()
-  field.registerLayer('storage', field.storage)
+  fss_utils.patchATType(atct.ATFile, ['file'])
   ...
 
 The ZCML way

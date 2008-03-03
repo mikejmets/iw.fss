@@ -24,8 +24,7 @@ __docformat__ = 'restructuredtext'
 
 from zope.interface import Interface
 from zope.configuration.fields import GlobalObject, Tokens, PythonIdentifier
-from utils import LOG
-from FileSystemStorage import FileSystemStorage
+from utils import patchATType
 
 
 class ITypeWithFSSDirective(Interface):
@@ -53,12 +52,3 @@ def typeWithFSS(_context, class_, fields):
         )
 
 
-def patchATType(class_, fields):
-    """Processing the type patch"""
-
-    for fieldname in fields:
-        field = class_.schema[fieldname]
-        field.storage = FileSystemStorage()
-        field.registerLayer('storage', field.storage)
-        LOG("Field '%s' of %s is stored in file system.", fieldname, class_.meta_type)
-    return
