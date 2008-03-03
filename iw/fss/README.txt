@@ -73,9 +73,28 @@ today.
 Installation
 ############
 
+With buildout
+=============
+
+FIXME: show an example with iw.recipe.fss and iw.fss in buildout.cfg.
+
+
+From SVN reposo
+===============
+
 * Inflate iw.fss package into your zope instance lib/python directory.
   I'm sure it's already done.
 * Include `configure.zcml` and `meta.zcml`.
+* Add `$INSTANCE_HOME/etc/package-includes/iw.fss-meta.zcml` file with
+  this line::
+  
+    <include package="iw.fss" file="meta.zcml"/>
+
+* Add `$INSTANCE_HOME/etc/package-includes/iw.fss-configure.zcml` file
+  with this line::
+
+    <include package="iw.fss" />
+
 * **Read carefully** `Storage strategies`_ and `FSS main
   configuration`_ below and configure your instance in
   `plone-filesystemstorage.conf` accordingly.
