@@ -42,10 +42,7 @@ See the `LICENSE` file that comes with this product.
 Requirements
 ############
 
-* `Zope 2.7.4+ <http://www.zope.org/>`_
-* `Plone 2.0+ <http://plone.org/>`_
-* `Archetypes 1.3+ <http://plone.org/products/archetypes>`_ if you run
-  Plone 2.0, otherwise use Archetypes that comes with the Plone bundle.
+* `Plone 3.0+ bundle <http://plone.org/>`_
 * A Plone component that requires or may use FSS, like
   AttachmentField_. Perhaps your custom Archetypes based content types
   (see `Developer's corner`_).
