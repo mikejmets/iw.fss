@@ -10,6 +10,8 @@ Issues
 Features
 ########
 
+* Register former storage in zcml.py to help migrations.
+
 * Include migration script "Attribute storage -> FSS". See ATCT2FSS in
   the collective reposo. https://svn.plone.org/svn/collective/ATCT2FSS/
 
