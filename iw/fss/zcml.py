@@ -47,7 +47,7 @@ def typeWithFSS(_context, class_, fields):
     """Register our monkey patch"""
 
     _context.action(
-        discriminator=None,
+        discriminator=class.__name__,
         callable=patchATType,
         args=(class_, fields)
         )

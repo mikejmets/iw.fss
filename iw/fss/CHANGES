@@ -5,8 +5,16 @@ CHANGES
 2.7.0 - 2008/02/26
 ##################
 
+* Renamed flat2directory.py into strategymigrator.py since future
+  other strategy migrations will go there.
+  [glenfant]
+
 * Added bin/flat2directory.py that migrates "flat" strategy storage to
   "directory" strategy storage.
+  [glenfant]
+
+* Added discriminator in ZCML support that warns on duplicate config
+  of the same content type.
   [glenfant]
 
 * Convert FileSystemStorage Zope 2 product to iw.fss python package

@@ -63,11 +63,15 @@ migration from this version. Please create a configuration file that
 clones your old configlet preferences as indicated in `FSS main
 configuration`_.
 
-From "flat" storage strategy to "directory" storage strategy
-============================================================
+Migrating between strategies
+============================
 
-Use the `bin/flat2directory.py` shell utility that ships with FSS. Get
+Use the `bin/strategymigrator.py` shell utility that ships with FSS. Get
 more info on this utility using the `--help` option.
+
+Note that only flat -> directory and directory -> flat are available
+today.
+
 
 Installation
 ############
