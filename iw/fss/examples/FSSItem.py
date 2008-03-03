@@ -16,7 +16,7 @@
 ## Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Demo content type with a file and an image.
-$Id: FSSItem.py,v 1.7 2005/05/11 15:42:59 clebeaupin Exp $
+$Id$
 """
 
 # Zope imports
