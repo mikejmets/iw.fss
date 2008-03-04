@@ -10,11 +10,7 @@
 # Copyright (c) Ingeniweb 2007
 # $Id$
 
-try:
-    from Products.CMFPlone.utils import getFSVersionTuple
-    PLONE_VERSION = getFSVersionTuple()[:2]
-except ImportError, e:
-    PLONE_VERSION = (2, 0)
+from iw.fss.utils import FSSMessageFactory as _
 
 from Products.CMFCore.utils import getToolByName
 
@@ -25,10 +21,5 @@ fss_tool.enableRDF(rdf_enabled)
 fss_tool.setRDFScript(rdf_script)
 
 message = 'message_properties_saved'
-if PLONE_VERSION >= (2, 5):
-    from Products.CMFPlone import PloneMessageFactory as _
-    context.plone_utils.addPortalMessage(_(unicode(message)))
-    return state.set(status='success')
-else:
-    return state.set(status='success', portal_status_message=message)
-
+context.plone_utils.addPortalMessage(_(unicode(message)))
+return state.set(status='success')
