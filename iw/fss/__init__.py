@@ -29,11 +29,7 @@ from Globals import package_home
 
 # CMF imports
 from Products.CMFCore.utils import ContentInit, ToolInit
-try:
-    from Products.CMFCore import permissions as CMFCorePermissions
-except ImportError:
-    from Products.CMFCore import CMFCorePermissions
-from Products.CMFCore.DirectoryView import registerDirectory
+from Products.CMFCore import permissions as CMFCorePermissions
 
 # Archetypes imports
 from Products.Archetypes.public import process_types, listTypes
@@ -49,8 +45,6 @@ from iw.fss.config import \
 
 
 from iw.fss import patches
-
-registerDirectory(SKINS_DIR, GLOBALS)
 
 def initialize(context):
     install_types = DEBUG or \
