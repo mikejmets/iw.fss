@@ -18,6 +18,5 @@ fss_tool = getToolByName(context, 'portal_fss')
 # Update RDF
 fss_tool.updateRDF()
 
-message = 'message_rdf_updated'
-context.plone_utils.addPortalMessage(_(unicode(message)))
+context.plone_utils.addPortalMessage(_(u'message_rdf_updated', default=u"RDF updated"))
 return state.set(status='success')

@@ -19,6 +19,5 @@ fss_tool = getToolByName(context, 'portal_fss')
 # Update filesystem storage
 fss_tool.updateFSS()
 
-message = 'message_filesystem_storage_updated'
-context.plone_utils.addPortalMessage(_(unicode(message)))
+context.plone_utils.addPortalMessage(_(u'message_filesystem_storage_updated', default=u"FileSystemStorage updated"))
 return state.set(status='success')

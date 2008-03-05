@@ -20,6 +20,5 @@ fss_tool = getToolByName(context, 'portal_fss')
 fss_tool.enableRDF(rdf_enabled)
 fss_tool.setRDFScript(rdf_script)
 
-message = 'message_properties_saved'
-context.plone_utils.addPortalMessage(_(unicode(message)))
+context.plone_utils.addPortalMessage(_(u'message_properties_saved', default=u"Properties saved"))
 return state.set(status='success')

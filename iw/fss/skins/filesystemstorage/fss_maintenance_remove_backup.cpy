@@ -19,8 +19,7 @@ fss_tool = getToolByName(context, 'portal_fss')
 # Remove backups
 fss_tool.removeBackups(days)
 
-message = 'message_backups_removed'
-context.plone_utils.addPortalMessage(_(unicode(message)))
+context.plone_utils.addPortalMessage(_(u'message_backups_removed', default=u"Backups removed"))
 return state.set(status='success')
 
 
