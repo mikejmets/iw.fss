@@ -44,10 +44,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 # CMF imports
 from Products.CMFCore.utils import UniqueObject, getToolByName
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
-try:
-    from Products.CMFCore import permissions as CMFCorePermissions
-except ImportError:
-    from Products.CMFCore import CMFCorePermissions
+from Products.CMFCore import permissions as CMFCorePermissions
 from Products.CMFCore.ActionInformation import ActionInformation
 from Products.CMFCore.Expression import Expression
 
@@ -55,6 +52,7 @@ from Products.CMFCore.Expression import Expression
 from FileUtils import rm_file
 from iw.fss.FileSystemStorage import FileSystemStorage
 from iw.fss.utils import getFieldValue
+from iw.fss.utils import FSSMessageFactory as _
 from iw.fss.config import ZCONFIG, CONFIG_FILE
 from iw.fss import strategy as fss_strategy
 
@@ -228,58 +226,6 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         items = strategy.walkOnBackupDirectory()
         return self.getFSSBrains(items)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFSStats')
-    def getFSStats(self):
-        """
-        Returns stats on FileSystem storage
-        valid_files_count -> Count of valid files
-        not_valid_files_count -> Count of not valid files
-        valid_backups_count -> Count of valid backups
-        not_valid_backups_count -> Count of not valid backups
-        """
-
-        storage_brains = self.getStorageBrains()
-        backup_brains = self.getBackupBrains()
-
-        valid_files = [x for x in storage_brains if x['path'] is not None]
-        not_valid_files = [x for x in storage_brains if x['path'] is None]
-        valid_backups = [x for x in backup_brains if x['path'] is None]
-        not_valid_backups = [x for x in backup_brains if x['path'] is not None]
-
-
-        # Sort valid files by size
-        def cmp_size(a, b):
-              return cmp(a['size'], b['size'])
-
-        valid_files.sort(cmp_size)
-
-        # Size in octets
-        total_size = 0
-        largest_size = 0
-        smallest_size = 0
-        average_size = 0
-
-        for x in valid_files:
-            total_size += x['size']
-
-        if len(valid_files) > 0:
-            largest_size = valid_files[-1]['size']
-            smallest_size = valid_files[0]['size']
-            average_size = int(total_size / len(valid_files))
-
-        stats = {
-          'valid_files_count' : len(valid_files),
-          'not_valid_files_count' : len(not_valid_files),
-          'valid_backups_count' : len(valid_backups),
-          'not_valid_backups_count' : len(not_valid_backups),
-          'total_size' : total_size,
-          'largest_size': largest_size,
-          'smallest_size' : smallest_size,
-          'average_size' : average_size,
-          }
-
-        return stats
-
     security.declareProtected(CMFCorePermissions.ManagePortal, 'updateFSS')
     def updateFSS(self):
         """
@@ -369,6 +315,75 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
     ## ZMI/PMI helpers (making a Zope 3 style view would be overkill)
     ###
 
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'configletTabs')
+    def configletTabs(self, template_id):
+        """
+        """
+        tab_infos = [
+            {'label': _(u'management_tab', default=u"Management"),
+             'template': 'fss_management_form',
+             'css_class': None},
+            {'label': _(u'maintenance_tab', default=u"Maintenance"),
+             'template': 'fss_maintenance_form',
+             'css_class': None}
+            ]
+        for ti in tab_infos:
+            if ti['template'] == template_id:
+                ti['css_class'] = 'selected'
+        return tab_infos
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFSStats')
+    def getFSStats(self):
+        """
+        Returns stats on FileSystem storage
+        valid_files_count -> Count of valid files
+        not_valid_files_count -> Count of not valid files
+        valid_backups_count -> Count of valid backups
+        not_valid_backups_count -> Count of not valid backups
+        """
+
+        storage_brains = self.getStorageBrains()
+        backup_brains = self.getBackupBrains()
+
+        valid_files = [x for x in storage_brains if x['path'] is not None]
+        not_valid_files = [x for x in storage_brains if x['path'] is None]
+        valid_backups = [x for x in backup_brains if x['path'] is None]
+        not_valid_backups = [x for x in backup_brains if x['path'] is not None]
+
+
+        # Sort valid files by size
+        def cmp_size(a, b):
+              return cmp(a['size'], b['size'])
+
+        valid_files.sort(cmp_size)
+
+        # Size in octets
+        total_size = 0
+        largest_size = 0
+        smallest_size = 0
+        average_size = 0
+
+        for x in valid_files:
+            total_size += x['size']
+
+        if len(valid_files) > 0:
+            largest_size = valid_files[-1]['size']
+            smallest_size = valid_files[0]['size']
+            average_size = int(total_size / len(valid_files))
+
+        stats = {
+          'valid_files_count' : len(valid_files),
+          'not_valid_files_count' : len(not_valid_files),
+          'valid_backups_count' : len(valid_backups),
+          'not_valid_backups_count' : len(not_valid_backups),
+          'total_size' : total_size,
+          'largest_size': largest_size,
+          'smallest_size' : smallest_size,
+          'average_size' : average_size,
+          }
+
+        return stats
+
     security.declareProtected(CMFCorePermissions.ManagePortal, 'siteConfigInfo')
     def siteConfigInfo(self):
         """A TALES friendly configuration info mapping for this Plone site"""
@@ -405,7 +420,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
     ###
     ## ZMI views
     ###
-    
+
     security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_overview')
     manage_overview = PageTemplateFile('manage_overview', _zmi)
 
