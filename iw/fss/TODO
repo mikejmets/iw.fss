@@ -12,11 +12,13 @@ Issues
 Features
 ########
 
-* Register former storage in zcml.py to help migrations.
-
 * Include migration script "Attribute storage -> FSS". See ATCT2FSS in
   the collective reposo. https://svn.plone.org/svn/collective/ATCT2FSS/
 
 * Add checksum to be sure files are not corrupted on filesystem.
 
-* Include storage strategy switching migration utility.
+* The "storage-strategy" should be mandatory and not implicitely
+  "flat" in plone-filesystemstorage.conf.
+
+* Deprecate the "flat" storage strategy (may be removed in FSS 2.8 or
+  2.9).

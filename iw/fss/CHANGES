@@ -2,8 +2,22 @@
 CHANGES
 #######
 
-2.7.0 - 2008/02/26
-##################
+
+SVN trunk: https://svn.plone.org/svn/collective/iw.fss/trunk
+############################################################
+
+* I18N domain is now "iw.fss" being consistent with new styles
+  components.
+  [glenfant]
+
+* Translations moved to zope 3 style in place of PTS style. As a
+  consequence, the config panel title is not translated any more
+  ("plone" domain).
+  [glenfant]
+
+* Public function to patch a type and registering patched types
+  for migration purposes
+  [glenfant]
 
 * Renamed flat2directory.py into strategymigrator.py since future
   other strategy migrations will go there.
@@ -17,7 +31,13 @@ CHANGES
   of the same content type.
   [glenfant]
 
+
+2.7.0 - 2008/02/26
+##################
+
+
 * Convert FileSystemStorage Zope 2 product to iw.fss python package
+  [tarek]
 
 * Added ZCML namespace/directive to wire fields of content types with
   FSS.
