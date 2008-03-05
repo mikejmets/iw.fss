@@ -20,9 +20,18 @@ $Id$
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:five="http://namespaces.zope.org/five"
+	   xmlns:i18n="http://namespaces.zope.org/i18n"
+	   xmlns:cmf="http://namespaces.zope.org/cmf"
 	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
 
+  <cmf:registerDirectory
+     name="filesystemstorage"
+     ignore=".svn README.txt"
+     />
+
   <five:registerPackage package="." initialize=".initialize" />
+
+  <i18n:registerTranslations directory="locales" />
 
   <adapter
       for="Products.Archetypes.atapi.BaseObject"
