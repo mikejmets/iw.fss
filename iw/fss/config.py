@@ -33,6 +33,7 @@ GLOBALS = globals()
 SKINS_DIR = 'skins'
 DEBUG = False
 INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE = 'FSS_INSTALL_EXAMPLE_TYPES'
+I18N_DOMAIN = PROJECTNAME.lower()
 
 from App.version_txt import getZopeVersion
 ZOPE_VERSION = getZopeVersion() # = (2, 9, 5, ...)
@@ -64,7 +65,7 @@ def loadConfig():
 
     def filePathOrNone(file_path):
         return os.path.isfile(file_path) and file_path or None
-    
+
     # (Potential) configuration files
     CONFIG_FILENAME = 'plone-filesystemstorage.conf'
     INSTANCE_CONFIG = filePathOrNone(os.path.join(INSTANCE_ETC, CONFIG_FILENAME))
