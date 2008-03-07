@@ -614,7 +614,7 @@ Please read `./tests/README.txt`.
 Other documentation
 ###################
 
-See `iw/fss/doc`.
+See `./doc/*` and `./locales/README.txt`
 
 
 Downloads
@@ -668,7 +668,8 @@ Credits
 * Main developer: `Cyrille Lebeaupin <mailto:cyrille.lebeaupin@ingeniweb.com>`_
 * ZConfig and ZCML support: `Gilles Lenfant <mailto:gilles.lenfant@ingeniweb.com>`_
 * HTTP "Range" support: `Youenn Boussard <mailto:youenn.boussard@ingeniweb.com>`_
-* Czeck (cs) translation: `Radim Novotny <novotny.radim@gmail.com>`_
+
+See `locales/README.txt` about localization credits.
 
 --------------------------
 
