@@ -84,7 +84,7 @@ From SVN reposo
 
 * Inflate iw.fss package into your zope instance lib/python directory.
   I'm sure it's already done.
-* Include `configure.zcml` and `meta.zcml`.
+
 * Add `$INSTANCE_HOME/etc/package-includes/iw.fss-meta.zcml` file with
   this line::
   
@@ -98,9 +98,12 @@ From SVN reposo
 * **Read carefully** `Storage strategies`_ and `FSS main
   configuration`_ below and configure your instance in
   `plone-filesystemstorage.conf` accordingly.
+
 * Start your Zope instance
+
 * In ZMI, go into your plone site and install the product using
   portal_quickinstaller
+
 * Optionally, tweak some - self explained - preferences in the
   FileSystemStorage configuration panel of your Plone site.
 
@@ -451,10 +454,12 @@ example of `The Python way`_ above::
 
   <configure
     ...
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage"
     ... />
     ...
     <fss:typeWithFSS
+      zcml:condition="installed iw.fss"
       class="Products.ATContentTypes.atct.ATFile"
       fields="file" />
     ...

@@ -19,6 +19,7 @@ USA.
 $Id$
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
+	   xmlns:zcml="http://namespaces.zope.org/zcml"
            xmlns:five="http://namespaces.zope.org/five"
 	   xmlns:i18n="http://namespaces.zope.org/i18n"
 	   xmlns:cmf="http://namespaces.zope.org/cmf"
@@ -44,14 +45,17 @@ $Id$
   ATContentTypes) with FSS.
 
   <fss:typeWithFSS
+     zcml:condition="installed iw.fss"
      class="Products.ATContentTypes.atct.ATFile"
      fields="file" />
 
   <fss:typeWithFSS
+     zcml:condition="installed iw.fss"
      class="Products.ATContentTypes.atct.ATImage"
      fields="image" />
 
   <fss:typeWithFSS
+     zcml:condition="installed iw.fss"
      class="Products.ATContentTypes.atct.ATNewsItem"
      fields="image" />
 

@@ -29,7 +29,7 @@ from zope.testing.doctest import ELLIPSIS
 
 def test_typewithfss():
     """
-    Test fss:typeWithFSS directive
+    Test fss:typeWithFSS directive::
 
         >>> from Products.Five import zcml
         >>> import iw.fss
@@ -41,7 +41,7 @@ def test_typewithfss():
         ... </configure>'''
         >>> zcml.load_config('meta.zcml', iw.fss)
 
-    Existing product configuration
+    Existing product configuration::
 
         >>> atfile_directive = '''
         ... <fss:typeWithFSS
@@ -50,13 +50,21 @@ def test_typewithfss():
         >>> config_zcml = template % atfile_directive
         >>> zcml.load_string(config_zcml)
 
-    Make sure we configured it
+    Make sure we configured it::
 
         >>> from Products.ATContentTypes.atct import ATFile
         >>> ATFile.schema['file'].storage
         <Storage FileSystemStorage>
 
-    Not existing content type or class
+    The patched type has been registered::
+
+        >>> from iw.fss.utils import patchedTypesRegistry
+        >>> len(patchedTypesRegistry)
+        1
+        >>> patchedTypesRegistry[ATFile]
+        {u'file': <Storage AnnotationStorage>}
+
+    Not existing content type or class::
 
         >>> stupid_directive = '''
         ... <fss:typeWithFSS
@@ -68,7 +76,7 @@ def test_typewithfss():
         ...
         ZopeXMLConfigurationError: ...
 
-    Class is not Archetypes content type
+    Class is not Archetypes content type::
 
         >>> stupid_directive = '''
         ... <fss:typeWithFSS
@@ -81,7 +89,7 @@ def test_typewithfss():
         ConfigurationExecutionError: exceptions.AttributeError: class SMTP has no attribute 'schema'
         ...
 
-    No such field in valid content type
+    No such field in valid content type::
 
         >>> stupid_directive = '''
         ... <fss:typeWithFSS

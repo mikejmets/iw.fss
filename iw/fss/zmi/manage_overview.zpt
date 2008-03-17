@@ -28,7 +28,37 @@ about actions.</p>
 <h3>Properties</h3>
 
 <p>The properties are commented out in the FileSystemStorage
-configuation panel of your Plone site.</p>
+configuration panel of your Plone site.</p>
+
+<h3>Changed types</h3>
+
+<p>This table lists the content types and fields which storage has been changed to
+FileSystemStorage through the monkey patching utility or using a custom configure.zcml.</p>
+
+<table border="1"
+       tal:define="features here/patchedTypesInfo"
+       tal:condition="features">
+  <tr>
+    <th>Content class</th>
+    <th><li>Field name: Storage class</li></th>
+  </tr>
+  <tal:loop repeat="feature features">
+    <tr valign="top">
+      <td tal:content="feature/klass">
+        Products.SomeType.SomeType
+      </td>
+      <td>
+      	<ul tal:repeat="field feature/fields">
+      	  <li>
+      	    <span tal:content="field/fieldname">foofield</span>:
+      	    <span tal:content="field/storage">FooStorage</span>
+      	  </li>
+      	</ul>
+      </td>
+    </tr>
+  </tal:loop>
+
+</table>
 
 <h3>Global configuration</h3>
 

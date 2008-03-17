@@ -53,6 +53,7 @@ from FileUtils import rm_file
 from iw.fss.FileSystemStorage import FileSystemStorage
 from iw.fss.utils import getFieldValue
 from iw.fss.utils import FSSMessageFactory as _
+from iw.fss.utils import patchedTypesRegistry
 from iw.fss.config import ZCONFIG, CONFIG_FILE
 from iw.fss import strategy as fss_strategy
 
@@ -383,6 +384,18 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
           }
 
         return stats
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'patchedTypesInfo')
+    def patchedTypesInfo(self):
+        """A TALES friendly summary of content types with storage changed to FSS"""
+
+        out = []
+        for type_class, fields_to_storages in patchedTypesRegistry.items():
+            feature = {'klass': str(type_class)}
+            feature['fields'] = [{'fieldname': fn, 'storage': str(st.__class__)}
+                                 for fn, st in fields_to_storages.items()]
+            out.append(feature)
+        return out
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'siteConfigInfo')
     def siteConfigInfo(self):

@@ -6,6 +6,15 @@ CHANGES
 SVN trunk: https://svn.plone.org/svn/collective/iw.fss/trunk
 ############################################################
 
+* Test case for FSS registration.
+  [glenfant]
+
+* Hint in README.txt to set FSS storage only if iw.fss is installed.
+  [glenfant]
+
+* The ZMI "Overview" tab shows the various types changed to use FSS.
+  [glenfant]
+
 * I18N domain is now "iw.fss" being consistent with new styles
   components.
   [glenfant]
