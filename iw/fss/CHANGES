@@ -6,6 +6,11 @@ CHANGES
 SVN trunk: https://svn.plone.org/svn/collective/iw.fss/trunk
 ############################################################
 
+...
+
+2.7.1 - 2008/03/17
+##################
+
 * Test case for FSS registration.
   [glenfant]
 
