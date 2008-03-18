@@ -1,1 +1,1 @@
-2.7.1
+2.7.1 - SVN https://svn.plone.org/svn/collective/iw.fss/trunk
