@@ -21,27 +21,21 @@ $Id$
 
 # Python imports
 import os
-import time
 import Globals
 
 # Zope imports
+import transaction
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import noSecurityManager
 
 # CMF imports
 from Products.CMFCore.utils import getToolByName
 
 # Plone imports
 from Products.PloneTestCase import PloneTestCase
-from Products.PloneTestCase.setup import PLONE21, PLONE25
 
 # Products imports
-from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE, \
-     ZOPE_VERSION
-
-if ZOPE_VERSION[:2] >= (2, 9):
-    import transaction
+from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
 
 # Globals
 portal_name = 'portal'
@@ -56,16 +50,6 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), 'data')
 CONTENT_PATH = os.path.join(DATA_PATH, 'word.doc')
 IMAGE_PATH = os.path.join(DATA_PATH, 'image.jpg')
 CONTENT_TXT = """mytestfile"""
-
-
-def commit_transaction():
-    # Transaction machinery depending on Zope version
-
-    if ZOPE_VERSION[:2] >= (2, 9):
-        transaction.savepoint(optimistic=True)
-    else:
-        get_transaction().commit(1)  
-    return
 
 
 from Products.PloneTestCase.layer import onsetup
@@ -95,29 +79,29 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
     def _setup(self):
         PloneTestCase.PloneTestCase._setup(self)
         self.app.REQUEST['SESSION'] = self.Session()
-        
+
         # Create temporary dirs to run test cases
         for base_path in (STORAGE_PATH, BACKUP_PATH):
             if not os.path.exists(base_path):
                 os.mkdir(base_path)
 
         self.fss_tool = getToolByName(self.portal, 'portal_fss')
-        
+
         # Patch getStorageStragegy to test all strategies
         strategy_klass = self.strategy_klass
         def getStorageStrategy(self):
             return strategy_klass(STORAGE_PATH, BACKUP_PATH)
-        
+
         from iw.fss.FSSTool import FSSTool
         FSSTool.getStorageStrategy = getStorageStrategy
-        
+
         # Check if fss is switched
         self.use_atct = False
         ttool = getToolByName(self.portal, 'portal_types')
         info = ttool.getTypeInfo('Folder')
         if info.getProperty('meta_type') == 'ATFolder':
             self.use_atct = True
-        
+
     def beforeTearDown(self):
         """Remove all the stuff again.
         """
@@ -129,9 +113,9 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
 
     def getDataPath(self):
         """Returns data path used for test cases"""
-    
+
         return DATA_PATH
-    
+
     def loginAsPortalOwner(self):
         '''Use if you need to manipulate an article as member.'''
         uf = self.app.acl_users
@@ -143,7 +127,7 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         """
         folder.invokeFactory('FSSItem', id=content_id)
         content = getattr(folder, content_id)
-        commit_transaction()
+        transaction.savepoint(optimistic=True)
         kw = {'file' : CONTENT_TXT}
         content.edit(**kw)
         return content
@@ -151,27 +135,27 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
     def addFileByFileUpload(self, folder, content_id):
         """Adds a file by file upload.
         """
-        
+
         folder.invokeFactory('FSSItem', id=content_id)
         content = getattr(folder, content_id)
-        commit_transaction()
+        transaction.savepoint(optimistic=True)
         self.updateContent(content, 'file', CONTENT_PATH)
         return content
-        
+
     def addImageByFileUpload(self, folder, content_id):
         """
         Adding image
         """
         folder.invokeFactory('FSSItem', id=content_id)
         content = getattr(folder, content_id)
-        commit_transaction()
+        transaction.savepoint(optimistic=True)
         self.updateContent(content, 'image', IMAGE_PATH)
         return content
 
     def updateContent(self, content, field, filepath):
         """Updates a field content for a file.
         """
-        
+
         from dummy import FileUpload
         file = open(filepath, 'rb')
         file.seek(0)
@@ -182,29 +166,11 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
 
 DEFAULT_PRODUCTS = ['kupu', 'iw.fss'] # 'FileSystemStorage']
 
-# We need Five (zope 2.8) and require kupu under plone 2.1
-if PLONE21 and not PLONE25:
-    ZopeTestCase.installProduct('Five')
-    ZopeTestCase.installProduct('kupu')
-
-# On Plone 2.0, install AT1.3
-if not PLONE21 and not PLONE25:
-    ZopeTestCase.installProduct('kupu')
-    ZopeTestCase.installProduct('Archetypes')
-    ZopeTestCase.installProduct('PortalTransforms')
-    ZopeTestCase.installProduct('MimetypesRegistry')
-    DEFAULT_PRODUCTS = ['ATContentTypes', 'kupu', 'iw.fss'] # 'FileSystemStorage']
-
 # Install FSS Example types
-os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True' 
-## ZopeTestCase.installProduct('PortalTransforms')
-## ZopeTestCase.installProduct('MimetypesRegistry')
-## ZopeTestCase.installProduct('Archetypes')
-
-#ZopeTestCase.installProduct('FileSystemStorage')
+os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
 
 HAS_ATCT = True
 ZopeTestCase.installProduct('ATContentTypes')
 
-# Setup Plone site  
+# Setup Plone site
 PloneTestCase.setupPloneSite(products=DEFAULT_PRODUCTS)

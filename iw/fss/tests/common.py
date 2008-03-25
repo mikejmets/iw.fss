@@ -20,33 +20,11 @@ $Id$
 """
 
 # Python imports
-import random
 import os
 import sys
-from types import StringType
-
-# Zope imports
-from Testing import ZopeTestCase
-from OFS.Image import File
-
-# CMF imports
-from Products.CMFCore.utils import getToolByName
-
-# Plone imports
-from Products.PloneTestCase.setup import PLONE21, PLONE25
-
-# Archetypes imports
-from Products.Archetypes.interfaces.base import IBaseUnit
 
 # Products imports
 from iw.fss.tests import FSSTestCase
 from iw.fss.FileSystemStorage import VirtualBinary
 
 FOLDER_TYPE = "Folder"
-
-# On Plone 2.0, use ATFolder
-if not PLONE21 and not PLONE25:
-    FOLDER_TYPE = "ATFolder"
-
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))

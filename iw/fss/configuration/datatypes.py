@@ -80,7 +80,7 @@ def strategy(value):
     @param value: as sent from ZConfig
     @return: valid strategy name
     """
-    
+
     possible_values = ('flat', 'directory', 'site1', 'site2')
     value = str(value).lower()
     if value not in possible_values:
@@ -105,7 +105,7 @@ class BaseConfig(object):
 
     def __getattr__(self, attrname):
         """attributes are found in self.section"""
-        
+
         if attrname in self._section_attr_names:
             return getattr(self._section, attrname)
         else:
@@ -114,7 +114,7 @@ class BaseConfig(object):
 
 class GlobalConfig(BaseConfig):
     """Instance wide zconfig object"""
-    
+
     def storagePathForSite(self, site_or_path):
         """Specific or global storage path
         @param site_or_path: Plone site obje or its path
@@ -147,7 +147,7 @@ class GlobalConfig(BaseConfig):
         @param site_or_path: Plone site object or path to a Plone site
         This should be a decorator func but we need to run with Python 2.3
         """
-        
+
         if type(site_or_path) is types.StringType:
             path = site_or_path.lower()
         else:

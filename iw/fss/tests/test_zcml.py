@@ -23,7 +23,6 @@ __author__  = ''
 __docformat__ = 'restructuredtext'
 
 import unittest
-import Testing
 from zope.testing import doctest
 from zope.testing.doctest import ELLIPSIS
 

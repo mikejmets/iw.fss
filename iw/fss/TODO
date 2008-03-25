@@ -7,16 +7,15 @@ Issues
 
 * Fix screenshot (deprecated from 2.6)
 
-* Remove FileUtils.py (?) Python has a `shutil` standard module.
-
 Features
 ########
 
-* Include migration script "Attribute storage -> FSS". See ATCT2FSS in
+* Include migration script "Original storage -> FSS". See ATCT2FSS in
   the collective reposo. https://svn.plone.org/svn/collective/ATCT2FSS/
   Note that the migration script may use the utils.patchedTypesRegistry.
 
-* Remove ActionProviderBase from tool base classes.
+* Include migration script "FSS -> original storage" to provide iw.fss
+  removal support.
 
 * Add checksum to be sure files are not corrupted on filesystem.
 
@@ -26,5 +25,31 @@ Features
 * Deprecate the "flat" storage strategy (may be removed in FSS 2.8 or
   2.9).
 
+Code cleanup and refactoring
+############################
+
+* GS style installation. Warning, there are example types for unit
+  tests.
+
+* Move properties to a propertysheet in portal_properties such we can
+  befefit of GS properties to install.
+
 * Fix the bobo traverse mess: we should not honour Plone 2.5(-)
   compatibility (remove patches.py) and fix the traverse warning.
+  BTW: add a test case for the traversal.
+
+* Remove ActionProviderBase from tool base classes.
+
+* Do we really need FileUtils? There is a shutils standard Python lib.
+
+* Is Extensions.toolbox useful?
+
+* Permission for ZMI tool methods should be "View management screens"
+  and not "Manage portel".
+
+* Remove as many files as possible from skins/filesystemstorage.
+  Idelally, we could remove the skin layer.
+   
+  - Use zope 3 style resources
+  - Register traversal for fss_get.py
+  - Use formlib for config panels.

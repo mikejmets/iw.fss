@@ -96,7 +96,7 @@
   # path. You may add ass many <site ...> sections as needed.
 
   # `storage-path` for this site
-  
+
   # Example: storage-path $$INSTANCE_HOME/var/my_plone/fss
 
   # `backup-path` for this site

@@ -24,8 +24,6 @@ __docformat__ = 'restructuredtext'
 
 # Python imports
 import os
-import sys
-from Globals import package_home
 
 # CMF imports
 from Products.CMFCore.utils import ContentInit, ToolInit
@@ -35,20 +33,11 @@ from Products.CMFCore import permissions as CMFCorePermissions
 from Products.Archetypes.public import process_types, listTypes
 
 # Products imports
-from iw.fss.config import \
-    SKINS_DIR, \
-    GLOBALS, \
-    PROJECTNAME, \
-    DEBUG, \
-    INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE, \
-    PLONE_VERSION
+from iw.fss.config import PROJECTNAME, DEBUG, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
 
-
-from iw.fss import patches
 
 def initialize(context):
-    install_types = DEBUG or \
-        os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
+    install_types = DEBUG or os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
 
     if install_types:
         # Import example types

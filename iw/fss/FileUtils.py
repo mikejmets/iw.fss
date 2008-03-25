@@ -26,7 +26,8 @@ $Id$
 """
 
 # Python builtins
-import os, os.path, string, types, urllib
+import os
+import types
 
 def rm_file(path):
     """

@@ -19,11 +19,10 @@ Stubs for testing
 $Id$
 """
 
-from OFS.SimpleItem import SimpleItem
-from ZPublisher.HTTPRequest import FileUpload
+from ZPublisher.HTTPRequest import FileUpload as BaseFileUpload
 
 
-class FileUpload(FileUpload):
+class FileUpload(BaseFileUpload):
     """Dummy upload object.
 
     Used to fake uploaded files and images.

@@ -26,27 +26,21 @@ __docformat__ = 'restructuredtext'
 
 # Python imports
 import os
-import re
-import random
 import time
 import Globals
 
 # Zope imports
-from Globals import package_home
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl import Permissions as zope_permissions
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
-from DateTime import DateTime
-from ZPublisher.Iterators import IStreamIterator
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # CMF imports
 from Products.CMFCore.utils import UniqueObject, getToolByName
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
-from Products.CMFCore import permissions as CMFCorePermissions
-from Products.CMFCore.ActionInformation import ActionInformation
-from Products.CMFCore.Expression import Expression
+from Products.CMFCore import permissions as cmf_permissions
 
 # Products imports
 from FileUtils import rm_file
@@ -78,9 +72,17 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
     meta_type = 'FSSTool'
 
     _properties=(
-        {'id':'title', 'type': 'string', 'mode':'w'},
-        {'id':'rdf_enabled', 'type': 'boolean', 'mode':'w'},
-        {'id':'rdf_script', 'type': 'string', 'mode':'w'},
+        {'id':'title',
+         'type': 'string',
+         'mode':'w'},
+        {'id':'rdf_enabled',
+         'label': "rdf_enabled: Enable RDF file",
+         'type': 'boolean',
+         'mode':'w'},
+        {'id':'rdf_script',
+         'label': "rdf_script: Name of RDF script.",
+         'type': 'string',
+         'mode':'w'},
         )
 
     _actions = ()
@@ -102,7 +104,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
     def manage_afterAdd(self, item, container):
         self.initProperties()
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'initProperties')
+    security.declareProtected(cmf_permissions.ManagePortal, 'initProperties')
     def initProperties(self):
         """Init properties"""
 
@@ -110,13 +112,13 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         self.storage_path = default_path
         self.backup_path = default_path
 
-    security.declareProtected(CMFCorePermissions.View, 'isRDFEnabled')
+    security.declareProtected(cmf_permissions.View, 'isRDFEnabled')
     def isRDFEnabled(self):
         """Returns true if RDF is automaticaly generated when file added"""
 
         return self.rdf_enabled
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'enableRDF')
+    security.declareProtected(cmf_permissions.ManagePortal, 'enableRDF')
     def enableRDF(self, enabled):
         """Enable rdf or not"""
 
@@ -125,13 +127,13 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         else:
             self.rdf_enabled = False
 
-    security.declareProtected(CMFCorePermissions.View, 'getRDFScript')
+    security.declareProtected(cmf_permissions.View, 'getRDFScript')
     def getRDFScript(self):
         """Returns rdf script used to generate RDF on files"""
 
         return self.rdf_script
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'setRDFScript')
+    security.declareProtected(cmf_permissions.ManagePortal, 'setRDFScript')
     def setRDFScript(self, rdf_script):
         """Set rdf script used to generate RDF on files"""
 
@@ -150,7 +152,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
             ZCONFIG.backupPathForSite(portal_path))
 
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getUIDToPathDictionnary')
+    security.declareProtected(cmf_permissions.ManagePortal, 'getUIDToPathDictionnary')
     def getUIDToPathDictionnary(self):
         """Returns a dictionnary
 
@@ -161,7 +163,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         brains = ctool(REQUEST={})
         return dict([(x['UID'], x.getPath()) for x in brains])
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getPathToUIDDictionnary')
+    security.declareProtected(cmf_permissions.ManagePortal, 'getPathToUIDDictionnary')
     def getPathToUIDDictionnary(self):
         """Returns a dictionnary
 
@@ -172,7 +174,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         brains = ctool(REQUEST={})
         return dict([(x.getPath(), x['UID']) for x in brains])
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFSSBrains')
+    security.declareProtected(cmf_permissions.ManagePortal, 'getFSSBrains')
     def getFSSBrains(self, items):
         """Returns a dictionnary.
 
@@ -203,7 +205,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         return items
 
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getStorageBrains')
+    security.declareProtected(cmf_permissions.ManagePortal, 'getStorageBrains')
     def getStorageBrains(self):
         """Returns a list of brains in storage path"""
 
@@ -212,14 +214,14 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         return self.getFSSBrains(items)
 
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getStorageBrainsByUID')
+    security.declareProtected(cmf_permissions.ManagePortal, 'getStorageBrainsByUID')
     def getStorageBrainsByUID(self, uid):
         """ Returns a list containing all brains related to fields stored
         on filesystem of object having the specified uid"""
 
         return [x for x in self.getStorageBrains() if x['uid'] == uid]
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getBackupBrains')
+    security.declareProtected(cmf_permissions.ManagePortal, 'getBackupBrains')
     def getBackupBrains(self):
         """Returns a list of brains in backup path"""
 
@@ -227,7 +229,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         items = strategy.walkOnBackupDirectory()
         return self.getFSSBrains(items)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'updateFSS')
+    security.declareProtected(cmf_permissions.ManagePortal, 'updateFSS')
     def updateFSS(self):
         """
         Update FileSystem storage
@@ -248,7 +250,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
         for item in not_valid_backups:
             strategy.restoreValueFile(**item)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'removeBackups')
+    security.declareProtected(cmf_permissions.ManagePortal, 'removeBackups')
     def removeBackups(self, max_days):
         """
         Remove backups older than specified days
@@ -267,7 +269,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
             if days >= max_days:
                 rm_file(item['fs_path'])
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'updateRDF')
+    security.declareProtected(cmf_permissions.ManagePortal, 'updateRDF')
     def updateRDF(self):
         """Add RDF files to fss files"""
 
@@ -316,10 +318,10 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
     ## ZMI/PMI helpers (making a Zope 3 style view would be overkill)
     ###
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'configletTabs')
+    security.declareProtected(cmf_permissions.ManagePortal, 'configletTabs')
     def configletTabs(self, template_id):
-        """
-        """
+        """Data for drawing tabs in FSS config panel"""
+
         tab_infos = [
             {'label': _(u'management_tab', default=u"Management"),
              'template': 'fss_management_form',
@@ -333,7 +335,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
                 ti['css_class'] = 'selected'
         return tab_infos
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFSStats')
+    security.declareProtected(cmf_permissions.ManagePortal, 'getFSStats')
     def getFSStats(self):
         """
         Returns stats on FileSystem storage
@@ -385,7 +387,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
 
         return stats
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'patchedTypesInfo')
+    security.declareProtected(cmf_permissions.ManagePortal, 'patchedTypesInfo')
     def patchedTypesInfo(self):
         """A TALES friendly summary of content types with storage changed to FSS"""
 
@@ -397,7 +399,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
             out.append(feature)
         return out
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'siteConfigInfo')
+    security.declareProtected(cmf_permissions.ManagePortal, 'siteConfigInfo')
     def siteConfigInfo(self):
         """A TALES friendly configuration info mapping for this Plone site"""
 
@@ -410,7 +412,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
             'backup_path': ZCONFIG.backupPathForSite(portal_path)
             }
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'globalConfigInfo')
+    security.declareProtected(cmf_permissions.ManagePortal, 'globalConfigInfo')
     def globalConfigInfo(self):
         """A TALES friendly configuration info mapping for global configuration"""
 
@@ -422,7 +424,7 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
             }
 
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'formattedReadme')
+    security.declareProtected(zope_permissions.view_management_screens, 'formattedReadme')
     def formattedReadme(self):
         """README.txt (reStructuredText) transformed to HTML"""
 
@@ -434,10 +436,10 @@ class FSSTool(PropertyManager, UniqueObject, SimpleItem, ActionProviderBase):
     ## ZMI views
     ###
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_overview')
+    security.declareProtected(zope_permissions.view_management_screens, 'manage_overview')
     manage_overview = PageTemplateFile('manage_overview', _zmi)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_documentation')
+    security.declareProtected(zope_permissions.view_management_screens, 'manage_documentation')
     manage_documentation = PageTemplateFile('manage_documentation', _zmi)
 
 InitializeClass(FSSTool)

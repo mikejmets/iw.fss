@@ -19,28 +19,15 @@ Demo content type with a file and an image.
 $Id$
 """
 
-# Zope imports
-from AccessControl import ClassSecurityInfo
-
-# CMF imports
-# from Products.CMFCore import CMFCorePermissions
 
 # Archetypes imports
-try:
-    from Products.LinguaPlone.public import *
-except ImportError: 
-    # No multilingual support
-    from Products.Archetypes.public import *
+from Products.Archetypes.public import *
 
 # Products imports
 from iw.fss.FileSystemStorage import FileSystemStorage
 from iw.fss.config import PROJECTNAME
 
-#try:
-#    from Products.AttachmentField.AttachmentField import AttachmentField as FileField
-#except:
-#    pass
-    
+
 schema = BaseSchema.copy() + Schema((
     FileField('file',
               required=False,

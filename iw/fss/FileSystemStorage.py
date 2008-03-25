@@ -23,14 +23,11 @@ __docformat__ = 'restructuredtext'
 
 # Python imports
 import os
-import Globals
 from Acquisition import aq_base
 from StringIO import StringIO
 from types import StringType, UnicodeType
-from new import instancemethod
 
 # Zope imports
-from webdav.common import rfc1123_date
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from OFS.Image import File
@@ -42,18 +39,15 @@ from ZPublisher.Iterators import filestream_iterator
 from Products.CMFCore.utils import getToolByName
 
 # Archetypes imports
+from Products.Archetypes.interfaces.field import IObjectField
 from Products.Archetypes.Storage import StorageLayer
-from Products.Archetypes.interfaces.field import IObjectField, IImageField
 from Products.Archetypes.interfaces.base import IBaseUnit
 from Products.Archetypes.Field import ImageField
-try:
-    from Products.Archetypes.Field import Image # Changes since AT1.3.4
-except:
-    from OFS.Image import Image
+from Products.Archetypes.Field import Image # Changes since AT1.3.4
 
 # Products imports
 from iw.fss.rdf import RDFWriter
-from FileUtils import copy_file, move_file, rm_file
+from FileUtils import copy_file
 
 from ZPublisher.Iterators import IStreamIterator
 from ZPublisher.HTTPRangeSupport import parseRange

@@ -23,10 +23,7 @@ __author__  = ''
 __docformat__ = 'restructuredtext'
 
 # CMF imports
-try:
-    from Products.CMFCore import permissions as CMFCorePermissions
-except ImportError:
-    from Products.CMFCore import CMFCorePermissions
+from Products.CMFCore import permissions as CMFCorePermissions
 
 PROJECTNAME = 'iw.fss'
 GLOBALS = globals()
@@ -34,17 +31,6 @@ SKINS_DIR = 'skins'
 DEBUG = False
 INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE = 'FSS_INSTALL_EXAMPLE_TYPES'
 I18N_DOMAIN = PROJECTNAME.lower()
-
-from App.version_txt import getZopeVersion
-ZOPE_VERSION = getZopeVersion() # = (2, 9, 5, ...)
-del getZopeVersion
-
-try:
-    from Products.CMFPlone.utils import getFSVersionTuple
-    PLONE_VERSION = getFSVersionTuple()[:2] # as (2, 1)
-    del getFSVersionTuple
-except ImportError, e:
-    PLONE_VERSION = (2, 0)
 
 ZCONFIG, dummy_handler, CONFIG_FILE = None, None, None
 

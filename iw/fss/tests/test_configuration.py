@@ -23,7 +23,6 @@ __author__  = 'Gilles Lenfant <gilles.lenfant@ingeniweb.com>'
 __docformat__ = 'restructuredtext'
 
 import unittest
-from Testing.ZopeTestCase import ZopeTestCase
 import os
 from StringIO import StringIO
 import ZConfig

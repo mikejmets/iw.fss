@@ -24,7 +24,6 @@ __docformat__ = 'restructuredtext'
 
 # Python imports
 from StringIO import StringIO
-import string
 
 # CMF imports
 from Products.CMFCore.utils import getToolByName

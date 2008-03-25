@@ -5,7 +5,15 @@ CHANGES
 SVN trunk https://svn.plone.org/svn/collective/iw.fss/trunk
 ###########################################################
 
-* ...
+* pyflakes everything.
+  [glenfant]
+
+* Removed Plone 2.5 (and previous) compatibility.
+  [glenfant]
+
+* Protect with appropriate permission ZMI views/methods.
+  [glenfant]
+
 
 2.7.1 - 2008/03/17
 ##################
