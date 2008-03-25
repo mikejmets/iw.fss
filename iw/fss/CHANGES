@@ -5,6 +5,11 @@ CHANGES
 SVN trunk https://svn.plone.org/svn/collective/iw.fss/trunk
 ###########################################################
 
+* Fix the bobo traverse mess: we should not honour Plone 2.5(-)
+  compatibility (remove patches.py) and fix the traverse deprecation
+  warning.
+  [glenfant]
+
 * pyflakes everything.
   [glenfant]
 
@@ -13,7 +18,6 @@ SVN trunk https://svn.plone.org/svn/collective/iw.fss/trunk
 
 * Protect with appropriate permission ZMI views/methods.
   [glenfant]
-
 
 2.7.1 - 2008/03/17
 ##################

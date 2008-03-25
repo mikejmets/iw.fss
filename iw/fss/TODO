@@ -34,18 +34,11 @@ Code cleanup and refactoring
 * Move properties to a propertysheet in portal_properties such we can
   befefit of GS properties to install.
 
-* Fix the bobo traverse mess: we should not honour Plone 2.5(-)
-  compatibility (remove patches.py) and fix the traverse warning.
-  BTW: add a test case for the traversal.
-
 * Remove ActionProviderBase from tool base classes.
 
 * Do we really need FileUtils? There is a shutils standard Python lib.
 
 * Is Extensions.toolbox useful?
-
-* Permission for ZMI tool methods should be "View management screens"
-  and not "Manage portel".
 
 * Remove as many files as possible from skins/filesystemstorage.
   Idelally, we could remove the skin layer.
