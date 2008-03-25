@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ## FileSystemStorage
-## 
+##
 ## Copyright (C) 2006 Ingeniweb
 
 ## This program is free software; you can redistribute it and/or modify
@@ -17,10 +17,10 @@
 ## along with this program; see the file COPYING. If not, write to the
 ## Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from Products.Five.traversable import FiveTraversable
+from zope.traversing.adapters import DefaultTraversable
 from utils import getFieldValue
 
-class FSSTraversable(FiveTraversable):
+class FSSTraversable(DefaultTraversable):
 
     def traverse(self, name, furtherPath):
 
