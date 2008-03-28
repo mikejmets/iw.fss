@@ -56,7 +56,6 @@ def initialize(context):
     ToolInit(
         '%s Tool' % PROJECTNAME,
         tools=(FSSTool,),
-        product_name=PROJECTNAME,
         icon='tool.gif').initialize(context)
 
     # setup module aliases to bind all Zope2 products
