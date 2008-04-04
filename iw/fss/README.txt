@@ -76,8 +76,19 @@ Installation
 With buildout
 =============
 
-FIXME: show an example with iw.recipe.fss and iw.fss in buildout.cfg.
+This example speaks of itself::
 
+  [instance]
+  ...
+  zcml =
+    ...
+    iw.fss
+    iw.fss-meta
+    ...
+
+You may also use the `iw.recipe.fss`_ recipe egg to configure fully an
+instance.
+  
 
 From SVN reposo
 ===============
@@ -95,9 +106,13 @@ From SVN reposo
 
     <include package="iw.fss" />
 
+Configuring your Plone sites
+============================
+
 * **Read carefully** `Storage strategies`_ and `FSS main
   configuration`_ below and configure your instance in
-  `plone-filesystemstorage.conf` accordingly.
+  `plone-filesystemstorage.conf` accordingly. You may use the
+  `iw.recipe.fss`_ recipe in your `buildout.cfg` to do this.
 
 * Start your Zope instance
 
@@ -682,4 +697,5 @@ See `locales/README.txt` about localization credits.
 .. _Ingeniweb: http://www.ingeniweb.com/
 .. _AttachmentField: http://plone.org/products/attachmentfield
 .. _DCMES-XML standard: http://dublincore.org/documents/dcmes-xml/
+.. _iw.recipe.fss: http://pypi.python.org/pypi/iw.recipe.fss
 .. $Id$
