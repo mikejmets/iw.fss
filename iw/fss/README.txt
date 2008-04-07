@@ -67,7 +67,8 @@ Use the `bin/strategymigrator.py` shell utility that ships with FSS. Get
 more info on this utility using the `--help` option.
 
 Note that only flat -> directory and directory -> flat are available
-today.
+today. Sponsorship is welcome - as indicated in `Support and
+feedback`_ - if you need other strategy migrations.
 
 
 Installation
@@ -377,10 +378,9 @@ you'll loose your contents, your job, your money, your friends, your
 wife/husband and children.
 
 **DO NEVER CHANGE THE STRATEGY FOR A PLONE SITE ONCE THIS SITE HAS
-FIELDS STORED IN ITS FSS STORAGE PATH** unless you're loose your
-contents, your job, ... FSS has no utility to convert a storage format
-to another one. Sponsorship is welcome - as indicated in `Support and
-feedback`_ - if you need such a feature.
+FIELDS STORED IN ITS FSS STORAGE PATH** unless you ran the appropriate
+strategy migrator - see `Migrating between strategies`_ otherwise
+you're loose your contents, your job, ...
 
 Thought it is possible to share the same storage path and backup path
 within various Plone sites, since you don't mind of your data in

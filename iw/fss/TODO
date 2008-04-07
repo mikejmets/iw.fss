@@ -25,6 +25,14 @@ Features
 * Deprecate the "flat" storage strategy (may be removed in FSS 2.8 or
   2.9).
 
+* Hide explicitely the maintenance buttons from the maintenance
+  control panel if the site has not its own config section.
+
+* Using site1 or site2 as default global strategy is dangerous and
+  should be forbidden (raise a ValueError at Zope startup in that
+  case).
+
+
 Code cleanup and refactoring
 ############################
 
