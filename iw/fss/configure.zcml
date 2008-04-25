@@ -20,7 +20,7 @@ $Id$
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
 	   xmlns:gs="http://namespaces.zope.org/genericsetup"
-	   xmlns:browser="http://namespaces.zope.org/zope"
+	   xmlns:browser="http://namespaces.zope.org/browser"
 	   xmlns:zcml="http://namespaces.zope.org/zcml"
            xmlns:five="http://namespaces.zope.org/five"
 	   xmlns:i18n="http://namespaces.zope.org/i18n"
@@ -96,5 +96,14 @@ $Id$
      fields="image" />
 
   -->
-
+  <utility
+  			provides=".interfaces.IConfiguration"
+  			component=".Configuration.Configuration"
+  			name="globalconf" />
+  <browser:page
+    name="fss_management_form"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    template="browser/fss_management_form.cpt"
+    class=".browser.FSSView.FSSView"
+    permission="cmf.ManagePortal" />
 </configure>

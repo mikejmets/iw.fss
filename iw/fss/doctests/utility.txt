@@ -1,0 +1,27 @@
+==========
+FSS Utility
+==========
+
+FSSUtility is an utility to replace the old FFSTool.
+
+Get the utility:
+	>>> from zope.component import queryUtility
+	>>> from iw.fss.interfaces import IConfiguration
+	>>> queryUtility(IConfiguration, "globalconf")
+	<class 'iw.fss.Configuration.Configuration'>
+
+Call the global configuration method 
+	>>> Configuration = queryUtility(IConfiguration, "globalconf")
+	>>> configuration = Configuration()
+	>>> configuration.globalConfigInfo().has_key('backup_path') 
+	True
+
+Get the strategy with the context
+	>>> configuration.getStorageStrategy(context)
+	<iw.fss.strategy.FlatStorageStrategy instance ...>
+	
+
+	
+
+
+
