@@ -19,12 +19,31 @@ USA.
 $Id$
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
+	   xmlns:gs="http://namespaces.zope.org/genericsetup"
 	   xmlns:browser="http://namespaces.zope.org/zope"
 	   xmlns:zcml="http://namespaces.zope.org/zcml"
            xmlns:five="http://namespaces.zope.org/five"
 	   xmlns:i18n="http://namespaces.zope.org/i18n"
 	   xmlns:cmf="http://namespaces.zope.org/cmf"
 	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
+
+  <gs:registerProfile
+     name="iw.fss.core"
+     title="iw.fss (FileSystemStorage)"
+     directory="profiles/default"
+     description="Core runtime resources for iw.fss (FileSystemStorage)"
+     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+     provides="Products.GenericSetup.interfaces.EXTENSION"
+     />
+
+  <gs:registerProfile
+      name="iw.fss.testfixtures"
+      title="iw.fss Test Fixture"
+      directory="profiles/testfixture"
+      description="Extension profile to configure a test fixture"
+      for="Products.CMFPlone.interfaces.ITestCasePloneSiteRoot"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
 
   <cmf:registerDirectory
      name="filesystemstorage"

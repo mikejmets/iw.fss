@@ -14,15 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; see the file COPYING. If not, write to the
 # Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""" defines a test class and its Plone Site layer for plone tests
-"""
+
+# $Id$
+
+""""Defines a test class and its Plone Site layer for plone tests"""
 
 import os
 
 from Testing import ZopeTestCase as ztc
 
+from zope.interface import classImplements
 from Products.Five import zcml
 from Products.Five import fiveconfigure
+from Products.CMFPlone.Portal import PloneSite
+from Products.CMFPlone.interfaces import ITestCasePloneSiteRoot
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import PloneSite
 from Products.PloneTestCase.layer import onsetup
@@ -32,6 +37,9 @@ from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
 
 # Install FSS Example types
 os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
+
+# Make the test fixture extension profile active
+classImplements(PloneSite, ITestCasePloneSiteRoot)
 
 @onsetup
 def setup_fss():
@@ -44,7 +52,8 @@ def setup_fss():
 
 # setting up plone site
 setup_fss()
-ptc.setupPloneSite(products=['iw.fss'])
+ptc.setupPloneSite(products=['iw.fss'],
+                   extension_profiles=['iw.fss:iw.fss.testfixtures'])
 
 # fake mailhost
 from Products.MailHost import MailHost
@@ -71,5 +80,3 @@ class TestCase(ptc.FunctionalTestCase):
         @classmethod
         def tearDown(cls):
             MailHost.MailHost = cls._old
-
-
