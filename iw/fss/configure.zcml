@@ -112,5 +112,7 @@ $Id$
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     template="browser/fss_maintenance_form.cpt"
     class=".browser.FSSView.FSSView"
-    permission="cmf.ManagePortal" />
+    permission="cmf.ManagePortal" 
+    allowed_attributes="updateFSS removeBackups"/>
+
 </configure>

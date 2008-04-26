@@ -100,7 +100,7 @@
                  tabindex=""
                  type="submit"
                  value="Update"
-                 name="UpdateFss:method"
+                 name="updateFSS:method"
                  i18n:attributes="value"
                  tal:attributes="tabindex tabindex/next;" />
         </div>
@@ -125,7 +125,7 @@
 
         <input type="text"
                id="days"
-               name="days:int"
+               name="max_days:int"
                value="0"
                size="4"
                tal:attributes="tabindex tabindex/next;" />
@@ -135,7 +135,7 @@
                  tabindex=""
                  type="submit"
                  value="Remove Backup"
-                 name="RemoveBackup:method"
+                 name="removeBackups:method"
                  i18n:attributes="value"
                  tal:attributes="tabindex tabindex/next;" />
         </div>

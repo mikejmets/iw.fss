@@ -1,12 +1,26 @@
+#Python imports
+import logging
+
 # Zope imports
 from Products.Five import BrowserView
 from zope.component import queryUtility
+from AccessControl import ClassSecurityInfo
+
+try:
+    from AccessControl.requestmethod import postonly
+except ImportError:
+    # For Zope <2.8.9, <2.9.7 and <2.10.3                                                           
+    def postonly(func):
+        return func
 
 # Products imports
+from Products.CMFCore.permissions import ManagePortal
 from iw.fss.utils import FSSMessageFactory as _
 from iw.fss.interfaces import IConf
 
 class FSSView(BrowserView):
+    
+    security = ClassSecurityInfo()
     
     def __init__(self, context, request):
         super(FSSView, self).__init__(context, request)
@@ -45,13 +59,21 @@ class FSSView(BrowserView):
     
     def backup_path(self):
         return self.conf.globalConfigInfo()['backup_path']
-    @postonly
-    def UpdateFss(self, REQUEST):
-        """Removed all invalid files"""
-        pass
-    @postonly
-    def RemoveBackup(self, REQUEST):
-        """Remove backup older than x day"""
-        pass
     
+    @postonly
+    def updateFSS(self, REQUEST):
+        """Removed all invalid files"""
+        self.conf.updateFSS()
+
+    @postonly
+    def removeBackups(self, REQUEST):
+        """Remove backup older than x day"""
+        max_days = REQUEST.get("max_days", None)
+        if max_days is None:
+            max_days = 0
+        self.conf.removeBackups(max_days)
+
+    @postonly
+    def updateRDF(self, REQUEST):
+        self.conf.updateRDF()
     
