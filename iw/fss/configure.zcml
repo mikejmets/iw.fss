@@ -103,14 +103,14 @@ $Id$
   <browser:page
     name="fss_management_form_new"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    template="browser/fss_management_form.cpt"
+    template="browser/fss_management_form.pt"
     class=".browser.FSSView.FSSView"
     permission="cmf.ManagePortal" />
     
   <browser:page
     name="fss_maintenance_form_new"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    template="browser/fss_maintenance_form.cpt"
+    template="browser/fss_maintenance_form.pt"
     class=".browser.FSSView.FSSView"
     permission="cmf.ManagePortal" 
     allowed_attributes="updateFSS removeBackups"/>
