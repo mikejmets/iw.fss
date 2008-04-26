@@ -60,11 +60,6 @@ $Id$
       provides="zope.app.traversing.interfaces.ITraversable"
       />
 
-  <five:implements
-     class=".FSSTool.FSSTool"
-     interface=".interfaces.IFSSTool"
-     />
-
   <!-- ZMI tabs -->
   <!--
   <browser:page
@@ -101,14 +96,14 @@ $Id$
   			component=".conffile.ConfFile"
   			name="globalconf" />
   <browser:page
-    name="fss_management_form_new"
+    name="fss_management_form"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     template="browser/fss_management_form.pt"
     class=".browser.FSSView.FSSView"
     permission="cmf.ManagePortal" />
     
   <browser:page
-    name="fss_maintenance_form_new"
+    name="fss_maintenance_form"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     template="browser/fss_maintenance_form.pt"
     class=".browser.FSSView.FSSView"

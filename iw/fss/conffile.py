@@ -65,13 +65,15 @@ class ConfFile(object):
     """Tool for FileSystem storage"""
 
     implements(IConf)
-
+    rdf_enabled = False
+    rdf_script = ""
     def initProperties(self):
         """Init properties"""
 
         default_path = os.path.join(Globals.INSTANCE_HOME, 'var')
         self.storage_path = default_path
         self.backup_path = default_path
+        self.rdf_enabled = False
 
     def isRDFEnabled(self):
         """Returns true if RDF is automaticaly generated when file added"""

@@ -51,13 +51,6 @@ def initialize(context):
                     fti = ftis,
                     ).initialize(context)
 
-    # Import tool
-    from iw.fss.FSSTool import FSSTool
-    ToolInit(
-        '%s Tool' % PROJECTNAME,
-        tools=(FSSTool,),
-        icon='tool.gif').initialize(context)
-
 
     # Register modifier
     context.registerClass(

@@ -12,12 +12,11 @@
 
   <div class="documentContent"
        metal:fill-slot="fss_prefs"
-       tal:define="fss_tool python:container.portal_fss;
-                   errors python:request.get('errors', {});">
+       tal:define="errors python:request.get('errors', {});">
 
     <h3 i18n:translate="heading_fss_maintenance">FSS Maintenance</h3>
 
-    <fieldset tal:define="stats fss_tool/getFSStats">
+    <fieldset>
       <legend i18n:translate="legend_fss_stats">
         FSS Stats
       </legend>
@@ -38,10 +37,10 @@
         </thead>
         <tbody>
           <tr>
-            <td tal:content="stats/valid_files_count" />
-            <td tal:content="stats/valid_backups_count" />
-            <td tal:content="stats/not_valid_files_count" />
-            <td tal:content="stats/not_valid_backups_count" />
+            <td tal:content="view/stats/valid_files_count" />
+            <td tal:content="view/stats/valid_backups_count" />
+            <td tal:content="view/stats/not_valid_files_count" />
+            <td tal:content="view/stats/not_valid_backups_count" />
           </tr>
         </tbody>
       </table>
@@ -62,16 +61,16 @@
         </thead>
         <tbody>
           <tr>
-            <td tal:define="size stats/total_size;
+            <td tal:define="size view/stats/total_size;
                             size python: round(size/1000);"
                 tal:content="string: $size Ko" />
-            <td tal:define="size stats/largest_size;
+            <td tal:define="size view/stats/largest_size;
                             size python: round(size/1000);"
                 tal:content="string: $size Ko" />
-            <td tal:define="size stats/smallest_size;
+            <td tal:define="size view/stats/smallest_size;
                             size python: round(size/1000);"
                 tal:content="string: $size Ko" />
-            <td tal:define="size stats/average_size;
+            <td tal:define="size view/stats/average_size;
                             size python: round(size/1000);"
                 tal:content="string: $size Ko" />
           </tr>

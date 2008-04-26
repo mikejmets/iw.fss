@@ -3,7 +3,7 @@ import logging
 
 # Zope imports
 from Products.Five import BrowserView
-from zope.component import queryUtility
+from zope.component import getUtility
 from AccessControl import ClassSecurityInfo
 
 try:
@@ -24,8 +24,9 @@ class FSSView(BrowserView):
     
     def __init__(self, context, request):
         super(FSSView, self).__init__(context, request)
-        conf_class = queryUtility(IConf, "globalconf")
+        conf_class = getUtility(IConf, "globalconf")
         self.conf = conf_class()
+        self.stats = self.conf.getFSStats()
          
     def mytry(self):
         return "OK"
@@ -60,6 +61,9 @@ class FSSView(BrowserView):
     def backup_path(self):
         return self.conf.globalConfigInfo()['backup_path']
     
+    def stats(self):
+        return self.stats    
+
     @postonly
     def updateFSS(self, REQUEST):
         """Removed all invalid files"""
@@ -76,4 +80,43 @@ class FSSView(BrowserView):
     @postonly
     def updateRDF(self, REQUEST):
         self.conf.updateRDF()
+    
+    def fss_get(self):
+
+        NotFound = "NotFound"
+        
+        if len(traverse_subpath) < 1:
+            raise NotFound, "Unknown page."
+        
+        # Get FSS Item
+        name = traverse_subpath[0]
+        obj = self.conf.getFSSItem(context, name)
+        
+        if obj is None:
+            raise NotFound, "Unknown page."
+        
+        if len(traverse_subpath) > 1:
+            # Maybe call method of object
+            cmd_name = traverse_subpath[1]
+            cmd = getattr(obj, 'evalCmd')
+            return cmd(cmd_name)
+        else:
+            REQUEST = context.REQUEST
+
+    def fss_download(self):
+        NotFound = "NotFound"
+
+        if len(traverse_subpath) < 1:
+            raise NotFound, "Unknown page."
+        
+        # Get FSS Item
+        name = traverse_subpath[0]
+        obj = self.conf.getFSSItem(context, name)
+        
+        if obj is None:
+            raise NotFound, "Unknown page."
+        
+        REQUEST = context.REQUEST
+        return obj.download(REQUEST)
+
     

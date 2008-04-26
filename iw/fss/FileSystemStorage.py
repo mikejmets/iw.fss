@@ -33,6 +33,7 @@ from AccessControl import ClassSecurityInfo
 from OFS.Image import File
 from OFS.SimpleItem import SimpleItem
 from ZPublisher.Iterators import filestream_iterator
+from zope.component import getUtility
 #from Shared.DC.ZRDB.TM import TM
 
 # CMF imports
@@ -48,6 +49,7 @@ from Products.Archetypes.Field import Image # Changes since AT1.3.4
 # Products imports
 from iw.fss.rdf import RDFWriter
 from FileUtils import copy_file
+from iw.fss.interfaces import IConf
 
 from ZPublisher.Iterators import IStreamIterator
 from ZPublisher.HTTPRangeSupport import parseRange
@@ -695,11 +697,13 @@ class FileSystemStorage(StorageLayer):
 
         return names
 
+    def getConf(self):
+        conf = getUtility(IConf, "globalconf")
+        return conf()
+
     def getStorageStrategy(self, name, instance):
         """Get strategy that defined how field values are stored"""
-
-        fss_tool = getToolByName(instance, 'portal_fss')
-        return fss_tool.getStorageStrategy()
+        return self.getConf().getStorageStrategy()
 
     def getStorageStrategyProperties(self, name, instance, info):
         """Returns a dictionnary containing all properties used by
@@ -760,9 +764,9 @@ class FileSystemStorage(StorageLayer):
         strategy.setValueFile(value, **props)
 
         # Create RDF file
-        fss_tool = getToolByName(instance, 'portal_fss')
-        is_rdf_enabled = fss_tool.isRDFEnabled()
-        rdf_script = fss_tool.getRDFScript()
+        conf = self.getConf()
+        is_rdf_enabled = conf.isRDFEnabled()
+        rdf_script = conf.getRDFScript()
 
         if is_rdf_enabled:
             # Replace rdf file
@@ -849,9 +853,9 @@ class FileSystemStorage(StorageLayer):
         names = self.getInheritedNames(instance, field)
         uid = instance.UID()
         src_uid = info.getUID()
-        fss_tool = getToolByName(instance, 'portal_fss')
-        is_rdf_enabled = fss_tool.isRDFEnabled()
-        rdf_script = fss_tool.getRDFScript()
+        conf = self.getConf()
+        is_rdf_enabled = conf.isRDFEnabled()
+        rdf_script = conf.getRDFScript()
         strategy = self.getStorageStrategy(name, instance)
 
         if uid == src_uid:

@@ -17,7 +17,7 @@ Call the global configuration method
 	True
 
 Get the strategy with the context
-	>>> conf.getStorageStrategy(context)
+	>>> conf.getStorageStrategy()
 	<iw.fss.strategy.FlatStorageStrategy instance ...>
 	
 

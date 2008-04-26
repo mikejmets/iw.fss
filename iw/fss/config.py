@@ -28,7 +28,7 @@ from Products.CMFCore import permissions as CMFCorePermissions
 PROJECTNAME = 'iw.fss'
 GLOBALS = globals()
 SKINS_DIR = 'skins'
-DEBUG = False
+DEBUG = True
 INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE = 'FSS_INSTALL_EXAMPLE_TYPES'
 I18N_DOMAIN = PROJECTNAME.lower()
 
