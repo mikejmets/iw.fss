@@ -45,11 +45,6 @@ $Id$
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
-  <cmf:registerDirectory
-     name="filesystemstorage"
-     ignore=".svn README.txt"
-     />
-
   <five:registerPackage package="." initialize=".initialize" />
 
   <i18n:registerTranslations directory="locales" />
