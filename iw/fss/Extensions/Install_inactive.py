@@ -22,19 +22,31 @@ $Id$
 __author__  = ''
 __docformat__ = 'restructuredtext'
 
-# Python imports
 from StringIO import StringIO
 
-# CMF imports
 from Products.CMFCore.utils import getToolByName
 
-# Archetypes imports
 from Products.Archetypes.Extensions.utils import installTypes, install_subskin
 from Products.Archetypes.public import listTypes
 
-# Products imports
 from iw.fss.config import PROJECTNAME, GLOBALS, fss_prefs_configlet
 from iw.fss.FSSTool import FSSTool
+from iw.fss.modifier import MODIFIER_ID
+from iw.fss.modifier import manage_addModifier
+
+def install_modifier(portal, out):
+    """Register CMFEditions modifier
+    """
+
+    mtool = getToolByName(portal, 'portal_modifier')
+
+    if MODIFIER_ID in  mtool.objectIds():
+        out.write("Modifier already installed.")
+        return False
+
+    manage_addModifier(mtool)
+    out.write("Modifier installed.")
+    return True
 
 def install(self):
     out = StringIO()
@@ -57,6 +69,9 @@ def install(self):
         cp_tool.registerConfiglet(**fss_prefs_configlet)
     except:
         pass
+
+    # Install modifier
+    install_modifier(self, out)
 
     out.write('Installation completed.\n')
     return out.getvalue()

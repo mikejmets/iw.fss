@@ -348,12 +348,13 @@ class FSSInfo(SimpleItem):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, uid):
-        self.update(uid)
+    def __init__(self, uid, version=None):
+        self.update(uid, version)
 
     security.declarePrivate('update')
-    def update(self, uid):
+    def update(self, uid, version=None):
         self.uid = uid
+        self.version = version
 
     security.declarePrivate('getUID')
     def getUID(self):
@@ -362,6 +363,14 @@ class FSSInfo(SimpleItem):
     security.declarePrivate('setUID')
     def setUID(self, uid):
         self.uid = uid
+
+    security.declarePrivate('getVersion')
+    def getVersion(self):
+        return getattr(self, 'version', None)
+
+    security.declarePrivate('setVersion')
+    def setVersion(self, version):
+        self.version = version
 
     security.declarePrivate('getValue')
     def getValue(self, name, instance, path):
@@ -392,6 +401,7 @@ class FSSInfo(SimpleItem):
 
         props = {}
         props['uid'] = self.uid
+        props['version'] = self.getVersion()
         return props
 
     security.declarePrivate('getRDF')
@@ -455,12 +465,12 @@ class FSSFileInfo(FSSInfo):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, uid, title, size, mimetype):
-        self.update(uid, title, size, mimetype)
+    def __init__(self, uid, title, size, mimetype, version=None):
+        self.update(uid, title, size, mimetype, version)
 
     security.declarePrivate('update')
-    def update(self, uid, title, size, mimetype):
-        FSSInfo.update(self, uid)
+    def update(self, uid, title, size, mimetype, version=None):
+        FSSInfo.update(self, uid, version)
         self.title = title
         self.size = size
         self.mimetype = mimetype
@@ -525,12 +535,12 @@ class FSSImageInfo(FSSFileInfo):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, uid, title, size, mimetype, width, height):
-        self.update(uid, title, size, mimetype, width, height)
+    def __init__(self, uid, title, size, mimetype, width, height, version=None):
+        self.update(uid, title, size, mimetype, width, height, version)
 
     security.declarePrivate('update')
-    def update(self, uid, title, size, mimetype, width, height):
-        FSSFileInfo.update(self, uid, title, size, mimetype)
+    def update(self, uid, title, size, mimetype, width, height, version=None):
+        FSSFileInfo.update(self, uid, title, size, mimetype, version)
         self.width = width
         self.height = height
 
@@ -627,6 +637,8 @@ class FileSystemStorage(StorageLayer):
 
         # Check types
         uid = instance.UID()
+        version = kwargs.get('version',None)
+
         if isinstance(value, File) or isinstance(value, Image):
             size = value.get_size()
             mimetype = kwargs.get('mimetype', getattr(value, 'content_type', 'application/octet-stream'))
@@ -640,13 +652,14 @@ class FileSystemStorage(StorageLayer):
                     title = name
 
                 # Like Image field
-                info = FSSImageInfo(uid, title, size, mimetype, width, height)
+                info = FSSImageInfo(uid, title, size, mimetype, width, height,
+                                    version)
             else:
                 # Like File field
-                info = FSSFileInfo(uid, title, size, mimetype)
+                info = FSSFileInfo(uid, title, size, mimetype, version)
         else:
             # Other
-            info = FSSInfo(uid)
+            info = FSSInfo(uid, version)
 
         # Make sure, we have deleted old info
         if hasattr(aq_base(instance), info_varname):
@@ -756,8 +769,43 @@ class FileSystemStorage(StorageLayer):
             rdf_value = info.getRDFValue(name, instance, rdf_script)
             strategy.setRDFFile(rdf_value, **props)
 
+    security.declarePrivate('restoreValueFile')
+    def restoreValueFile(self, strategy, name, instance):
+        """ restore all versions """
+
+        to_restore = []
+        rtool = getToolByName(instance, 'portal_repository')
+        history = rtool.getHistory(instance, oldestFirst=True)
+
+        if (len(history)):
+            for version in history:
+                to_restore.append(version.object.__of__(instance.aq_parent))
+
+        to_restore.append(instance)
+
+        for obj in to_restore:
+            info = self.getFSSInfo(name, obj)
+            props = self.getStorageStrategyProperties(name, obj, info)
+            strategy.restoreValueFile(**props)
+
     security.declarePrivate('unset')
     def unset(self, name, instance, **kwargs):
+        """Delete all versions"""
+
+        to_unset = []
+        rtool = getToolByName(instance, 'portal_repository')
+        history = rtool.getHistory(instance, oldestFirst=True)
+
+        if (len(history)):
+            for version in history:
+                to_unset.append(version.object.__of__(instance.aq_parent))
+
+        to_unset.append(instance)
+
+        for obj in to_unset:
+            self.unsetVersion(name, obj, **kwargs)
+
+    def unsetVersion(self, name, instance, **kwargs):
         """Delete field value"""
 
         info = self.getFSSInfo(name, instance)
@@ -809,9 +857,7 @@ class FileSystemStorage(StorageLayer):
         if uid == src_uid:
             # Cut/Paste
             for name in names:
-                info = self.getFSSInfo(name, instance)
-                props = self.getStorageStrategyProperties(name, instance, info)
-                strategy.restoreValueFile(**props)
+                self.restoreValueFile(strategy, name, instance)
 
                 if is_rdf_enabled:
                     # Replace rdf file
