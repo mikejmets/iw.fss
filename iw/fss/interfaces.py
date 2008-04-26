@@ -19,22 +19,19 @@
 """
 Interfaces exposed here
 """
-__author__  = 'Gilles Lenfant <gilles.lenfant@ingeiweb.com>'
+__author__  = 'Gilles Lenfant <gilles.lenfant@ingeniweb.com>'
 __docformat__ = 'restructuredtext'
 
 from zope.interface import Interface
 
 class IFSSTool(Interface):
     """Marker for FSS tool"""
-
     pass
 
-class IConfiguration(Interface):
+class IConf(Interface):
     """Main configuration for fss"""
     def globalConfigInfo():
         """Get global Configuration"""
-        pass
-
     def initProperties():
         """Init properties"""
     def isRDFEnabled():

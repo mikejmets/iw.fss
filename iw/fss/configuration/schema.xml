@@ -107,4 +107,22 @@ $Id$
       /my/plone&gt;. Non existing plone sites are ignored.
     </description>
   </multisection>
+  
+  <key name="rdf-enabled"
+     datatype="boolean"
+     default="false"
+     required="no">
+  <metadefault>$INSTANCE_HOME/var/fss_files</metadefault>
+  <description>
+    Do we enabled rdf on this FSS
+  </description>
+
+  </key>
+  <key name="rdf-script"
+     datatype="existing-file"
+     required="no">
+  <description>
+		Script to add custom information to export
+  </description>
+  </key>
 </schema>

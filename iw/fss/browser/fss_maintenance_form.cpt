@@ -100,7 +100,7 @@
                  tabindex=""
                  type="submit"
                  value="Update"
-                 name="form.button.Update"
+                 name="UpdateFss:method"
                  i18n:attributes="value"
                  tal:attributes="tabindex tabindex/next;" />
         </div>
@@ -135,7 +135,7 @@
                  tabindex=""
                  type="submit"
                  value="Remove Backup"
-                 name="form.button.RemoveBackup"
+                 name="RemoveBackup:method"
                  i18n:attributes="value"
                  tal:attributes="tabindex tabindex/next;" />
         </div>
