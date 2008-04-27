@@ -75,7 +75,10 @@ BAD_CONFIG4 = """# No such strategy
 storage-strategy foo
 """
 
-_bad_configs = (BAD_CONFIG1, BAD_CONFIG2, BAD_CONFIG3, BAD_CONFIG4)
+BAD_CONFIG5 = """# site1 default strategy forbidden
+storage-strategy site1"""
+
+_bad_configs = (BAD_CONFIG1, BAD_CONFIG2, BAD_CONFIG3, BAD_CONFIG4, BAD_CONFIG5)
 
 
 class ConfigSchemaTest(unittest.TestCase):
