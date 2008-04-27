@@ -688,6 +688,7 @@ Credits
 * Main developer: `Cyrille Lebeaupin <mailto:cyrille.lebeaupin@ingeniweb.com>`_
 * ZConfig and ZCML support: `Gilles Lenfant <mailto:gilles.lenfant@ingeniweb.com>`_
 * HTTP "Range" support: `Youenn Boussard <mailto:youenn.boussard@ingeniweb.com>`_
+* tiny help : `Mehdi Benammar <mailto:mehdi.benammar@kitry.lu>`_
 
 See `locales/README.txt` about localization credits.
 

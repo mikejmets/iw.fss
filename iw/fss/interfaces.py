@@ -1,6 +1,5 @@
 ## -*- coding: utf-8 -*-
 ## Copyright (C) 2008 Ingeniweb
-
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -23,6 +22,11 @@ __author__  = 'Gilles Lenfant <gilles.lenfant@ingeniweb.com>'
 __docformat__ = 'restructuredtext'
 
 from zope.interface import Interface
+from zope.annotation.interfaces import IAttributeAnnotatable
+
+class IFSSInfo(IAttributeAnnotatable):
+    """Marker for FSSInfo"""
+    pass
 
 class IFSSTool(Interface):
     """Marker for FSS tool"""

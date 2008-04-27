@@ -90,4 +90,7 @@ $Id$
   			provides=".interfaces.IConf"
   			component=".conffile.ConfFile"
   			name="globalconf" />
+
+ <five:implements class=".FileSystemStorage.FSSInfo"
+                  interface=".interfaces.IFSSInfo" />
 </configure>

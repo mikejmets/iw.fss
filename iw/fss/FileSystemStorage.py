@@ -33,7 +33,9 @@ from AccessControl import ClassSecurityInfo
 from OFS.Image import File
 from OFS.SimpleItem import SimpleItem
 from ZPublisher.Iterators import filestream_iterator
+from zope.annotation.interfaces import IAttributeAnnotatable, IAnnotations
 from zope.component import getUtility
+
 #from Shared.DC.ZRDB.TM import TM
 
 # CMF imports
@@ -351,28 +353,36 @@ class FSSInfo(SimpleItem):
     security = ClassSecurityInfo()
 
     def __init__(self, uid, version=None):
+
         self.update(uid, version)
 
     security.declarePrivate('update')
     def update(self, uid, version=None):
-        self.uid = uid
-        self.version = version
+	annotations = IAnnotations(self)
+	annotations["iw.fss.fssinfo.uid"] = uid
+        annotations["iw.fss.fssinfo.version"] = version
 
     security.declarePrivate('getUID')
     def getUID(self):
-        return self.uid
+	annotations = IAnnotations(self)
+	return annotations["iw.fss.fssinfo.uid"]
+
 
     security.declarePrivate('setUID')
     def setUID(self, uid):
-        self.uid = uid
+	annotations = IAnnotations(self)
+	annotations["iw.fss.fssinfo.uid"] = uid
+
 
     security.declarePrivate('getVersion')
     def getVersion(self):
-        return getattr(self, 'version', None)
+        annotations = IAnnotations(self)
+        return annotations["iw.fss.fssinfo.version"]
 
     security.declarePrivate('setVersion')
     def setVersion(self, version):
-        self.version = version
+        annotations = IAnnotations(self)
+        annotations["iw.fss.fssinfo.version"]
 
     security.declarePrivate('getValue')
     def getValue(self, name, instance, path):
@@ -386,6 +396,9 @@ class FSSInfo(SimpleItem):
 
         @param name: name of the field
         @param instance: Content using this storage"""
+
+	annotations = IAnnotations(self)
+	annotations["iw.fss.fssinfo.props"] = props
 
         props = (
             {'id': 'dc:title', 'value': instance.title_or_id()},
@@ -402,7 +415,9 @@ class FSSInfo(SimpleItem):
         """Returns info attributes in a dictionnary"""
 
         props = {}
-        props['uid'] = self.uid
+#        annotations = IAnnotations(self)
+#        annotations
+        props['uid'] = self.getUID()
         props['version'] = self.getVersion()
         return props
 

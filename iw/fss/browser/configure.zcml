@@ -42,4 +42,9 @@ $Id$
     permission="cmf.ManagePortal" 
     allowed_attributes="updateFSS removeBackups"/>
 
+  <browser:resource
+    name="fss_tool.gif"
+    image="fss_tool.gif" />
+   
+
 </configure>
