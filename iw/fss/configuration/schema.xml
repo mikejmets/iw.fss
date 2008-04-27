@@ -60,7 +60,7 @@ $Id$
 	 default="flat">
       <description>
 	Storage strategy: 'flat', 'directory', 'site1' or 'site2',
-	default is 'flat'. See README.txt about strategies.
+	default is 'directory'. See README.txt about strategies.
       </description>
     </key>
   </sectiontype>
@@ -89,12 +89,12 @@ $Id$
   </key>
 
   <key name="storage-strategy"
-       datatype="strategy"
+       datatype="default-strategy"
        required="no"
        default="flat">
     <description>
-      Storage strategy: 'flat', 'directory', 'site1' or 'site2',
-      default is 'flat'. See README.txt about strategies.
+      Storage strategy: 'flat' or 'directory' default is 'flat'. See
+      README.txt about strategies.
     </description>
   </key>
 

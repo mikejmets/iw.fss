@@ -75,6 +75,19 @@ def _existingPath(value, default):
     return value
 
 
+def default_strategy(value):
+    """Validating/converting a default storage strategy
+    @param value: as sent from ZConfig
+    @return: valid strategy name
+    """
+
+    possible_values = ('flat', 'directory')
+    value = str(value).lower()
+    if value not in possible_values:
+        raise ValueError("'%s' is not a valid storage strategy" % value)
+    return value
+
+
 def strategy(value):
     """Validating/converting a storage strategy
     @param value: as sent from ZConfig
