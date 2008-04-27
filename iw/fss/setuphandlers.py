@@ -20,6 +20,21 @@ from Products.CMFCore.utils import getToolByName
 from iw.fss.modifier import MODIFIER_ID
 from iw.fss.modifier import manage_addModifier
 
+def thisProfileOnly(func):
+    """Decorator that prevents the setup func to be used on other GS profiles.
+    Usage:
+    @thisProfileOnly
+    def someFunc(context): ...
+    """
+
+    def wrapper(context):
+        if context.readDataFile('iw.fss.txt') is None:
+            return
+        else:
+            return func(context)
+    return wrapper
+
+@thisProfileOnly
 def setupVarious(context):
     """Put here various stuff that cannot be installed with generic setup"""
 

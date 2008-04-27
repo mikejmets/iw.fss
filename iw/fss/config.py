@@ -77,7 +77,6 @@ def loadConfig():
     return
 
 loadConfig()
-del loadConfig
 
 # Configlets
 fss_prefs_configlet = {

@@ -154,6 +154,41 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         self.updateContent(content, 'image', IMAGE_PATH)
         return content
 
+    ## ATContentTypes based testcases
+
+    def addATFileByString(self, folder, content_id):
+        """Adds a file by string.
+        """
+
+        folder.invokeFactory('ATFSSItem', id=content_id)
+        content = getattr(folder, content_id)
+        commit_transaction()
+        kw = {'file' : CONTENT_TXT}
+        content.edit(**kw)
+        return content
+
+    def addATFileByFileUpload(self, folder, content_id):
+        """Adds a file by file upload.
+        """
+
+        folder.invokeFactory('ATFSSItem', id=content_id)
+        content = getattr(folder, content_id)
+        commit_transaction()
+        self.updateContent(content, 'file', CONTENT_PATH)
+        return content
+
+    def addATImageByFileUpload(self, folder, content_id):
+        """
+        Adding image
+        """
+        folder.invokeFactory('ATFSSItem', id=content_id)
+        content = getattr(folder, content_id)
+        commit_transaction()
+        self.updateContent(content, 'image', IMAGE_PATH)
+        return content
+
+    # Update content for any type
+
     def updateContent(self, content, field, filepath):
         """Updates a field content for a file.
         """
