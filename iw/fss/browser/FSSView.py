@@ -26,7 +26,6 @@ class FSSView(BrowserView):
         super(FSSView, self).__init__(context, request)
         conf_class = getUtility(IConf, "globalconf")
         self.conf = conf_class()
-        self.stats = self.conf.getFSStats()
          
     def mytry(self):
         return "OK"
