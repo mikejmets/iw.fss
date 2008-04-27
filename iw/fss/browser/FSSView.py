@@ -26,6 +26,7 @@ class FSSView(BrowserView):
         super(FSSView, self).__init__(context, request)
         conf_class = getUtility(IConf, "globalconf")
         self.conf = conf_class()
+        self.getFSStats()
          
     def mytry(self):
         return "OK"
@@ -60,7 +61,7 @@ class FSSView(BrowserView):
     def backup_path(self):
         return self.conf.globalConfigInfo()['backup_path']
     
-    def stats(self):
+    def getFSStats(self):
         """
         Returns stats on FileSystem storage
         valid_files_count -> Count of valid files
@@ -98,7 +99,7 @@ class FSSView(BrowserView):
             smallest_size = valid_files[0]['size']
             average_size = int(total_size / len(valid_files))
 
-        stats = {
+        self.stats = {
           'valid_files_count' : len(valid_files),
           'not_valid_files_count' : len(not_valid_files),
           'valid_backups_count' : len(valid_backups),
@@ -107,9 +108,7 @@ class FSSView(BrowserView):
           'largest_size': largest_size,
           'smallest_size' : smallest_size,
           'average_size' : average_size,
-          }
-
-        return stats    
+          }    
 
     @postonly
     def updateFSS(self, REQUEST):
