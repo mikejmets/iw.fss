@@ -30,17 +30,11 @@ import time
 import Globals
 
 # Zope imports
-from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
-from AccessControl import Permissions as zope_permissions
-from OFS.SimpleItem import SimpleItem
-from OFS.PropertyManager import PropertyManager
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
 #getSite return the context-dependent plone site
 from zope.app.component.hooks import getSite
 # CMF imports
-from Products.CMFCore.utils import UniqueObject, getToolByName
+from Products.CMFCore.utils import getToolByName
 
 # Products imports
 from FileUtils import rm_file
@@ -51,7 +45,6 @@ from iw.fss.utils import patchedTypesRegistry
 from iw.fss.config import ZCONFIG, CONFIG_FILE
 from iw.fss import strategy as fss_strategy
 from iw.fss.interfaces import IConf
-_zmi = os.path.join(os.path.dirname(__file__), 'zmi')
 
 # {storage-strategy (from config file): strategy class, ...}
 _strategy_map = {
@@ -98,7 +91,6 @@ class ConfFile(object):
 
         self.rdf_script = rdf_script
 
-
     def getStorageStrategy(self):
         """Returns the storage strategy"""
 
@@ -110,8 +102,6 @@ class ConfFile(object):
             ZCONFIG.storagePathForSite(portal_path),
             ZCONFIG.backupPathForSite(portal_path))
 
-
-
     def getUIDToPathDictionnary(self):
         """Returns a dictionnary
 
@@ -121,7 +111,6 @@ class ConfFile(object):
         ctool = getToolByName(getSite(), 'uid_catalog')
         brains = ctool(REQUEST={})
         return dict([(x['UID'], x.getPath()) for x in brains])
-
     
     def getPathToUIDDictionnary(self):
         """Returns a dictionnary
@@ -132,7 +121,6 @@ class ConfFile(object):
         ctool = getToolByName(getSite(), 'uid_catalog')
         brains = ctool(REQUEST={})
         return dict([(x.getPath(), x['UID']) for x in brains])
-
 
     def getFSSBrains(self, items):
         """Returns a dictionnary.
@@ -163,7 +151,6 @@ class ConfFile(object):
 
         return items
 
-
     def getStorageBrains(self):
         """Returns a list of brains in storage path"""
 
@@ -176,7 +163,6 @@ class ConfFile(object):
         on filesystem of object having the specified uid"""
 
         return [x for x in self.getStorageBrains() if x['uid'] == uid]
-
  
     def getBackupBrains(self):
         """Returns a list of brains in backup path"""
@@ -184,7 +170,6 @@ class ConfFile(object):
         strategy = self.getStorageStrategy()
         items = strategy.walkOnBackupDirectory()
         return self.getFSSBrains(items)
-
 
     def updateFSS(self):
         """
@@ -205,7 +190,6 @@ class ConfFile(object):
         # Move not valid backups in file storage
         for item in not_valid_backups:
             strategy.restoreValueFile(**item)
-
 
     def removeBackups(self, max_days):
         """
@@ -269,61 +253,7 @@ class ConfFile(object):
 
         return getFieldValue(instance, name)
 
-    ###
-    ## ZMI/PMI helpers (making a Zope 3 style view would be overkill)
-    ###
-
-
-    def getFSStats(self):
-        """
-        Returns stats on FileSystem storage
-        valid_files_count -> Count of valid files
-        not_valid_files_count -> Count of not valid files
-        valid_backups_count -> Count of valid backups
-        not_valid_backups_count -> Count of not valid backups
-        """
-
-        storage_brains = self.getStorageBrains()
-        backup_brains = self.getBackupBrains()
-
-        valid_files = [x for x in storage_brains if x['path'] is not None]
-        not_valid_files = [x for x in storage_brains if x['path'] is None]
-        valid_backups = [x for x in backup_brains if x['path'] is None]
-        not_valid_backups = [x for x in backup_brains if x['path'] is not None]
-
-
-        # Sort valid files by size
-        def cmp_size(a, b):
-              return cmp(a['size'], b['size'])
-
-        valid_files.sort(cmp_size)
-
-        # Size in octets
-        total_size = 0
-        largest_size = 0
-        smallest_size = 0
-        average_size = 0
-
-        for x in valid_files:
-            total_size += x['size']
-
-        if len(valid_files) > 0:
-            largest_size = valid_files[-1]['size']
-            smallest_size = valid_files[0]['size']
-            average_size = int(total_size / len(valid_files))
-
-        stats = {
-          'valid_files_count' : len(valid_files),
-          'not_valid_files_count' : len(not_valid_files),
-          'valid_backups_count' : len(valid_backups),
-          'not_valid_backups_count' : len(not_valid_backups),
-          'total_size' : total_size,
-          'largest_size': largest_size,
-          'smallest_size' : smallest_size,
-          'average_size' : average_size,
-          }
-
-        return stats
+ 
 
     def patchedTypesInfo(self):
         """A TALES friendly summary of content types with storage changed to FSS"""
@@ -357,7 +287,6 @@ class ConfFile(object):
             'storage_path': ZCONFIG.storagePathForSite('/'),
             'backup_path': ZCONFIG.backupPathForSite('/')
             }
-
 
     def formattedReadme(self):
         """README.txt (reStructuredText) transformed to HTML"""

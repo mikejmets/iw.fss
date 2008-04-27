@@ -62,7 +62,55 @@ class FSSView(BrowserView):
         return self.conf.globalConfigInfo()['backup_path']
     
     def stats(self):
-        return self.stats    
+        """
+        Returns stats on FileSystem storage
+        valid_files_count -> Count of valid files
+        not_valid_files_count -> Count of not valid files
+        valid_backups_count -> Count of valid backups
+        not_valid_backups_count -> Count of not valid backups
+        """
+
+        storage_brains = self.conf.getStorageBrains()
+        backup_brains = self.conf.getBackupBrains()
+
+        valid_files = [x for x in storage_brains if x['path'] is not None]
+        not_valid_files = [x for x in storage_brains if x['path'] is None]
+        valid_backups = [x for x in backup_brains if x['path'] is None]
+        not_valid_backups = [x for x in backup_brains if x['path'] is not None]
+
+
+        # Sort valid files by size
+        def cmp_size(a, b):
+              return cmp(a['size'], b['size'])
+
+        valid_files.sort(cmp_size)
+
+        # Size in octets
+        total_size = 0
+        largest_size = 0
+        smallest_size = 0
+        average_size = 0
+
+        for x in valid_files:
+            total_size += x['size']
+
+        if len(valid_files) > 0:
+            largest_size = valid_files[-1]['size']
+            smallest_size = valid_files[0]['size']
+            average_size = int(total_size / len(valid_files))
+
+        stats = {
+          'valid_files_count' : len(valid_files),
+          'not_valid_files_count' : len(not_valid_files),
+          'valid_backups_count' : len(valid_backups),
+          'not_valid_backups_count' : len(not_valid_backups),
+          'total_size' : total_size,
+          'largest_size': largest_size,
+          'smallest_size' : smallest_size,
+          'average_size' : average_size,
+          }
+
+        return stats    
 
     @postonly
     def updateFSS(self, REQUEST):
