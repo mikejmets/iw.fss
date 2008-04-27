@@ -17,7 +17,7 @@
 
 # $Id$
 
-""""Defines a test class and its Plone Site layer for plone tests"""
+"""Defines a test class and its Plone Site layer for plone tests"""
 
 import os
 
@@ -71,8 +71,7 @@ class TestCase(ptc.FunctionalTestCase):
         @classmethod
         def setUp(cls):
             fiveconfigure.debug_mode = True
-            zcml.load_config('configure.zcml',
-                             iw.fss)
+            zcml.load_config('configure.zcml', iw.fss)
             fiveconfigure.debug_mode = False
             cls._old = MailHost.MailHost
             MailHost.MailHost = TestMailHost
