@@ -20,7 +20,7 @@ This module contains the tool of iw.fss
 import os
 from setuptools import setup, find_packages
 
-version = '2.7.1'
+version = '2.7.3'
 
 README = os.path.join(os.path.dirname(__file__),
                       'iw', 'fss', 'README.txt')
