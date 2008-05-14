@@ -586,7 +586,7 @@ class FSSImageInfo(FSSFileInfo):
         return VirtualImage(name, instance, path, self.title, self.mimetype, self.size, self.width, self.height)
 
     security.declarePrivate('getProperties')
-    def getProperties(self):
+    def getProperties(self, instance):
         """Returns info attributes in a dictionnary"""
 
         props = FSSFileInfo.getProperties(self, instance)
