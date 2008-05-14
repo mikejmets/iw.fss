@@ -473,6 +473,26 @@ class TestFSS(FSSTestCase.FSSTestCase):
         self.failIf(hasattr(self.test_folder, content_id))
         self.logout()
 
+    def testStorageWhenDeleteContent(self):
+        from FSSTestCase import STORAGE_PATH
+
+        self.loginAsPortalOwner()
+        
+        # Create file
+        content_id = 'test_file'
+        self.file_content = self.addFileByFileUpload(self.test_folder, content_id)
+        
+        # One item in storage path
+        self.failUnless(len(os.listdir(STORAGE_PATH))==1)
+        
+        # Delete file
+        self.test_folder.manage_delObjects(ids=[content_id])
+        
+        # Zero items in storage path
+        self.failUnless(len(os.listdir(STORAGE_PATH))==0)
+
+        self.logout()
+
 # #############################################################################
 # FIELD OPERATIONS
 # #############################################################################
