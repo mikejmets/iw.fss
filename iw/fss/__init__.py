@@ -41,7 +41,7 @@ def initialize(context):
 
     if install_types:
         # Import example types
-        from iw.fss.examples import FSSItem
+        from iw.fss import examples
         content_types, constructors, ftis = process_types(listTypes(PROJECTNAME),
                                                           PROJECTNAME)
         ContentInit('%s Content' % PROJECTNAME,

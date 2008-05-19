@@ -41,6 +41,9 @@ os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
 # Make the test fixture extension profile active
 classImplements(PloneSite, ITestCasePloneSiteRoot)
 
+STORAGE_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'unittests_storage')
+BACKUP_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'unittests_backup')
+
 @onsetup
 def setup_fss():
     """Set up the additional products required for fss.
@@ -75,6 +78,19 @@ class TestCase(ptc.FunctionalTestCase):
             fiveconfigure.debug_mode = False
             cls._old = MailHost.MailHost
             MailHost.MailHost = TestMailHost
+            
+        def createTemporaryDirs(self):
+            # Create temporary dirs to run test cases
+            for base_path in (STORAGE_PATH, BACKUP_PATH):
+                if not os.path.exists(base_path):
+                    os.mkdir(base_path)
+
+        def removeTemporaryDirs(self):
+            # removes previoulys created dirs
+            import shutil
+            shutil.rmtree(STORAGE_PATH)
+            shutil.rmtree(BACKUP_PATH)
+            return            
 
         @classmethod
         def tearDown(cls):

@@ -162,7 +162,7 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
 
         folder.invokeFactory('ATFSSItem', id=content_id)
         content = getattr(folder, content_id)
-        commit_transaction()
+        transaction.savepoint(optimistic=True)
         kw = {'file' : CONTENT_TXT}
         content.edit(**kw)
         return content
@@ -173,7 +173,7 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
 
         folder.invokeFactory('ATFSSItem', id=content_id)
         content = getattr(folder, content_id)
-        commit_transaction()
+        transaction.savepoint(optimistic=True)
         self.updateContent(content, 'file', CONTENT_PATH)
         return content
 
@@ -183,7 +183,7 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         """
         folder.invokeFactory('ATFSSItem', id=content_id)
         content = getattr(folder, content_id)
-        commit_transaction()
+        transaction.savepoint(optimistic=True)
         self.updateContent(content, 'image', IMAGE_PATH)
         return content
 

@@ -11,8 +11,6 @@ the box with FileSystemStorage.
 Create a dummy content::
 
     >>> self.setRoles(('Manager',))
-    >>> install_log = self.portal.portal_quickinstaller.installProduct(
-    ...     'iw.fss')
     >>> self.portal.invokeFactory(type_name='FSSItem', id="dummy", title="Foo title", text="Foo text")
     'dummy'
     >>> dummy_content = self.portal['dummy']

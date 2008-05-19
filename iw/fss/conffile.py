@@ -37,11 +37,12 @@ from zope.app.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 
 # Products imports
+from utils import rm_file
 from iw.fss.utils import rm_file
 from iw.fss.FileSystemStorage import FileSystemStorage
 from iw.fss.utils import getFieldValue
 from iw.fss.utils import FSSMessageFactory as _
-from iw.fss.utils import patchedTypesRegistry
+from iw.fss.zcml import patchedTypesRegistry
 from iw.fss.config import ZCONFIG, CONFIG_FILE
 from iw.fss import strategy as fss_strategy
 from iw.fss.interfaces import IConf

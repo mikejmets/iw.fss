@@ -12,7 +12,7 @@ Features
 
 * Include migration script "Original storage -> FSS". See ATCT2FSS in
   the collective reposo. https://svn.plone.org/svn/collective/ATCT2FSS/
-  Note that the migration script may use the utils.patchedTypesRegistry.
+  Note that the migration script may use the zcml.patchedTypesRegistry.
 
 * Include migration script "FSS -> original storage" to provide iw.fss
   removal support.

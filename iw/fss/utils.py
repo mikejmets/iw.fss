@@ -23,14 +23,13 @@ __docformat__ = 'restructuredtext'
 
 import os
 import types
-import logging
 
 from AccessControl import ModuleSecurityInfo
 from zope.i18nmessageid import MessageFactory
 
 # Archetypes imports
 from Products.Archetypes.Field import ImageField
-from FileSystemStorage import FileSystemStorage
+#from FileSystemStorage import FileSystemStorage
 
 import config
 
@@ -65,29 +64,6 @@ def getFieldValue(self, name):
 
     return accessor()
 
-logger = logging.getLogger(config.PROJECTNAME)
-LOG = logger.info
-
-def patchATType(class_, fields):
-    """Processing the type patch"""
-    global patchedTypesRegistry
-
-    for fieldname in fields:
-        field = class_.schema[fieldname]
-        former_storage = field.storage
-        field.storage = FileSystemStorage()
-        field.registerLayer('storage', field.storage)
-        if patchedTypesRegistry.has_key(class_):
-            patchedTypesRegistry[class_][fieldname] = former_storage
-        else:
-            patchedTypesRegistry[class_] = {fieldname: former_storage}
-        LOG("Field '%s' of %s is stored in file system.", fieldname, class_.meta_type)
-    return
-
-# We register here the types that have been patched for migration purpose
-patchedTypesRegistry = {
-    # {content class : {field name: storage, ...}, ...}
-    }
 
 FSSMessageFactory = MessageFactory(config.I18N_DOMAIN)
 ModuleSecurityInfo('iw.fss.utils').declarePublic('FSSMessageFactory')

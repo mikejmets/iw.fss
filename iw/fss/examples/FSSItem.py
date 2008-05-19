@@ -39,6 +39,7 @@ from Products.ATContentTypes.content.base import ATCTContent
 from Products.ATContentTypes.content.base import ATContentTypeSchema
 
 # Products imports
+from iw.fss.config import PROJECTNAME
 from iw.fss.FileSystemStorage import FileSystemStorage
 
 BaseItemShema = Schema((
@@ -76,7 +77,7 @@ class FSSItem(BaseContent):
     _at_rename_after_creation = True
 
 
-registerType(FSSItem)
+registerType(FSSItem, PROJECTNAME)
 
 class ATFSSItem(ATCTContent):
     """A simple item using FileSystemStorage base on ATContentypes"""
@@ -85,4 +86,4 @@ class ATFSSItem(ATCTContent):
     _at_rename_after_creation = True
 
 
-registerType(ATFSSItem)
+registerType(ATFSSItem, PROJECTNAME)

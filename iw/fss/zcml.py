@@ -22,10 +22,12 @@ ZCML fss namespace handling, see meta.zcml
 __author__  = 'glenfant <gilles.lenfant@ingeniweb.com>'
 __docformat__ = 'restructuredtext'
 
+import logging
 from zope.interface import Interface
 from zope.configuration.fields import GlobalObject, Tokens, PythonIdentifier
-from utils import patchATType
 
+import config
+from FileSystemStorage import FileSystemStorage
 
 class ITypeWithFSSDirective(Interface):
     """Schema for fss:typeWithFSS directive"""
@@ -52,3 +54,26 @@ def typeWithFSS(_context, class_, fields):
         )
 
 
+logger = logging.getLogger(config.PROJECTNAME)
+LOG = logger.info
+
+def patchATType(class_, fields):
+    """Processing the type patch"""
+    global patchedTypesRegistry
+
+    for fieldname in fields:
+        field = class_.schema[fieldname]
+        former_storage = field.storage
+        field.storage = FileSystemStorage()
+        field.registerLayer('storage', field.storage)
+        if patchedTypesRegistry.has_key(class_):
+            patchedTypesRegistry[class_][fieldname] = former_storage
+        else:
+            patchedTypesRegistry[class_] = {fieldname: former_storage}
+        LOG("Field '%s' of %s is stored in file system.", fieldname, class_.meta_type)
+    return
+
+# We register here the types that have been patched for migration purpose
+patchedTypesRegistry = {
+    # {content class : {field name: storage, ...}, ...}
+    }

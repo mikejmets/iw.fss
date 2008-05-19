@@ -19,4 +19,4 @@ FileSystemStorage examples package
 $Id$
 """
 
-import FSSItem
+from FSSItem import FSSItem, ATFSSItem

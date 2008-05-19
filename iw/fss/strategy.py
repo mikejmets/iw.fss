@@ -562,7 +562,7 @@ class SiteStorageStrategy(DirectoryStorageStrategy):
             filename = kwargs['name']
 
         if kwargs.get('version', None) is not None:
-            filename += '.'+ kwargs['version']
+            filename = '%s.%s' % (filename, kwargs['version'])
 
         # Maybe filename of field is the same than rdf filename
         rdf_filename = self.getRDFFilename(**kwargs)
@@ -845,7 +845,7 @@ class SiteStorageStrategy2(DirectoryStorageStrategy):
             filename = name
 
         if kwargs.get('version', None) is not None:
-            filename += '.'+ kwargs['version']
+            filename = '%s.%s' % (filename, kwargs['version'])
 
         # Filename is unique because path has not been created
         if not os.path.exists(path):
