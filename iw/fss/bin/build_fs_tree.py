@@ -54,7 +54,7 @@ def build_fs_tree(src_path, dst_path, lib_path):
 # Rdf imports
     sys.path.append(lib_path)
     from rdf import RDFReader
-    from FileUtils import copy_file
+    from utils import copy_file
 
     print "Build filesystem data in %s from %s" % (src_path, dst_path)
     sys_encoding = sys.getfilesystemencoding()

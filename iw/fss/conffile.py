@@ -37,7 +37,7 @@ from zope.app.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 
 # Products imports
-from FileUtils import rm_file
+from iw.fss.utils import rm_file
 from iw.fss.FileSystemStorage import FileSystemStorage
 from iw.fss.utils import getFieldValue
 from iw.fss.utils import FSSMessageFactory as _
@@ -53,6 +53,7 @@ _strategy_map = {
     'site1': fss_strategy.SiteStorageStrategy,
     'site2': fss_strategy.SiteStorageStrategy2
     }
+
 
 class ConfFile(object):
     """Tool for FileSystem storage"""
@@ -76,20 +77,20 @@ class ConfFile(object):
     def enableRDF(self, enabled):
         """Enable rdf or not"""
 
-        if enabled:
-            self.rdf_enabled = True
-        else:
-            self.rdf_enabled = False
+        self.rdf_enabled = bool(enabled)
+
 
     def getRDFScript(self):
         """Returns rdf script used to generate RDF on files"""
 
         return self.rdf_script
 
+
     def setRDFScript(self, rdf_script):
         """Set rdf script used to generate RDF on files"""
 
         self.rdf_script = rdf_script
+
 
     def getStorageStrategy(self):
         """Returns the storage strategy"""
@@ -102,6 +103,7 @@ class ConfFile(object):
             ZCONFIG.storagePathForSite(portal_path),
             ZCONFIG.backupPathForSite(portal_path))
 
+
     def getUIDToPathDictionnary(self):
         """Returns a dictionnary
 
@@ -111,7 +113,8 @@ class ConfFile(object):
         ctool = getToolByName(getSite(), 'uid_catalog')
         brains = ctool(REQUEST={})
         return dict([(x['UID'], x.getPath()) for x in brains])
-    
+
+
     def getPathToUIDDictionnary(self):
         """Returns a dictionnary
 
@@ -121,6 +124,7 @@ class ConfFile(object):
         ctool = getToolByName(getSite(), 'uid_catalog')
         brains = ctool(REQUEST={})
         return dict([(x.getPath(), x['UID']) for x in brains])
+
 
     def getFSSBrains(self, items):
         """Returns a dictionnary.
@@ -151,6 +155,7 @@ class ConfFile(object):
 
         return items
 
+
     def getStorageBrains(self):
         """Returns a list of brains in storage path"""
 
@@ -158,18 +163,21 @@ class ConfFile(object):
         items = strategy.walkOnStorageDirectory()
         return self.getFSSBrains(items)
 
+
     def getStorageBrainsByUID(self, uid):
         """ Returns a list containing all brains related to fields stored
         on filesystem of object having the specified uid"""
 
         return [x for x in self.getStorageBrains() if x['uid'] == uid]
- 
+
+
     def getBackupBrains(self):
         """Returns a list of brains in backup path"""
 
         strategy = self.getStorageStrategy()
         items = strategy.walkOnBackupDirectory()
         return self.getFSSBrains(items)
+
 
     def updateFSS(self):
         """
@@ -191,6 +199,7 @@ class ConfFile(object):
         for item in not_valid_backups:
             strategy.restoreValueFile(**item)
 
+
     def removeBackups(self, max_days):
         """
         Remove backups older than specified days
@@ -208,6 +217,7 @@ class ConfFile(object):
 
             if days >= max_days:
                 rm_file(item['fs_path'])
+
 
     def updateRDF(self):
         """Add RDF files to fss files"""
@@ -243,6 +253,7 @@ class ConfFile(object):
             rdf_value = info.getRDFValue(name, instance, rdf_script=rdf_script)
             strategy.setRDFFile(rdf_value, uid=item['uid'], name=name)
 
+
     def getFSSItem(self, instance, name):
         """Get value of fss item.
         This method is called from fss_get script.
@@ -253,7 +264,6 @@ class ConfFile(object):
 
         return getFieldValue(instance, name)
 
- 
 
     def patchedTypesInfo(self):
         """A TALES friendly summary of content types with storage changed to FSS"""
@@ -265,6 +275,7 @@ class ConfFile(object):
                                  for fn, st in fields_to_storages.items()]
             out.append(feature)
         return out
+
 
     def siteConfigInfo(self):
         """A TALES friendly configuration info mapping for this Plone site"""
@@ -278,6 +289,7 @@ class ConfFile(object):
             'backup_path': ZCONFIG.backupPathForSite(portal_path)
             }
 
+
     def globalConfigInfo(self):
         """A TALES friendly configuration info mapping for global configuration"""
 
@@ -288,6 +300,7 @@ class ConfFile(object):
             'backup_path': ZCONFIG.backupPathForSite('/')
             }
 
+
     def formattedReadme(self):
         """README.txt (reStructuredText) transformed to HTML"""
 
@@ -295,4 +308,4 @@ class ConfFile(object):
         readme_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.txt')
         return HTML(file(readme_path).read(), report_level=100) # No errors/warnings -> faster
 
- 
+

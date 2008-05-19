@@ -31,8 +31,7 @@ from ConfigParser import RawConfigParser
 from DateTime import DateTime
 
 # Other imports
-from FileUtils import copy_file, move_file, rm_file
-
+from iw.fss.utils import copy_file, move_file, rm_file
 
 class BaseStorageStrategy:
     """Strategy of how field values are stored on filesystem"""

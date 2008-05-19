@@ -26,7 +26,9 @@ $Id$
 	   xmlns:i18n="http://namespaces.zope.org/i18n"
 	   xmlns:cmf="http://namespaces.zope.org/cmf"
 	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
+
   <include package=".browser" />
+
   <gs:registerProfile
      name="iw.fss.core"
      title="iw.fss (FileSystemStorage)"
@@ -87,9 +89,9 @@ $Id$
 
   -->
   <utility
-  			provides=".interfaces.IConf"
-  			component=".conffile.ConfFile"
-  			name="globalconf" />
+     provides=".interfaces.IConf"
+     component=".conffile.ConfFile"
+     name="globalconf" />
 
  <five:implements class=".FileSystemStorage.FSSInfo"
                   interface=".interfaces.IFSSInfo" />

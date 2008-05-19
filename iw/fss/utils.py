@@ -21,6 +21,8 @@ $Id$
 __author__  = ''
 __docformat__ = 'restructuredtext'
 
+import os
+import types
 import logging
 
 from AccessControl import ModuleSecurityInfo
@@ -89,3 +91,79 @@ patchedTypesRegistry = {
 
 FSSMessageFactory = MessageFactory(config.I18N_DOMAIN)
 ModuleSecurityInfo('iw.fss.utils').declarePublic('FSSMessageFactory')
+
+###
+## File management utilities
+###
+
+def rm_file(path):
+    """
+    Delete file from a path
+    """
+
+    os.remove(path)
+
+def move_file(infile, outfile):
+    """
+    Move file to another place
+    """
+
+    if infile == outfile:
+        # SiteStorageStrategy can send equals infile and outfile
+        return
+
+    if os.path.exists(outfile) and infile != outfile:
+        os.remove(outfile)
+
+    os.rename(infile, outfile)
+
+
+def copy_file(infile, outfile):
+    """
+
+    Read binary data from infile and write it to outfile. infile and
+    outfile my be strings, in which case a file with that name is
+    opened, or filehandles, in which case they are accessed directly.
+
+    """
+
+    if type(infile) is types.StringType:
+        instream = open(infile, 'rb')
+        close_in = 1
+    else:
+        close_in = 0
+        instream = infile
+
+    if type(outfile) is types.StringType:
+        outstream = open(outfile, 'wb')
+        close_out = 1
+    else:
+        close_out = 0
+        outstream = outfile
+    try:
+        blocksize = 2<<16
+        block = instream.read(blocksize)
+        outstream.write(block)
+        while len(block)==blocksize:
+            block = instream.read(blocksize)
+            outstream.write(block)
+        instream.seek(0)
+    finally:
+        if close_in: instream.close()
+        if close_out: outstream.close()
+
+def create_file(contents_file, target_filepath):
+    """
+    Creates a physical file on the filesystem at target_filepath.  If
+    contents_file is not None, it points to a file whose contents will
+    be copied into the target file.  Otherwise, a zero length file
+    will be created.  This method will raise an exception if there are
+    any problems writing to the target file (or reading
+    contents_file).
+    """
+
+    if contents_file:
+        copy_file(contents_file, target_filepath)
+    else:
+        touchfile = open(target_filepath, 'wb') # create zero-length file
+        touchfile.close()
