@@ -22,10 +22,11 @@ $Id$
 	   xmlns:gs="http://namespaces.zope.org/genericsetup"
 	   xmlns:browser="http://namespaces.zope.org/browser"
 	   xmlns:zcml="http://namespaces.zope.org/zcml"
-           xmlns:five="http://namespaces.zope.org/five"
+       xmlns:five="http://namespaces.zope.org/five"
 	   xmlns:i18n="http://namespaces.zope.org/i18n"
 	   xmlns:cmf="http://namespaces.zope.org/cmf"
-	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
+	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage"
+	   i18n_domain="iw.fss">
 
   <include package=".browser" />
 

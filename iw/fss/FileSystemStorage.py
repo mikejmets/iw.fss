@@ -33,7 +33,6 @@ from AccessControl import ClassSecurityInfo
 from OFS.Image import File
 from OFS.SimpleItem import SimpleItem
 from ZPublisher.Iterators import filestream_iterator
-from zope.annotation.interfaces import IAttributeAnnotatable, IAnnotations
 from zope.component import getUtility
 
 #from Shared.DC.ZRDB.TM import TM
@@ -97,8 +96,7 @@ class range_filestream_iterator(file):
         file.__init__(self, name, mode, bufsize)
         self.seek(start, 0)
         self.streamsize = streamsize
-
-
+    
     def next(self):
         """
         raise a stopIteration if read bytes is upper than end value specified
@@ -122,9 +120,7 @@ class range_filestream_iterator(file):
             if not data:
                 raise StopIteration
             return data
-
-
-
+    
     def __len__(self):
         """
         return len of the file
@@ -354,36 +350,32 @@ class FSSInfo(SimpleItem):
 
     security.declarePrivate('update')
     def update(self, uid, version=None):
-        # C'est jolie les annotations, mais ici c'est quoi le but ??!
-        annotations = IAnnotations(self)
-        annotations["iw.fss.fssinfo.uid"] = uid
-        annotations["iw.fss.fssinfo.version"] = version
-
-    security.declarePrivate('updateFromInstance')
-    def updateFromInstance(self, instance):
-        FSSInfo.update(self,
-                       instance.UID(),
-                       getattr(instance, 'version_id', None))
+        self.uid = uid
+        self.version = version
 
     security.declarePrivate('getUID')
     def getUID(self):
-        annotations = IAnnotations(self)
-        return annotations.get("iw.fss.fssinfo.uid")
+        return self.uid
 
     security.declarePrivate('setUID')
     def setUID(self, uid):
-        annotations = IAnnotations(self)
-        annotations["iw.fss.fssinfo.uid"] = uid
+        self.uid = uid
 
     security.declarePrivate('getVersion')
     def getVersion(self):
-        annotations = IAnnotations(self)
-        return annotations.get("iw.fss.fssinfo.version", None)
+        return getattr(self, 'version', None)
 
     security.declarePrivate('setVersion')
     def setVersion(self, version):
-        annotations = IAnnotations(self)
-        annotations["iw.fss.fssinfo.version"] = version
+        self.version = version
+        
+    security.declarePrivate('getProperties')
+    def getProperties(self):
+        """Returns info attributes in a dictionnary"""
+        props = {}
+        props['uid'] = self.uid
+        props['version'] = self.getVersion()
+        return props        
 
     security.declarePrivate('getValue')
     def getValue(self, name, instance, path):
@@ -405,22 +397,8 @@ class FSSInfo(SimpleItem):
             {'id': 'dc:creator', 'value': instance.Creator()},
             {'id': 'dc:date', 'value': instance.modified()},
             {'id': 'dc:format', 'value': getattr(self, 'mimetype', 'text/plain')},
-        )
-        # Ca sert a quoi ???
-        annotations = IAnnotations(self)
-        annotations["iw.fss.fssinfo.props"] = props
+            )
         return props
-
-    security.declarePrivate('getProperties')
-    def getProperties(self, instance):
-        """Returns info attributes in a dictionnary"""
-
-        if self.getUID() is None:
-            self.updateFromInstance(instance)
-        return {
-            'uid': self.getUID(),
-            'version': self.getVersion()
-        }
 
     security.declarePrivate('getRDF')
     def getRDF(self, name, instance):
@@ -469,7 +447,7 @@ class FSSInfo(SimpleItem):
         if rdf_script:
             func = getattr(instance, rdf_script, None)
             if func is not None:
-                rdf_args = func(name=name, instance=instance, properties=self.getProperties(instance), default_rdf=default_rdf)
+                rdf_args = func(name=name, instance=instance, properties=self.getProperties(), default_rdf=default_rdf)
 
         if rdf_args is None:
             rdf_args = default_rdf
@@ -522,10 +500,10 @@ class FSSFileInfo(FSSInfo):
         return VirtualFile(name, instance, path, self.title, self.mimetype, self.size)
 
     security.declarePrivate('getProperties')
-    def getProperties(self, instance):
+    def getProperties(self):
         """Returns info attributes in a dictionnary"""
 
-        props = FSSInfo.getProperties(self, instance)
+        props = FSSInfo.getProperties(self)
         props['mimetype'] = self.mimetype
         props['title'] = self.title
         props['size'] = self.size
@@ -583,10 +561,10 @@ class FSSImageInfo(FSSFileInfo):
         return VirtualImage(name, instance, path, self.title, self.mimetype, self.size, self.width, self.height)
 
     security.declarePrivate('getProperties')
-    def getProperties(self, instance):
+    def getProperties(self):
         """Returns info attributes in a dictionnary"""
 
-        props = FSSFileInfo.getProperties(self, instance)
+        props = FSSFileInfo.getProperties(self)
         props['width'] = self.width
         props['height'] = self.height
         return props
@@ -658,8 +636,8 @@ class FileSystemStorage(StorageLayer):
 
         # Check types
         uid = instance.UID()
-        version = getattr(instance, 'version_id', None)
-
+        version = kwargs.get('version')
+        
         if isinstance(value, File) or isinstance(value, Image):
             size = value.get_size()
             mimetype = kwargs.get('mimetype', getattr(value, 'content_type', 'application/octet-stream'))
@@ -697,8 +675,7 @@ class FileSystemStorage(StorageLayer):
         """Get field"""
 
         return kwargs.get('field', instance.getField(name))
-
-
+    
     def getInheritedNames(self, instance, field):
         """Returns all names derivating from a field
 
@@ -718,16 +695,13 @@ class FileSystemStorage(StorageLayer):
 
         return names
 
-
     def getConf(self):
         conf = getUtility(IConf, "globalconf")
         return conf()
 
-
     def getStorageStrategy(self, name, instance):
         """Get strategy that defined how field values are stored"""
         return self.getConf().getStorageStrategy()
-
 
     def getStorageStrategyProperties(self, name, instance, info):
         """Returns a dictionnary containing all properties used by
@@ -737,7 +711,7 @@ class FileSystemStorage(StorageLayer):
         kwargs['name'] = name
         utool = getToolByName(instance, 'portal_url')
         kwargs['path'] = '/'.join(utool.getRelativeContentPath(instance))
-        kwargs.update(info.getProperties(instance))
+        kwargs.update(info.getProperties())
         return kwargs
 
 
@@ -749,7 +723,7 @@ class FileSystemStorage(StorageLayer):
 
         if info is None:
             return ''
-
+        
         strategy = self.getStorageStrategy(name, instance)
         props = self.getStorageStrategyProperties(name, instance, info)
 
@@ -757,7 +731,6 @@ class FileSystemStorage(StorageLayer):
         strategy.restoreValueFile(**props)
         path = strategy.getValueFilePath(**props)
         return info.getValue(name, instance, path)
-
 
     security.declarePrivate('set')
     def set(self, name, instance, value, **kwargs):
@@ -798,8 +771,7 @@ class FileSystemStorage(StorageLayer):
             # Replace rdf file
             rdf_value = info.getRDFValue(name, instance, rdf_script)
             strategy.setRDFFile(rdf_value, **props)
-
-
+    
     security.declarePrivate('restoreValueFile')
     def restoreValueFile(self, strategy, name, instance):
         """ restore all versions """
@@ -883,9 +855,6 @@ class FileSystemStorage(StorageLayer):
         names = self.getInheritedNames(instance, field)
         uid = instance.UID()
         src_uid = info.getUID()
-        if src_uid is None:
-            info.updateFromInstance(instance)
-            src_uid = info.getUID()
         conf = self.getConf()
         is_rdf_enabled = conf.isRDFEnabled()
         rdf_script = conf.getRDFScript()
@@ -913,7 +882,7 @@ class FileSystemStorage(StorageLayer):
 
                 for name in names:
                     info = self.getFSSInfo(name, instance)
-                    info.updateFromInstance(instance)
+                    info.setUID(uid)
                     props = self.getStorageStrategyProperties(name, instance, info)
                     strategy.copyValueFile(src_uid=src_uid, src_path=src_path, **props)
 
@@ -926,7 +895,7 @@ class FileSystemStorage(StorageLayer):
                 # changed using _setUID method
                 for name in names:
                     info = self.getFSSInfo(name, instance)
-                    info.updateFromInstance(instance)
+                    info.setUID(uid)
                     props = self.getStorageStrategyProperties(name, instance, info)
                     strategy.moveValueFile(src_uid=src_uid, **props)
 
@@ -935,8 +904,7 @@ class FileSystemStorage(StorageLayer):
                         rdf_value = info.getRDFValue(name, instance, rdf_script)
                         props = self.getStorageStrategyProperties(name, instance, info)
                         strategy.setRDFFile(rdf_value, **props)
-
-
+    
     security.declarePrivate('cleanupField')
     def cleanupField(self, instance, field, **kwargs):
         """Delete object field"""

@@ -28,14 +28,17 @@ from StringIO import StringIO
 from ConfigParser import RawConfigParser
 
 # Zope imports
+from zope.interface import implements
 from DateTime import DateTime
 
 # Other imports
+from iw.fss.interfaces import IStrategy
 from iw.fss.utils import copy_file, move_file, rm_file
 
 class BaseStorageStrategy:
     """Strategy of how field values are stored on filesystem"""
-
+    implements(IStrategy)
+    
     def __init__(self, storage_path, backup_path):
         """Initialize strategy
 

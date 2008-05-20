@@ -28,12 +28,15 @@ from Testing.ZopeTestCase import FunctionalDocFileSuite
 from zope.publisher.browser import TestRequest
 from Products.Five.testbrowser import Browser
 
-from base import TestCase
+from iw.fss import strategy
+from iw.fss.conffile import ConfFile
+
+from base import TestCase, STORAGE_PATH, BACKUP_PATH
 
 current_dir = os.path.dirname(__file__)
 
 def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
-    """Returns a test suite, based on doctests found in /doctest."""
+    """Returns a test suite, based on doctests found in /doctest."""    
     suite = []
     if globs is None:
         globs = globals()
@@ -67,11 +70,28 @@ def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
                                             test_class=TestCase,
                                             module_relative=False))
 
-    return unittest.TestSuite(suite)
+    return suite
+
 
 def test_suite():
     """returns the test suite"""
-    return doc_suite(current_dir)
+    
+    strategies = ('FlatStorageStrategy', 'DirectoryStorageStrategy',
+                  'SiteStorageStrategy', 'SiteStorageStrategy2')
+    
+    def changeStrategy(self):
+        strategy_klass = self.globs['strategy_klass'](STORAGE_PATH, BACKUP_PATH)
+        ConfFile.getStorageStrategy = lambda x: strategy_klass
+        
+    # Duplicate doc tests for all strategies
+    suite = []
+    for strategy_name in strategies:
+        strategy_klass = getattr(strategy, strategy_name)
+
+        suite.extend(doc_suite(current_dir, globs={'strategy_klass': strategy_klass},
+                                            setUp=changeStrategy))
+    
+    return unittest.TestSuite(suite)
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

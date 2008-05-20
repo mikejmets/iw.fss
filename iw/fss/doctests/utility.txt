@@ -6,8 +6,7 @@ FSSUtility is an utility to replace the old FFSTool.
 
 Some inits::
 
-    >>> from iw.fss.config import loadConfig
-    >>> dummy = loadConfig()
+    >>> from iw.fss.interfaces import IStrategy
 
 Get the utility::
 
@@ -25,7 +24,7 @@ Call the global configuration method::
 
 Get the strategy with the context::
 
-    >>> conf.getStorageStrategy()
-    <iw.fss.strategy.FlatStorageStrategy instance ...>
+    >>> conf.getStorageStrategy().__class__ == strategy_klass
+    True
 
 

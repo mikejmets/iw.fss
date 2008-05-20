@@ -20,6 +20,7 @@
 """Defines a test class and its Plone Site layer for plone tests"""
 
 import os
+import Globals
 
 from Testing import ZopeTestCase as ztc
 
@@ -53,6 +54,18 @@ def setup_fss():
     """
     ztc.installPackage('iw.fss')
 
+def createTemporaryDirs():
+    # Create temporary dirs to run test cases
+    for base_path in (STORAGE_PATH, BACKUP_PATH):
+        if not os.path.exists(base_path):
+            os.mkdir(base_path)
+
+def removeTemporaryDirs():
+    # removes previoulys created dirs
+    import shutil
+    shutil.rmtree(STORAGE_PATH)
+    shutil.rmtree(BACKUP_PATH)
+    return
 # setting up plone site
 setup_fss()
 ptc.setupPloneSite(products=['iw.fss'],
@@ -78,20 +91,10 @@ class TestCase(ptc.FunctionalTestCase):
             fiveconfigure.debug_mode = False
             cls._old = MailHost.MailHost
             MailHost.MailHost = TestMailHost
-            
-        def createTemporaryDirs(self):
-            # Create temporary dirs to run test cases
-            for base_path in (STORAGE_PATH, BACKUP_PATH):
-                if not os.path.exists(base_path):
-                    os.mkdir(base_path)
-
-        def removeTemporaryDirs(self):
-            # removes previoulys created dirs
-            import shutil
-            shutil.rmtree(STORAGE_PATH)
-            shutil.rmtree(BACKUP_PATH)
-            return            
+            createTemporaryDirs()
 
         @classmethod
         def tearDown(cls):
             MailHost.MailHost = cls._old
+            removeTemporaryDirs()
+        
