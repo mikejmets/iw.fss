@@ -55,7 +55,7 @@ $Id$
   <adapter
       for="Products.Archetypes.atapi.BaseObject"
       factory=".traversable.FSSTraversable"
-      provides="zope.app.traversing.interfaces.ITraversable"
+      provides="zope.traversing.interfaces.ITraversable"
       />
 
   <!-- ZMI tabs -->
