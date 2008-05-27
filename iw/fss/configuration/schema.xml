@@ -36,7 +36,7 @@ $Id$
 	 datatype="existing-storage-path"
 	 default=""
 	 required="no">
-      <metadefault>$INSTANCE_HOME/var/fss_files</metadefault>
+      <metadefault>$INSTANCE_HOME/var/fss_storage</metadefault>
       <description>
 	The path of the directory that will store the files of fields
 	values.
@@ -107,7 +107,7 @@ $Id$
       /my/plone&gt;. Non existing plone sites are ignored.
     </description>
   </multisection>
-  
+
   <key name="rdf-enabled"
      datatype="boolean"
      default="false"
