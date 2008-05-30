@@ -701,7 +701,7 @@ class FileSystemStorage(StorageLayer):
 
     def getStorageStrategy(self, name, instance):
         """Get strategy that defined how field values are stored"""
-        return self.getConf().getStorageStrategy(name, instance)
+        return self.getConf().getStorageStrategy()
 
     def getStorageStrategyProperties(self, name, instance, info):
         """Returns a dictionnary containing all properties used by

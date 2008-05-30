@@ -93,11 +93,11 @@ class ConfFile(object):
         self.rdf_script = rdf_script
 
 
-    def getStorageStrategy(self, name, instance):
+    def getStorageStrategy(self):
         """Returns the storage strategy"""
 
         global _strategy_map
-        portal = getToolByName(instance, 'portal_url').getPortalObject()
+        portal = getSite()
         portal_path = '/'.join(portal.getPhysicalPath())
         strategy_class = _strategy_map[ZCONFIG.storageStrategyForSite(portal_path)]
         return strategy_class(
