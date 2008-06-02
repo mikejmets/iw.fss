@@ -19,12 +19,10 @@ Call the global configuration method::
 
      >>> conf= getUtility(IConf, "globalconf")
      >>> conf = conf()
-     >>> conf.globalConfigInfo().has_key('backup_path') 
-     True
+     >>> conf.rdfEnabled
+     False
 
 Get the strategy with the context::
 
     >>> conf.getStorageStrategy().__class__ == strategy_klass
     True
-
-
