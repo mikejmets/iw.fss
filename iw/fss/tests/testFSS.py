@@ -36,7 +36,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         self.portal_repository = self.portal.portal_repository
         conf_class = getUtility(IConf, "globalconf")
         self.conf = conf_class()
-        
+
 
 # #############################################################################
 # ADD
@@ -477,19 +477,19 @@ class TestFSS(FSSTestCase.FSSTestCase):
         from FSSTestCase import STORAGE_PATH
 
         self.loginAsPortalOwner()
-        
+
         # Create file
         content_id = 'test_file'
         self.file_content = self.addFileByFileUpload(self.test_folder, content_id)
-        
+
         # One item in storage path
-        self.failUnless(len(os.listdir(STORAGE_PATH))==1)
-        
+        self.failUnlessEqual(len(os.listdir(STORAGE_PATH)), 1)
+
         # Delete file
         self.test_folder.manage_delObjects(ids=[content_id])
-        
+
         # Zero items in storage path
-        self.failUnless(len(os.listdir(STORAGE_PATH))==0)
+        self.failUnlessEqual(len(os.listdir(STORAGE_PATH)), 0)
 
         self.logout()
 

@@ -27,6 +27,9 @@ import os
 from StringIO import StringIO
 import ZConfig
 
+import iw.fss.customconfig
+iw.fss.customconfig.ZOPETESTCASE = True
+
 from iw.fss.configuration import datatypes
 
 # Test configurations

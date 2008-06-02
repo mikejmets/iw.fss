@@ -34,6 +34,8 @@ from Products.PloneTestCase.layer import PloneSite
 from Products.PloneTestCase.layer import onsetup
 
 import iw.fss
+
+iw.fss.config.ZOPETESTCASE = True
 from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
 
 # Install FSS Example types
@@ -66,10 +68,11 @@ def removeTemporaryDirs():
     shutil.rmtree(STORAGE_PATH)
     shutil.rmtree(BACKUP_PATH)
     return
+
 # setting up plone site
 setup_fss()
 ptc.setupPloneSite(products=['iw.fss'],
-                   extension_profiles=['iw.fss:iw.fss.testfixtures'])
+                   extension_profiles=['iw.fss:iw.fss.core', 'iw.fss:iw.fss.testfixtures'])
 
 # fake mailhost
 from Products.MailHost import MailHost
@@ -97,4 +100,3 @@ class TestCase(ptc.FunctionalTestCase):
         def tearDown(cls):
             MailHost.MailHost = cls._old
             removeTemporaryDirs()
-        
