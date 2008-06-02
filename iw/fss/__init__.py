@@ -24,7 +24,7 @@ __docformat__ = 'restructuredtext'
 
 import os
 
-from Products.CMFCore.utils import ContentInit, ToolInit
+from Products.CMFCore.utils import ContentInit
 from Products.CMFCore import permissions as CCP
 
 from Products.Archetypes.public import process_types, listTypes
@@ -43,6 +43,7 @@ def initialize(context):
     if ZOPETESTCASE or os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE):
         # Import example types
         from iw.fss import examples
+        dummy = examples # No pyflakes warning
         content_types, constructors, ftis = process_types(listTypes(PROJECTNAME),
                                                           PROJECTNAME)
         ContentInit('%s Content' % PROJECTNAME,
@@ -64,3 +65,5 @@ def initialize(context):
 
     # setup module aliases to bind all Zope2 products
     import modulealiases
+    dummy = modulealiases # No pyflakes warning
+    return
