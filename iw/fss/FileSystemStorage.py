@@ -96,7 +96,7 @@ class range_filestream_iterator(file):
         file.__init__(self, name, mode, bufsize)
         self.seek(start, 0)
         self.streamsize = streamsize
-    
+
     def next(self):
         """
         raise a stopIteration if read bytes is upper than end value specified
@@ -120,7 +120,7 @@ class range_filestream_iterator(file):
             if not data:
                 raise StopIteration
             return data
-    
+
     def __len__(self):
         """
         return len of the file
@@ -368,14 +368,14 @@ class FSSInfo(SimpleItem):
     security.declarePrivate('setVersion')
     def setVersion(self, version):
         self.version = version
-        
+
     security.declarePrivate('getProperties')
     def getProperties(self):
         """Returns info attributes in a dictionnary"""
         props = {}
         props['uid'] = self.uid
         props['version'] = self.getVersion()
-        return props        
+        return props
 
     security.declarePrivate('getValue')
     def getValue(self, name, instance, path):
@@ -637,7 +637,7 @@ class FileSystemStorage(StorageLayer):
         # Check types
         uid = instance.UID()
         version = kwargs.get('version')
-        
+
         if isinstance(value, File) or isinstance(value, Image):
             size = value.get_size()
             mimetype = kwargs.get('mimetype', getattr(value, 'content_type', 'application/octet-stream'))
@@ -675,7 +675,7 @@ class FileSystemStorage(StorageLayer):
         """Get field"""
 
         return kwargs.get('field', instance.getField(name))
-    
+
     def getInheritedNames(self, instance, field):
         """Returns all names derivating from a field
 
@@ -723,7 +723,7 @@ class FileSystemStorage(StorageLayer):
 
         if info is None:
             return ''
-        
+
         strategy = self.getStorageStrategy(name, instance)
         props = self.getStorageStrategyProperties(name, instance, info)
 
@@ -771,7 +771,7 @@ class FileSystemStorage(StorageLayer):
             # Replace rdf file
             rdf_value = info.getRDFValue(name, instance, rdf_script)
             strategy.setRDFFile(rdf_value, **props)
-    
+
     security.declarePrivate('restoreValueFile')
     def restoreValueFile(self, strategy, name, instance):
         """ restore all versions """
@@ -904,7 +904,7 @@ class FileSystemStorage(StorageLayer):
                         rdf_value = info.getRDFValue(name, instance, rdf_script)
                         props = self.getStorageStrategyProperties(name, instance, info)
                         strategy.setRDFFile(rdf_value, **props)
-    
+
     security.declarePrivate('cleanupField')
     def cleanupField(self, instance, field, **kwargs):
         """Delete object field"""
