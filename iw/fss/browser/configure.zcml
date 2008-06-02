@@ -19,32 +19,44 @@ USA.
 $Id$
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
-	   xmlns:gs="http://namespaces.zope.org/genericsetup"
-	   xmlns:browser="http://namespaces.zope.org/browser"
-	   xmlns:zcml="http://namespaces.zope.org/zcml"
-       xmlns:five="http://namespaces.zope.org/five"
-	   xmlns:i18n="http://namespaces.zope.org/i18n"
-	   xmlns:cmf="http://namespaces.zope.org/cmf"
-	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
+	   xmlns:browser="http://namespaces.zope.org/browser">
 
   <browser:page
-    name="fss_management_form"
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    template="fss_management_form.pt"
-    class=".FSSView.FSSView"
-    permission="cmf.ManagePortal" />
-    
+     name="fss_controlpanel_master"
+     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+     template="fss_controlpanel_master.pt"
+     permission="cmf.ManagePortal" 
+     />
+
   <browser:page
-    name="fss_maintenance_form"
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    template="fss_maintenance_form.pt"
-    class=".FSSView.FSSView"
-    permission="cmf.ManagePortal" 
-    allowed_attributes="updateFSS removeBackups"/>
+     name="fss_management_form"
+     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+     template="fss_management_form.pt"
+     class=".controlpanel.FSSManagementView"
+     permission="cmf.ManagePortal"
+     allowed_attributes="changeOptions"
+     />
+  
+  <browser:page
+     name="fss_maintenance_form"
+     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+     template="fss_maintenance_form.pt"
+     class=".controlpanel.FSSMaintenanceView"
+     permission="cmf.ManagePortal" 
+     allowed_attributes="updateFSS removeBackups updateRDF"
+     />
+
+  <browser:page
+     name="fss_documentation_form"
+     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+     template="fss_documentation_form.pt"
+     class=".controlpanel.FSSDocumentationView"
+     permission="cmf.ManagePortal"
+     />
 
   <browser:resource
-    name="fss_tool.gif"
-    image="fss_tool.gif" />
-   
-
+     name="fss_tool.gif"
+     image="fss_tool.gif"
+     />
+  
 </configure>
