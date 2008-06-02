@@ -22,15 +22,12 @@ $Id$
 __author__  = ''
 __docformat__ = 'restructuredtext'
 
-# CMF imports
-from Products.CMFCore import permissions as CMFCorePermissions
+from customconfig import ZOPETESTCASE, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
 
 PROJECTNAME = 'iw.fss'
 GLOBALS = globals()
-SKINS_DIR = 'skins'
-DEBUG = True
-INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE = 'FSS_INSTALL_EXAMPLE_TYPES'
 I18N_DOMAIN = PROJECTNAME.lower()
+PROPERTYSHEET = 'filesystemstorage_properties'
 
 ZCONFIG, dummy_handler, CONFIG_FILE = None, None, None
 
@@ -63,7 +60,7 @@ def loadConfig():
                    if fp is not None][0]
 
     # We ignore personal configuration on unit tests
-    if os.environ.has_key('ZOPE_TESTCASE'):
+    if ZOPETESTCASE:
         ZCONFIG, dummy_handler = ConfigLoader(fssSchema).loadURL(FSS_CONFIG_IN)
     else:
         ZCONFIG, dummy_handler = ConfigLoader(fssSchema).loadURL(CONFIG_FILE)
@@ -72,19 +69,8 @@ def loadConfig():
     # Dirty but we need to reinit datatypes control globals since this
     # initialisation seems to be called more than once with Zope 2.8
     # (why ???)
-    from iw.fss.configuration import datatypes
-    datatypes._paths = []
-    return
+    #from iw.fss.configuration import datatypes
+    #datatypes._paths = []
+    #return
 
 loadConfig()
-
-# Configlets
-fss_prefs_configlet = {
-    'id': 'fss_prefs',
-    'appId': PROJECTNAME,
-    'name': 'FileSystem storage Preferences',
-    'action': 'string:$portal_url/fss_management_form',
-    'category': 'Products',
-    'permission': (CMFCorePermissions.ManagePortal,),
-    'imageUrl': 'fss_tool.gif',
-    }
