@@ -34,10 +34,6 @@ class IFSSTool(Interface):
 
 class IConf(Interface):
     """Main configuration for fss"""
-    def globalConfigInfo():
-        """Get global Configuration"""
-    def initProperties():
-        """Init properties"""
     def isRDFEnabled():
         """Returns true if RDF is automaticaly generated when file added"""
     def enableRDF(enabled):
@@ -86,7 +82,7 @@ class IConf(Interface):
 
 class IStrategy(Interface):
     """Defines the way to store files"""
-    
+
     def walkOnStorageDirectory(**kwargs):
         """Walk on storage directory"""
 
@@ -101,39 +97,39 @@ class IStrategy(Interface):
 
     def getValueFilename(**kwargs):
         """Get filename of the field value on filesystem"""
-        
+
     def getValueFilePath(**kwargs):
         """Get path of file where the field value is stored"""
-        
+
     def getRDFDirectoryPath(**kwargs):
         """Get path of directory where the rdf value is stored"""
-        
+
     def getRDFFilename(**kwargs):
         """Get filename of the rdf value on filesystem"""
-        
+
     def getRDFFilePath(**kwargs):
         """Get path of file where the rdf value is stored"""
-        
+
     def getBackupDirectoryPath(**kwargs):
         """Get path of directory where the file value is backup"""
-        
+
     def getBackupFilename(**kwargs):
         """Get filename of the file backup value on filesystem"""
-        
+
     def getBackupFilePath(**kwargs):
         """Get path of file where the file value is backup"""
-        
+
     def setValueFile(value, **kwargs):
         """Copy file value on filesystem"""
-        
+
     def unsetValueFile(**kwargs):
         """Remove file value if exists"""
-        
+
     def moveValueFile(**kwargs):
         """File properties has changed, move it its new locations"""
-        
+
     def restoreValueFile(**kwargs):
         """Restore the backup value if exists"""
-        
+
     def copyValueFile(**kwargs):
-        """Duplicate file value on filesystem"""    
+        """Duplicate file value on filesystem"""
