@@ -6,6 +6,15 @@ CHANGES
 SVN branch https://svn.plone.org/svn/collective/iw.fss/branches/paris-sprint-2.7.3
 ##################################################################################
 
+* Config panel enhancements
+  [lenfant]
+
+* Code cleanup (useless stuffs)
+  [lenfant]
+
+* Fixed test cases
+  [cbosse] [glenfant]
+
 * CMFEditions compatibility
   [glenfant]
 
