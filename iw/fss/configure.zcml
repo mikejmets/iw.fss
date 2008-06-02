@@ -22,7 +22,7 @@ $Id$
 	   xmlns:gs="http://namespaces.zope.org/genericsetup"
 	   xmlns:browser="http://namespaces.zope.org/browser"
 	   xmlns:zcml="http://namespaces.zope.org/zcml"
-       xmlns:five="http://namespaces.zope.org/five"
+	   xmlns:five="http://namespaces.zope.org/five"
 	   xmlns:i18n="http://namespaces.zope.org/i18n"
 	   xmlns:cmf="http://namespaces.zope.org/cmf"
 	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage"
@@ -58,17 +58,6 @@ $Id$
       provides="zope.traversing.interfaces.ITraversable"
       />
 
-  <!-- ZMI tabs -->
-  <!--
-  <browser:page
-     for=".interfaces.IFSSTool"
-     name="manage_migrations"
-     class=".zmi.browser.ManageMigrations"
-     template="zmi/manage_migrations.zpt"
-     permission="zope2.ViewManagementScreens"
-     />
-  -->
-
   <!-- You may uncomment elements from "fss" namespace bellow to store
   the file and image fields of default Plone content types (aka
   ATContentTypes) with FSS.
@@ -89,6 +78,7 @@ $Id$
      fields="image" />
 
   -->
+
   <utility
      provides=".interfaces.IConf"
      component=".conffile.ConfFile"
