@@ -23,11 +23,8 @@ $Id$
 __version__ = "$Revision$"
 __docformat__ = 'restructuredtext'
 
-
 # Python imports
-import os
 import time
-import Globals
 
 # Zope imports
 from zope.interface import implements
@@ -37,13 +34,10 @@ from zope.app.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 
 # Products imports
-from utils import rm_file
 from iw.fss.utils import rm_file
 from iw.fss.FileSystemStorage import FileSystemStorage
 from iw.fss.utils import getFieldValue
-from iw.fss.utils import FSSMessageFactory as _
-from iw.fss.zcml import patchedTypesRegistry
-from iw.fss.config import ZCONFIG, CONFIG_FILE
+from iw.fss.config import ZCONFIG
 from iw.fss import strategy as fss_strategy
 from iw.fss.interfaces import IConf
 
@@ -60,38 +54,41 @@ class ConfFile(object):
     """Tool for FileSystem storage"""
 
     implements(IConf)
-    rdf_enabled = False
-    rdf_script = ""
-    def initProperties(self):
-        """Init properties"""
 
-        default_path = os.path.join(Globals.INSTANCE_HOME, 'var')
-        self.storage_path = default_path
-        self.backup_path = default_path
-        self.rdf_enabled = False
+
+    @property
+    def fssPropertySheet(self):
+
+        portal_properties = getToolByName(getSite(), 'portal_properties')
+        return portal_properties.filesystemstorage_properties
+
 
     def isRDFEnabled(self):
         """Returns true if RDF is automaticaly generated when file added"""
 
-        return self.rdf_enabled
+        return bool(self.fssPropertySheet.rdf_enabled)
+
 
     def enableRDF(self, enabled):
         """Enable rdf or not"""
 
-        self.rdf_enabled = bool(enabled)
+        self.fssPropertySheet.rdf_enabled = bool(enabled)
+
+    rdfEnabled = property(isRDFEnabled, enableRDF)
 
 
     def getRDFScript(self):
         """Returns rdf script used to generate RDF on files"""
 
-        return self.rdf_script
+        return self.fssPropertySheet.rdf_script
 
 
     def setRDFScript(self, rdf_script):
         """Set rdf script used to generate RDF on files"""
 
-        self.rdf_script = rdf_script
+        self.fssPropertySheet.rdf_script = rdf_script.strip()
 
+    rdfScript = property(getRDFScript, setRDFScript)
 
     def getStorageStrategy(self):
         """Returns the storage strategy"""
@@ -199,6 +196,7 @@ class ConfFile(object):
         # Move not valid backups in file storage
         for item in not_valid_backups:
             strategy.restoreValueFile(**item)
+        return len(not_valid_files), len(not_valid_backups)
 
 
     def removeBackups(self, max_days):
@@ -253,6 +251,7 @@ class ConfFile(object):
             # Call the storage strategy
             rdf_value = info.getRDFValue(name, instance, rdf_script=rdf_script)
             strategy.setRDFFile(rdf_value, uid=item['uid'], name=name)
+        return
 
 
     def getFSSItem(self, instance, name):
@@ -264,49 +263,3 @@ class ConfFile(object):
         """
 
         return getFieldValue(instance, name)
-
-
-    def patchedTypesInfo(self):
-        """A TALES friendly summary of content types with storage changed to FSS"""
-
-        out = []
-        for type_class, fields_to_storages in patchedTypesRegistry.items():
-            feature = {'klass': str(type_class)}
-            feature['fields'] = [{'fieldname': fn, 'storage': str(st.__class__)}
-                                 for fn, st in fields_to_storages.items()]
-            out.append(feature)
-        return out
-
-
-    def siteConfigInfo(self):
-        """A TALES friendly configuration info mapping for this Plone site"""
-
-        portal = getToolByName(getSite(), 'portal_url').getPortalObject()
-        portal_path = '/'.join(portal.getPhysicalPath())
-        return {
-            'config_file': CONFIG_FILE,
-            'strategy': ZCONFIG.storageStrategyForSite(portal_path),
-            'storage_path': ZCONFIG.storagePathForSite(portal_path),
-            'backup_path': ZCONFIG.backupPathForSite(portal_path)
-            }
-
-
-    def globalConfigInfo(self):
-        """A TALES friendly configuration info mapping for global configuration"""
-
-        return {
-            'config_file': CONFIG_FILE,
-            'strategy': ZCONFIG.storageStrategyForSite('/'),
-            'storage_path': ZCONFIG.storagePathForSite('/'),
-            'backup_path': ZCONFIG.backupPathForSite('/')
-            }
-
-
-    def formattedReadme(self):
-        """README.txt (reStructuredText) transformed to HTML"""
-
-        from reStructuredText import HTML
-        readme_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.txt')
-        return HTML(file(readme_path).read(), report_level=100) # No errors/warnings -> faster
-
-
