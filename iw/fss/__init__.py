@@ -31,15 +31,16 @@ from Products.Archetypes.public import process_types, listTypes
 
 from Products.CMFEditions.Modifiers import ConditionalTalesModifier
 
-from iw.fss.config import PROJECTNAME, DEBUG, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
+from iw.fss.config import (
+    PROJECTNAME, ZOPETESTCASE, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
 from iw.fss.modifier import manage_addModifier
 from iw.fss.modifier import modifierAddForm
 from iw.fss.modifier import MODIFIER_ID
 
 def initialize(context):
-    install_types = DEBUG or os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
 
-    if install_types:
+
+    if ZOPETESTCASE or os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE):
         # Import example types
         from iw.fss import examples
         content_types, constructors, ftis = process_types(listTypes(PROJECTNAME),
