@@ -33,6 +33,7 @@ from Products.CMFEditions.Modifiers import ConditionalTalesModifier
 
 from iw.fss.config import (
     PROJECTNAME, ZOPETESTCASE, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
+
 from iw.fss.modifier import manage_addModifier
 from iw.fss.modifier import modifierAddForm
 from iw.fss.modifier import MODIFIER_ID
@@ -63,7 +64,11 @@ def initialize(context):
         icon='modifier.gif',
         )
 
-    # setup module aliases to bind all Zope2 products
+    # Setup module aliases to bind all Zope2 products
     import modulealiases
     dummy = modulealiases # No pyflakes warning
+
+    # Provides 'plone' domain translations
+    context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(os.path.dirname(__file__)+'/i18n')
+
     return
