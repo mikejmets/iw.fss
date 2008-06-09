@@ -43,12 +43,9 @@ Requirements
 ############
 
 * `Plone 3.0+ bundle <http://plone.org/>`_
-* A Plone component that requires or may use FSS, like
-  AttachmentField_. Perhaps your custom Archetypes based content types
-  (see `Developer's corner`_).
 
 
-Migration
+Upgrading
 #########
 
 From FSS 2.5.x and older
@@ -60,8 +57,15 @@ migration from this version. Please create a configuration file that
 clones your old configlet preferences as indicated in `FSS main
 configuration`_.
 
+From iw.fss 2.7.1
+=================
+
+From this version and later version, iw.fss registers upgrade steps in
+GenericSetup. When upgrading to a newer version of iw.fss, just have a
+look at the "Upgrade" tab of the portal_setup tool in your Plone site.@q
+
 Migrating between strategies
-============================
+############################
 
 Use the `bin/strategymigrator.py` shell utility that ships with FSS. Get
 more info on this utility using the `--help` option.
@@ -79,6 +83,13 @@ With buildout
 
 This example speaks of itself::
 
+  [buildout]
+  ...
+  eggs =
+    ...
+    iw.fss
+    ...
+
   [instance]
   ...
   zcml =
@@ -89,7 +100,7 @@ This example speaks of itself::
 
 You may also use the `iw.recipe.fss`_ recipe egg to configure fully an
 instance.
-  
+
 
 From SVN reposo
 ===============
@@ -99,7 +110,7 @@ From SVN reposo
 
 * Add `$INSTANCE_HOME/etc/package-includes/iw.fss-meta.zcml` file with
   this line::
-  
+
     <include package="iw.fss" file="meta.zcml"/>
 
 * Add `$INSTANCE_HOME/etc/package-includes/iw.fss-configure.zcml` file
@@ -485,7 +496,7 @@ The (required) attributes of this directive are:
 * **class**: the dotted name of the AT based content type class.
 * **fields**: one or more (space separated) field names to wire with FSS.
 
-The "configure.zcml" of FSS contains sample directives that wire FSS
+The "atct.zcml" of FSS contains sample directives that wire FSS
 with some standard Plone content types (aka ATCT). You just need to
 configure FSS for your Plone instances - see pointers in
 `Installation`_ - and uncomment those directives.

@@ -69,6 +69,7 @@ def initialize(context):
     dummy = modulealiases # No pyflakes warning
 
     # Provides 'plone' domain translations
-    context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(os.path.dirname(__file__)+'/i18n')
+    if not ZOPETESTCASE:
+        context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(os.path.dirname(__file__)+'/i18n')
 
     return

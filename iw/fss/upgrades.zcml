@@ -16,28 +16,25 @@ along with this program; see the file COPYING. If not, write to the
 Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 USA.
 ===============================================================
-$Id$
+$Id: configure.zcml 66023 2008-06-02 13:50:56Z glenfant $
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
 	   xmlns:gs="http://namespaces.zope.org/genericsetup"
 	   i18n_domain="iw.fss">
 
-  <gs:registerProfile
-     name="default"
-     title="iw.fss (FileSystemStorage)"
-     directory="profiles/default"
-     description="Core runtime resources for iw.fss (FileSystemStorage)"
-     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-     provides="Products.GenericSetup.interfaces.EXTENSION"
-     />
-
-  <gs:registerProfile
-      name="testfixtures"
-      title="iw.fss Test Fixture"
-      directory="profiles/testfixture"
-      description="Extension profile to configure a test fixture"
-      for="Products.CMFPlone.interfaces.ITestCasePloneSiteRoot"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      />
-
+  <gs:upgradeSteps
+     source="0.0"
+     destination="1.0"
+     profile="iw.fss:default">
+    <gs:upgradeStep
+       title="Removing FSS tool"
+       description="FSS tool is now deprecated and useless"
+       handler=".upgrades.removeFSSTool"
+       />
+    <gs:upgradeStep
+       title="Adding FSS property sheet"
+       description="FSS options are stored in its property sheet"
+       handler=".upgrades.addFSSPropertySheet"
+       />
+  </gs:upgradeSteps>
 </configure>

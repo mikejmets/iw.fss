@@ -6,7 +6,13 @@ CHANGES
 SVN branch https://svn.plone.org/svn/collective/iw.fss/branches/paris-sprint-2.7.3
 ##################################################################################
 
-* Config panel enhancements
+* GenericSetup upgrade step (any version) -> 1.0
+  [lenfant]
+
+* Red warnings when using the default common config in config panels
+  [lenfant]
+
+* Config panel enhancements (config details view, documentation)
   [lenfant]
 
 * Code cleanup (useless stuffs)

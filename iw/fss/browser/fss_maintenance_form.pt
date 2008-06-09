@@ -11,7 +11,7 @@
   </tal:comment>
 
   <div metal:fill-slot="body">
-    
+
     <h1 class="documentFirstHeading"
         i18n:translate="heading_fss_maintenance">FSS Maintenance</h1>
 
@@ -76,6 +76,16 @@
       </table>
 
     </fieldset>
+
+    <p tal:condition="view/usesGlobalConfig"
+       style="color:red; font-weight:bold"
+       i18n:translate="warning_using_global_config1">
+      THIS SITE USES THE COMMON DEFAULT CONFIGURATION AND STORAGE AREA.
+      AS A CONSEQUENCE, THIS SITE MAY SHARE ITS STORAGE AND BACKUP SPACES
+      WITH OTHER SITES. IN THAT CASE, USING THE FORMS BELOW MAY RESULT IN
+      DATA LOSS ON THE OTHER SITES OF THIS INSTANCE USING THE COMMON
+      STORAGE AND BACKUP AREA. YOU HAVE BEEN WARNED.
+    </p>
 
     <form action="#"
           method="post"

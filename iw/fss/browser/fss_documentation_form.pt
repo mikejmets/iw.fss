@@ -7,15 +7,15 @@
     ###################################################
     FileSystemStorage documentation configuration panel
     ###################################################
-    $Id: fss_maintenance_form.pt 63651 2008-04-26 17:07:09Z wid $
+    $Id$
   </tal:comment>
-  
+
   <div id="content"
        metal:fill-slot="body">
 
     <div tal:replace="structure view/readMeHtml">
       Documentation for iw.fss
     </div>
-    
+
   </div>
 </html>

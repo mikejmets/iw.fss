@@ -76,6 +76,11 @@ class FSSBaseView(BrowserView):
     def rdfEnabled(self):
         return self.conf.rdfEnabled
 
+    def usesGlobalConfig(self):
+        """If this site uses the global configuration"""
+
+        return self.conf.usesGlobalConfig()
+
 
 
 class FSSManagementView(FSSBaseView):

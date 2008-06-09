@@ -30,6 +30,8 @@ $Id$
 
   <include file="profiles.zcml" />
 
+  <include file="upgrades.zcml" />
+
   <!-- You may uncomment this if you want to store files and images fields
        of ATContentTypes with FSS
 

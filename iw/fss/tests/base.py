@@ -72,7 +72,7 @@ def removeTemporaryDirs():
 # setting up plone site
 setup_fss()
 ptc.setupPloneSite(products=['iw.fss'],
-                   extension_profiles=['iw.fss:iw.fss.core', 'iw.fss:iw.fss.testfixtures'])
+                   extension_profiles=['iw.fss:default', 'iw.fss:testfixtures'])
 
 # fake mailhost
 from Products.MailHost import MailHost

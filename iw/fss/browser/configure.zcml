@@ -25,7 +25,7 @@ $Id$
      name="fss_controlpanel_master"
      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
      template="fss_controlpanel_master.pt"
-     permission="cmf.ManagePortal" 
+     permission="cmf.ManagePortal"
      />
 
   <browser:page
@@ -36,13 +36,13 @@ $Id$
      permission="cmf.ManagePortal"
      allowed_attributes="changeOptions"
      />
-  
+
   <browser:page
      name="fss_maintenance_form"
      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
      template="fss_maintenance_form.pt"
      class=".controlpanel.FSSMaintenanceView"
-     permission="cmf.ManagePortal" 
+     permission="cmf.ManagePortal"
      allowed_attributes="updateFSS removeBackups updateRDF"
      />
 
@@ -58,5 +58,5 @@ $Id$
      name="fss_tool.gif"
      image="fss_tool.gif"
      />
-  
+
 </configure>

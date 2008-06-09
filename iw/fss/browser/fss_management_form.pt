@@ -9,10 +9,20 @@
     ################################################
     $Id$
   </tal:comment>
-  
+
   <div metal:fill-slot="body">
-    
+
     <h1 i18n:translate="heading_fss_management">FSS Management</h1>
+
+    <p tal:condition="view/usesGlobalConfig"
+       style="color:red; font-weight:bold"
+       i18n:translate="warning_using_global_config2">
+      THIS SITE USES THE COMMON DEFAULT CONFIGURATION AND STORAGE AREA.
+      IF THIS DOES NOT MATTER ON DEVELOPMENT SITES, YOU SHOULD NEVER
+      DO THIS IN A PRODUCTION SITE. PLEASE FIX THE CONFIGURATION AS
+      DESCRIBE IN THE DOCUMENTATION BEFORE ADDING ANY CONTENT IN THAT CASE.
+    </p>
+
 
     <tal:block define="config_info view/siteConfigInfo">
       <p>
@@ -28,19 +38,19 @@
         </legend>
 
         <div class="field">
-          <label for="label_storage_path" 
+          <label for="label_storage_path"
                  i18n:translate="label_storage_path">Storage path</label> :
           <span tal:content="config_info/storage_path">/foo/bar</span>
         </div>
 
         <div class="field">
-          <label for="label_storage_path" 
+          <label for="label_storage_path"
                  i18n:translate="label_storage_strategy">Storage strategy</label> :
           <span tal:content="config_info/strategy">flat</span>
         </div>
-        
+
         <div class="field">
-          <label for="label_backup_path" 
+          <label for="label_backup_path"
                  i18n:translate="label_backup_path">Backup path</label> :
           <span tal:content="config_info/backup_path">/spam/egg</span>
         </div>
@@ -54,25 +64,25 @@
         </legend>
 
         <div class="field">
-          <label for="label_storage_path" 
+          <label for="label_storage_path"
                  i18n:translate="label_storage_path">Storage path</label> :
           <span tal:content="config_info/storage_path">/foo/bar</span>
         </div>
 
         <div class="field">
-          <label for="label_storage_path" 
+          <label for="label_storage_path"
                  i18n:translate="label_storage_strategy">Storage strategy</label> :
           <span tal:content="config_info/strategy">flat</span>
         </div>
-        
+
         <div class="field">
-          <label for="label_backup_path" 
+          <label for="label_backup_path"
                  i18n:translate="label_backup_path">Backup path</label> :
           <span tal:content="config_info/backup_path">/spam/egg</span>
         </div>
       </fieldset>
     </tal:block>
-    
+
     <fieldset tal:define="patch_info view/patchedTypesInfo">
       <legend i18n:translate="label_patched_types">
         Patched types

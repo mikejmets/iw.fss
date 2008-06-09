@@ -67,7 +67,6 @@ def setup_fss():
     zcml.load_config('meta.zcml', iw.fss)
     zcml.load_config('configure.zcml', iw.fss)
     fiveconfigure.debug_mode = False
-
     ztc.installPackage('iw.fss')
 
 setup_fss()
@@ -210,5 +209,5 @@ HAS_ATCT = True
 ZopeTestCase.installProduct('ATContentTypes')
 
 # Setup Plone site
-PloneTestCase.setupPloneSite(products=DEFAULT_PRODUCTS, extension_profiles=['iw.fss:iw.fss.testfixtures'])
+PloneTestCase.setupPloneSite(products=DEFAULT_PRODUCTS, extension_profiles=['iw.fss:testfixtures'])
 

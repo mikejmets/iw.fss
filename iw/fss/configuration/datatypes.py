@@ -128,6 +128,17 @@ class BaseConfig(object):
 class GlobalConfig(BaseConfig):
     """Instance wide zconfig object"""
 
+    _is_global = True
+
+    def usesGlobalConfig(self, site_or_path):
+        """Does site use the global configuration (true)
+        @param site_or_path: Plone site obje or its path
+        @return: backup path
+        """
+
+        return self._configForPath(site_or_path)._is_global
+
+
     def storagePathForSite(self, site_or_path):
         """Specific or global storage path
         @param site_or_path: Plone site obje or its path
@@ -178,5 +189,4 @@ class GlobalConfig(BaseConfig):
 class SiteConfig(BaseConfig):
     """Site wide zconfig object"""
 
-    # Don't need more than basic stuff
-    pass
+    _is_global = False

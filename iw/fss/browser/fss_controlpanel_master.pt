@@ -5,7 +5,7 @@
     ###########################
     iw.fss control panel master
     ###########################
-    $Id: fss_management_form.pt 63589 2008-04-26 10:24:29Z wid $
+    $Id$
   </tal:comment>
 
   <metal:master use-macro="here/prefs_main_template/macros/master">

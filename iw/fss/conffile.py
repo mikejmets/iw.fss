@@ -90,6 +90,12 @@ class ConfFile(object):
 
     rdfScript = property(getRDFScript, setRDFScript)
 
+    def usesGlobalConfig(self):
+        """If the global configuration is in use for this site"""
+
+        portal = getSite()
+        return ZCONFIG.usesGlobalConfig(portal)
+
     def getStorageStrategy(self):
         """Returns the storage strategy"""
 
