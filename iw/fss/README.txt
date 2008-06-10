@@ -62,7 +62,7 @@ From iw.fss 2.7.1
 
 From this version and later version, iw.fss registers upgrade steps in
 GenericSetup. When upgrading to a newer version of iw.fss, just have a
-look at the "Upgrade" tab of the portal_setup tool in your Plone site.@q
+look at the "Upgrade" tab of the portal_setup tool in your Plone site.
 
 Migrating between strategies
 ############################
@@ -461,7 +461,7 @@ any custom product. Let's say we're in the `__init__.py` of your
 custom product::
 
   ...
-  from iw.fss import utils as fss_utils
+  from iw.fss import zcml as fss_utils
   from Products.ATContentTypes import atct
   ...
   fss_utils.patchATType(atct.ATFile, ['file'])
@@ -496,10 +496,21 @@ The (required) attributes of this directive are:
 * **class**: the dotted name of the AT based content type class.
 * **fields**: one or more (space separated) field names to wire with FSS.
 
-The "atct.zcml" of FSS contains sample directives that wire FSS
-with some standard Plone content types (aka ATCT). You just need to
-configure FSS for your Plone instances - see pointers in
-`Installation`_ - and uncomment those directives.
+
+Storing Plone standard content types with FSS
+=============================================
+
+Include this ZCML element either in your instance `package-includes`
+directory or in any personal `configure.zcml` in your instance
+packages::
+
+  <include package="iw.fss" file="atct.zcml" />
+
+This ZCML file wires FSS with the relevant content types that ship with Plone bundle:
+
+* File
+* Image
+* News Item
 
 
 Customize RDF info set
@@ -653,7 +664,7 @@ Downloads
 
 You may find newer stable versions of FSS and pointers to related
 informations (tracker, doc, ...) from
-http://plone.org/iw.fss
+http://pypi.python.org/pypi/iw.fss
 
 
 Subversion repository
