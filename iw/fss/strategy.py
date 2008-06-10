@@ -28,15 +28,17 @@ from StringIO import StringIO
 from ConfigParser import RawConfigParser
 
 # Zope imports
+from zope.interface import implements
 from DateTime import DateTime
 
 # Other imports
-from FileUtils import copy_file, move_file, rm_file
-
+from iw.fss.interfaces import IStrategy
+from iw.fss.utils import copy_file, move_file, rm_file
 
 class BaseStorageStrategy:
     """Strategy of how field values are stored on filesystem"""
-
+    implements(IStrategy)
+    
     def __init__(self, storage_path, backup_path):
         """Initialize strategy
 
@@ -199,6 +201,10 @@ class FlatStorageStrategy(BaseStorageStrategy):
     def getValueFilename(self, **kwargs):
         """Get filename of the field value on filesystem"""
 
+        if kwargs.get('version', None) is not None:
+            return '%s_%s.%s' % (kwargs['uid'], kwargs['name'],
+                                 kwargs['version'])
+
         return '%s_%s' % (kwargs['uid'], kwargs['name'])
 
     def getValueFilePath(self, **kwargs):
@@ -214,6 +220,10 @@ class FlatStorageStrategy(BaseStorageStrategy):
     def getRDFFilename(self, **kwargs):
         """Get filename of the rdf value on filesystem"""
 
+        if kwargs.get('version', None) is not None:
+            return '%s_%s.%s.rdf' % (kwargs['uid'], kwargs['name'],
+                                     kwargs['version'])
+
         return '%s_%s.rdf' % (kwargs['uid'], kwargs['name'])
 
     def getRDFFilePath(self, **kwargs):
@@ -228,6 +238,10 @@ class FlatStorageStrategy(BaseStorageStrategy):
 
     def getBackupFilename(self, **kwargs):
         """Get filename of the file backup value on filesystem"""
+
+        if kwargs.get('version', None) is not None:
+            return '%s_%s.%s.bak' % (kwargs['uid'], kwargs['name'],
+                                     kwargs['version'])
 
         return '%s_%s.bak' % (kwargs['uid'], kwargs['name'])
 
@@ -546,8 +560,12 @@ class SiteStorageStrategy(DirectoryStorageStrategy):
         """Get filename of the field value on filesystem"""
 
         filename = kwargs.get('title', '')
+
         if not filename:
             filename = kwargs['name']
+
+        if kwargs.get('version', None) is not None:
+            filename = '%s.%s' % (filename, kwargs['version'])
 
         # Maybe filename of field is the same than rdf filename
         rdf_filename = self.getRDFFilename(**kwargs)
@@ -568,6 +586,9 @@ class SiteStorageStrategy(DirectoryStorageStrategy):
 
     def getRDFFilename(self, **kwargs):
         """Get filename of the rdf value on filesystem"""
+
+        if kwargs.get('version', None) is not None:
+            return '%s.%s.rdf' % (kwargs['name'], kwargs['version'])
 
         return '%s.rdf' % kwargs['name']
 
@@ -822,8 +843,12 @@ class SiteStorageStrategy2(DirectoryStorageStrategy):
 
         # Filename has not been already defined
         filename = kwargs.get('title', '')
+
         if not filename:
             filename = name
+
+        if kwargs.get('version', None) is not None:
+            filename = '%s.%s' % (filename, kwargs['version'])
 
         # Filename is unique because path has not been created
         if not os.path.exists(path):
@@ -856,6 +881,10 @@ class SiteStorageStrategy2(DirectoryStorageStrategy):
 
     def getRDFFilename(self, **kwargs):
         """Get filename of the rdf value on filesystem"""
+
+        if kwargs.get('version', None) is not None:
+            return '%s.%s.rdf' % (self.getValueFilename(**kwargs),
+                                  kwargs['version'])
 
         return '%s.rdf' % self.getValueFilename(**kwargs)
 

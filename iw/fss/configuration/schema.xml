@@ -36,7 +36,7 @@ $Id$
 	 datatype="existing-storage-path"
 	 default=""
 	 required="no">
-      <metadefault>$INSTANCE_HOME/var/fss_files</metadefault>
+      <metadefault>$INSTANCE_HOME/var/fss_storage</metadefault>
       <description>
 	The path of the directory that will store the files of fields
 	values.
@@ -60,7 +60,7 @@ $Id$
 	 default="flat">
       <description>
 	Storage strategy: 'flat', 'directory', 'site1' or 'site2',
-	default is 'flat'. See README.txt about strategies.
+	default is 'directory'. See README.txt about strategies.
       </description>
     </key>
   </sectiontype>
@@ -89,12 +89,12 @@ $Id$
   </key>
 
   <key name="storage-strategy"
-       datatype="strategy"
+       datatype="default-strategy"
        required="no"
        default="flat">
     <description>
-      Storage strategy: 'flat', 'directory', 'site1' or 'site2',
-      default is 'flat'. See README.txt about strategies.
+      Storage strategy: 'flat' or 'directory' default is 'flat'. See
+      README.txt about strategies.
     </description>
   </key>
 
@@ -107,4 +107,22 @@ $Id$
       /my/plone&gt;. Non existing plone sites are ignored.
     </description>
   </multisection>
+
+  <key name="rdf-enabled"
+     datatype="boolean"
+     default="false"
+     required="no">
+  <metadefault>$INSTANCE_HOME/var/fss_files</metadefault>
+  <description>
+    Do we enabled rdf on this FSS
+  </description>
+
+  </key>
+  <key name="rdf-script"
+     datatype="existing-file"
+     required="no">
+  <description>
+		Script to add custom information to export
+  </description>
+  </key>
 </schema>

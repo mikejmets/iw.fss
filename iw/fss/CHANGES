@@ -2,6 +2,46 @@
 CHANGES
 #######
 
+
+SVN branch https://svn.plone.org/svn/collective/iw.fss/branches/paris-sprint-2.7.3
+##################################################################################
+
+* GenericSetup upgrade step (any version) -> 1.0
+  [lenfant]
+
+* Red warnings when using the default common config in config panels
+  [lenfant]
+
+* Config panel enhancements (config details view, documentation)
+  [lenfant]
+
+* Code cleanup (useless stuffs)
+  [lenfant]
+
+* Fixed test cases
+  [cbosse] [glenfant]
+
+* CMFEditions compatibility
+  [glenfant]
+
+* Annotations replacement for the attributes (FSSInfo), and some
+  cosmetics.
+  [mehdi]
+
+* CMF skins layer removed in favour of views.
+  [wid]
+
+* Add a test verifying that the storage path contains one item after
+  adding a file, and zero items after deleting it.
+  [maikroeder]
+
+* "site1" and "site2" strategies are forfidden as globla strategies
+  [glenfant]
+
+* 100% GenericSetup installation
+  [clebeaupin]
+
+
 SVN trunk https://svn.plone.org/svn/collective/iw.fss/trunk
 ###########################################################
 

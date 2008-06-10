@@ -18,11 +18,13 @@
 ## Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import StringIO
+from zope.component import getUtility
 from Products.CMFCore.utils import getToolByName
 
 from Products.Archetypes.Field import FileField, StringField, TextField
 from Products.Archetypes.Storage import AttributeStorage
 from iw.fss.FileSystemStorage import FileSystemStorage
+from iw.fss.interfaces import IConf
 
 #
 # This method is here for giving an example of storage migration.
@@ -42,7 +44,7 @@ def migrateToFSStorage(self):
     FSS as storage for interested fields
     """
     try:
-        fss_tool = getToolByName(self, 'portal_fss')
+        conf = getUtility(IConf, "globalconf")()        
     except AttributeError:
         raise ValueError, "install and configure FileSystemStorage first!"
     

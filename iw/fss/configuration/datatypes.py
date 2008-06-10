@@ -75,6 +75,19 @@ def _existingPath(value, default):
     return value
 
 
+def default_strategy(value):
+    """Validating/converting a default storage strategy
+    @param value: as sent from ZConfig
+    @return: valid strategy name
+    """
+
+    possible_values = ('flat', 'directory')
+    value = str(value).lower()
+    if value not in possible_values:
+        raise ValueError("'%s' is not a valid storage strategy" % value)
+    return value
+
+
 def strategy(value):
     """Validating/converting a storage strategy
     @param value: as sent from ZConfig
@@ -114,6 +127,17 @@ class BaseConfig(object):
 
 class GlobalConfig(BaseConfig):
     """Instance wide zconfig object"""
+
+    _is_global = True
+
+    def usesGlobalConfig(self, site_or_path):
+        """Does site use the global configuration (true)
+        @param site_or_path: Plone site obje or its path
+        @return: backup path
+        """
+
+        return self._configForPath(site_or_path)._is_global
+
 
     def storagePathForSite(self, site_or_path):
         """Specific or global storage path
@@ -165,5 +189,4 @@ class GlobalConfig(BaseConfig):
 class SiteConfig(BaseConfig):
     """Site wide zconfig object"""
 
-    # Don't need more than basic stuff
-    pass
+    _is_global = False

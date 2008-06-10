@@ -33,6 +33,8 @@ from AccessControl import ClassSecurityInfo
 from OFS.Image import File
 from OFS.SimpleItem import SimpleItem
 from ZPublisher.Iterators import filestream_iterator
+from zope.component import getUtility
+
 #from Shared.DC.ZRDB.TM import TM
 
 # CMF imports
@@ -47,7 +49,8 @@ from Products.Archetypes.Field import Image # Changes since AT1.3.4
 
 # Products imports
 from iw.fss.rdf import RDFWriter
-from FileUtils import copy_file
+from iw.fss.utils import copy_file
+from iw.fss.interfaces import IConf
 
 from ZPublisher.Iterators import IStreamIterator
 from ZPublisher.HTTPRangeSupport import parseRange
@@ -94,7 +97,6 @@ class range_filestream_iterator(file):
         self.seek(start, 0)
         self.streamsize = streamsize
 
-
     def next(self):
         """
         raise a stopIteration if read bytes is upper than end value specified
@@ -119,8 +121,6 @@ class range_filestream_iterator(file):
                 raise StopIteration
             return data
 
-
-
     def __len__(self):
         """
         return len of the file
@@ -132,9 +132,6 @@ class range_filestream_iterator(file):
         self.seek(cur_pos, 0)
 
         return size
-
-
-
 
 
 class VirtualData:
@@ -348,12 +345,13 @@ class FSSInfo(SimpleItem):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, uid):
-        self.update(uid)
+    def __init__(self, uid, version=None):
+        self.update(uid, version)
 
     security.declarePrivate('update')
-    def update(self, uid):
+    def update(self, uid, version=None):
         self.uid = uid
+        self.version = version
 
     security.declarePrivate('getUID')
     def getUID(self):
@@ -362,6 +360,22 @@ class FSSInfo(SimpleItem):
     security.declarePrivate('setUID')
     def setUID(self, uid):
         self.uid = uid
+
+    security.declarePrivate('getVersion')
+    def getVersion(self):
+        return getattr(self, 'version', None)
+
+    security.declarePrivate('setVersion')
+    def setVersion(self, version):
+        self.version = version
+
+    security.declarePrivate('getProperties')
+    def getProperties(self):
+        """Returns info attributes in a dictionnary"""
+        props = {}
+        props['uid'] = self.uid
+        props['version'] = self.getVersion()
+        return props
 
     security.declarePrivate('getValue')
     def getValue(self, name, instance, path):
@@ -384,14 +398,6 @@ class FSSInfo(SimpleItem):
             {'id': 'dc:date', 'value': instance.modified()},
             {'id': 'dc:format', 'value': getattr(self, 'mimetype', 'text/plain')},
             )
-        return props
-
-    security.declarePrivate('getProperties')
-    def getProperties(self):
-        """Returns info attributes in a dictionnary"""
-
-        props = {}
-        props['uid'] = self.uid
         return props
 
     security.declarePrivate('getRDF')
@@ -455,12 +461,12 @@ class FSSFileInfo(FSSInfo):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, uid, title, size, mimetype):
-        self.update(uid, title, size, mimetype)
+    def __init__(self, uid, title, size, mimetype, version=None):
+        self.update(uid, title, size, mimetype, version)
 
     security.declarePrivate('update')
-    def update(self, uid, title, size, mimetype):
-        FSSInfo.update(self, uid)
+    def update(self, uid, title, size, mimetype, version=None):
+        FSSInfo.update(self, uid, version)
         self.title = title
         self.size = size
         self.mimetype = mimetype
@@ -525,12 +531,12 @@ class FSSImageInfo(FSSFileInfo):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, uid, title, size, mimetype, width, height):
-        self.update(uid, title, size, mimetype, width, height)
+    def __init__(self, uid, title, size, mimetype, width, height, version=None):
+        self.update(uid, title, size, mimetype, width, height, version)
 
     security.declarePrivate('update')
-    def update(self, uid, title, size, mimetype, width, height):
-        FSSFileInfo.update(self, uid, title, size, mimetype)
+    def update(self, uid, title, size, mimetype, width, height, version=None):
+        FSSFileInfo.update(self, uid, title, size, mimetype, version)
         self.width = width
         self.height = height
 
@@ -597,11 +603,13 @@ class FileSystemStorage(StorageLayer):
 
     security = ClassSecurityInfo()
 
+
     security.declarePrivate('getFSSInfoVarname')
     def getFSSInfoVarname(self, name):
         """ """
 
         return '%s_filesystemstorage_info' % name
+
 
     security.declarePrivate('getFSSInfo')
     def getFSSInfo(self, name, instance, **kwargs):
@@ -618,6 +626,7 @@ class FileSystemStorage(StorageLayer):
         info_varname = self.getFSSInfoVarname(name)
         delattr(aq_base(instance), info_varname)
 
+
     security.declarePrivate('setFSSInfo')
     def setFSSInfo(self, name, instance, value, **kwargs):
         """Set new value in fss info"""
@@ -627,6 +636,8 @@ class FileSystemStorage(StorageLayer):
 
         # Check types
         uid = instance.UID()
+        version = kwargs.get('version')
+
         if isinstance(value, File) or isinstance(value, Image):
             size = value.get_size()
             mimetype = kwargs.get('mimetype', getattr(value, 'content_type', 'application/octet-stream'))
@@ -640,13 +651,14 @@ class FileSystemStorage(StorageLayer):
                     title = name
 
                 # Like Image field
-                info = FSSImageInfo(uid, title, size, mimetype, width, height)
+                info = FSSImageInfo(uid, title, size, mimetype, width, height,
+                                    version)
             else:
                 # Like File field
-                info = FSSFileInfo(uid, title, size, mimetype)
+                info = FSSFileInfo(uid, title, size, mimetype, version)
         else:
             # Other
-            info = FSSInfo(uid)
+            info = FSSInfo(uid, version)
 
         # Make sure, we have deleted old info
         if hasattr(aq_base(instance), info_varname):
@@ -656,6 +668,7 @@ class FileSystemStorage(StorageLayer):
         setattr(instance, info_varname, info)
 
         return info
+
 
     security.declarePrivate('getField')
     def getField(self, name, instance, **kwargs):
@@ -682,11 +695,13 @@ class FileSystemStorage(StorageLayer):
 
         return names
 
+    def getConf(self):
+        conf = getUtility(IConf, "globalconf")
+        return conf()
+
     def getStorageStrategy(self, name, instance):
         """Get strategy that defined how field values are stored"""
-
-        fss_tool = getToolByName(instance, 'portal_fss')
-        return fss_tool.getStorageStrategy()
+        return self.getConf().getStorageStrategy()
 
     def getStorageStrategyProperties(self, name, instance, info):
         """Returns a dictionnary containing all properties used by
@@ -698,6 +713,7 @@ class FileSystemStorage(StorageLayer):
         kwargs['path'] = '/'.join(utool.getRelativeContentPath(instance))
         kwargs.update(info.getProperties())
         return kwargs
+
 
     security.declarePrivate('get')
     def get(self, name, instance, **kwargs):
@@ -747,17 +763,54 @@ class FileSystemStorage(StorageLayer):
         strategy.setValueFile(value, **props)
 
         # Create RDF file
-        fss_tool = getToolByName(instance, 'portal_fss')
-        is_rdf_enabled = fss_tool.isRDFEnabled()
-        rdf_script = fss_tool.getRDFScript()
+        conf = self.getConf()
+        is_rdf_enabled = conf.isRDFEnabled()
+        rdf_script = conf.getRDFScript()
 
         if is_rdf_enabled:
             # Replace rdf file
             rdf_value = info.getRDFValue(name, instance, rdf_script)
             strategy.setRDFFile(rdf_value, **props)
 
+    security.declarePrivate('restoreValueFile')
+    def restoreValueFile(self, strategy, name, instance):
+        """ restore all versions """
+
+        to_restore = []
+        rtool = getToolByName(instance, 'portal_repository')
+        history = rtool.getHistory(instance, oldestFirst=True)
+
+        if (len(history)):
+            for version in history:
+                to_restore.append(version.object.__of__(instance.aq_parent))
+
+        to_restore.append(instance)
+
+        for obj in to_restore:
+            info = self.getFSSInfo(name, obj)
+            props = self.getStorageStrategyProperties(name, obj, info)
+            strategy.restoreValueFile(**props)
+
+
     security.declarePrivate('unset')
     def unset(self, name, instance, **kwargs):
+        """Delete all versions"""
+
+        to_unset = []
+        rtool = getToolByName(instance, 'portal_repository')
+        history = rtool.getHistory(instance, oldestFirst=True)
+
+        if (len(history)):
+            for version in history:
+                to_unset.append(version.object.__of__(instance.aq_parent))
+
+        to_unset.append(instance)
+
+        for obj in to_unset:
+            self.unsetVersion(name, obj, **kwargs)
+
+
+    def unsetVersion(self, name, instance, **kwargs):
         """Delete field value"""
 
         info = self.getFSSInfo(name, instance)
@@ -784,6 +837,7 @@ class FileSystemStorage(StorageLayer):
             # Delete FSS info
             self.delFSSInfo(name, instance, **kwargs)
 
+
     security.declarePrivate('initializeField')
     def initializeField(self, instance, field, **kwargs):
         """Initialize field of object"""
@@ -801,17 +855,15 @@ class FileSystemStorage(StorageLayer):
         names = self.getInheritedNames(instance, field)
         uid = instance.UID()
         src_uid = info.getUID()
-        fss_tool = getToolByName(instance, 'portal_fss')
-        is_rdf_enabled = fss_tool.isRDFEnabled()
-        rdf_script = fss_tool.getRDFScript()
+        conf = self.getConf()
+        is_rdf_enabled = conf.isRDFEnabled()
+        rdf_script = conf.getRDFScript()
         strategy = self.getStorageStrategy(name, instance)
 
         if uid == src_uid:
             # Cut/Paste
             for name in names:
-                info = self.getFSSInfo(name, instance)
-                props = self.getStorageStrategyProperties(name, instance, info)
-                strategy.restoreValueFile(**props)
+                self.restoreValueFile(strategy, name, instance)
 
                 if is_rdf_enabled:
                     # Replace rdf file
@@ -873,12 +925,14 @@ class FileSystemStorage(StorageLayer):
         for name in names:
             self.unset(name, instance, is_moved=is_moved, **kwargs)
 
+
     security.declarePrivate('initializeInstance')
     def initializeInstance(self, instance, item=None, container=None):
         """Initialize new object"""
 
         # Not implemented
         pass
+
 
     security.declarePrivate('cleanupInstance')
     def cleanupInstance(self, instance, item=None, container=None):
@@ -902,5 +956,6 @@ class FileSystemStorage(StorageLayer):
         for name, info in fss_props.items():
             fss_info_name = self.getFSSInfoVarname(name)
             setattr(instance, fss_info_name, info)
+
 
 InitializeClass(FileSystemStorage)

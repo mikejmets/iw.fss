@@ -36,6 +36,7 @@ SCHEMA_FILE = os.path.join(_this_dir, "schema.xml")
 fssRegistry = Registry(stock=None)
 fssRegistry.register('existing-storage-path', datatypes.existingStoragePath)
 fssRegistry.register('existing-backup-path', datatypes.existingBackupPath)
+fssRegistry.register('default-strategy', datatypes.default_strategy)
 fssRegistry.register('strategy', datatypes.strategy)
 
 # Our configuration schema

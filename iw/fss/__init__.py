@@ -22,41 +22,54 @@ $Id$
 __author__  = ''
 __docformat__ = 'restructuredtext'
 
-# Python imports
 import os
 
-# CMF imports
-from Products.CMFCore.utils import ContentInit, ToolInit
-from Products.CMFCore import permissions as CMFCorePermissions
+from Products.CMFCore.utils import ContentInit
+from Products.CMFCore import permissions as CCP
 
-# Archetypes imports
 from Products.Archetypes.public import process_types, listTypes
 
-# Products imports
-from iw.fss.config import PROJECTNAME, DEBUG, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
+from Products.CMFEditions.Modifiers import ConditionalTalesModifier
 
+from iw.fss.config import (
+    PROJECTNAME, ZOPETESTCASE, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
+
+from iw.fss.modifier import manage_addModifier
+from iw.fss.modifier import modifierAddForm
+from iw.fss.modifier import MODIFIER_ID
 
 def initialize(context):
-    install_types = DEBUG or os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE)
 
-    if install_types:
+
+    if ZOPETESTCASE or os.environ.get(INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE):
         # Import example types
-        from iw.fss.examples import FSSItem
+        from iw.fss import examples
+        dummy = examples # No pyflakes warning
         content_types, constructors, ftis = process_types(listTypes(PROJECTNAME),
                                                           PROJECTNAME)
         ContentInit('%s Content' % PROJECTNAME,
                     content_types = content_types,
-                    permission = CMFCorePermissions.AddPortalContent,
+                    permission = CCP.AddPortalContent,
                     extra_constructors = constructors,
                     fti = ftis,
                     ).initialize(context)
 
-    # Import tool
-    from iw.fss.FSSTool import FSSTool
-    ToolInit(
-        '%s Tool' % PROJECTNAME,
-        tools=(FSSTool,),
-        icon='tool.gif').initialize(context)
 
-    # setup module aliases to bind all Zope2 products
+    # Register modifier
+    context.registerClass(
+        ConditionalTalesModifier,
+        MODIFIER_ID,
+        permission=CCP.ManagePortal,
+        constructors = (modifierAddForm, manage_addModifier),
+        icon='modifier.gif',
+        )
+
+    # Setup module aliases to bind all Zope2 products
     import modulealiases
+    dummy = modulealiases # No pyflakes warning
+
+    # Provides 'plone' domain translations
+    if not ZOPETESTCASE:
+        context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(os.path.dirname(__file__)+'/i18n')
+
+    return

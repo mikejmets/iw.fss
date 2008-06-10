@@ -19,47 +19,71 @@ Demo content type with a file and an image.
 $Id$
 """
 
+# Zope imports
+from AccessControl import ClassSecurityInfo
 
 # Archetypes imports
-from Products.Archetypes.public import *
+from Products.Archetypes.public import Schema
+from Products.Archetypes.public import BaseSchema
+from Products.Archetypes.public import FileField
+from Products.Archetypes.public import ImageField
+from Products.Archetypes.public import TextField
+from Products.Archetypes.public import FileWidget
+from Products.Archetypes.public import ImageWidget
+from Products.Archetypes.public import TextAreaWidget
+from Products.Archetypes.public import PrimaryFieldMarshaller
+from Products.Archetypes.public import BaseContent
+from Products.Archetypes.public import registerType
+
+from Products.ATContentTypes.content.base import ATCTContent
+from Products.ATContentTypes.content.base import ATContentTypeSchema
 
 # Products imports
-from iw.fss.FileSystemStorage import FileSystemStorage
 from iw.fss.config import PROJECTNAME
+from iw.fss.FileSystemStorage import FileSystemStorage
 
-
-schema = BaseSchema.copy() + Schema((
+BaseItemShema = Schema((
     FileField('file',
               required=False,
               primary=True,
               storage=FileSystemStorage(),
-              widget = FileWidget(
-                        description = "Select the file to be added by clicking the 'Browse' button.",
-                        description_msgid = "help_file",
-                        label= "File",
-                        label_msgid = "label_file",
-                        i18n_domain = "plone",
-                        show_content_type = False,)),
+              widget=FileWidget(
+                  description="Select the file to be added by clicking the 'Browse' button.",
+                  description_msgid="help_file",
+                  label="File",
+                  label_msgid="label_file",
+                  i18n_domain="plone",
+                  show_content_type=False,)),
     ImageField('image',
                required=False,
                sizes={
                    'mini':(40,40),
                    'thumb':(80,80),},
                storage=FileSystemStorage(),
-               widget = ImageWidget()),
+               widget=ImageWidget()),
     TextField('text',
               required=False,
               storage=FileSystemStorage(),
-              widget = TextAreaWidget(
-                        )),
+              widget=TextAreaWidget()),
     ), marshall=PrimaryFieldMarshaller())
 
+FSSItemSchema = BaseSchema.copy() + BaseItemShema.copy()
+ATFSSItemSchema = ATContentTypeSchema.copy() + BaseItemShema.copy()
 
 class FSSItem(BaseContent):
     """A simple item using FileSystemStorage"""
     archetypes_name = portal_type = meta_type = 'FSSItem'
-    schema = schema
+    schema = FSSItemSchema
     _at_rename_after_creation = True
+
 
 registerType(FSSItem, PROJECTNAME)
 
+class ATFSSItem(ATCTContent):
+    """A simple item using FileSystemStorage base on ATContentypes"""
+    archetypes_name = portal_type = meta_type = 'ATFSSItem'
+    schema = ATFSSItemSchema
+    _at_rename_after_creation = True
+
+
+registerType(ATFSSItem, PROJECTNAME)

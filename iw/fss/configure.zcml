@@ -19,63 +19,41 @@ USA.
 $Id$
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
-	   xmlns:browser="http://namespaces.zope.org/zope"
-	   xmlns:zcml="http://namespaces.zope.org/zcml"
-           xmlns:five="http://namespaces.zope.org/five"
+	   xmlns:browser="http://namespaces.zope.org/browser"
+	   xmlns:five="http://namespaces.zope.org/five"
 	   xmlns:i18n="http://namespaces.zope.org/i18n"
-	   xmlns:cmf="http://namespaces.zope.org/cmf"
-	   xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage">
-
-  <cmf:registerDirectory
-     name="filesystemstorage"
-     ignore=".svn README.txt"
-     />
+	   i18n_domain="iw.fss">
 
   <five:registerPackage package="." initialize=".initialize" />
+
+  <include package=".browser" />
+
+  <include file="profiles.zcml" />
+
+  <include file="upgrades.zcml" />
+
+  <!-- You may uncomment this if you want to store files and images fields
+       of ATContentTypes with FSS
+
+  <include file="atct.zcml" />
+
+  -->
 
   <i18n:registerTranslations directory="locales" />
 
   <adapter
       for="Products.Archetypes.atapi.BaseObject"
       factory=".traversable.FSSTraversable"
-      provides="zope.app.traversing.interfaces.ITraversable"
+      provides="zope.traversing.interfaces.ITraversable"
       />
 
-  <five:implements
-     class=".FSSTool.FSSTool"
-     interface=".interfaces.IFSSTool"
-     />
+  <utility
+     provides=".interfaces.IConf"
+     component=".conffile.ConfFile"
+     name="globalconf" />
 
-  <!-- ZMI tabs -->
-  <!--
-  <browser:page
-     for=".interfaces.IFSSTool"
-     name="manage_migrations"
-     class=".zmi.browser.ManageMigrations"
-     template="zmi/manage_migrations.zpt"
-     permission="zope2.ViewManagementScreens"
-     />
-  -->
+  <five:implements class=".FileSystemStorage.FSSInfo"
+                   interface=".interfaces.IFSSInfo" />
 
-  <!-- You may uncomment elements from "fss" namespace bellow to store
-  the file and image fields of default Plone content types (aka
-  ATContentTypes) with FSS.
-
-  <fss:typeWithFSS
-     zcml:condition="installed iw.fss"
-     class="Products.ATContentTypes.atct.ATFile"
-     fields="file" />
-
-  <fss:typeWithFSS
-     zcml:condition="installed iw.fss"
-     class="Products.ATContentTypes.atct.ATImage"
-     fields="image" />
-
-  <fss:typeWithFSS
-     zcml:condition="installed iw.fss"
-     class="Products.ATContentTypes.atct.ATNewsItem"
-     fields="image" />
-
-  -->
 
 </configure>

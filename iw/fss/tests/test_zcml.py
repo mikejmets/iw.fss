@@ -57,7 +57,7 @@ def test_typewithfss():
 
     The patched type has been registered::
 
-        >>> from iw.fss.utils import patchedTypesRegistry
+        >>> from iw.fss.zcml import patchedTypesRegistry
         >>> len(patchedTypesRegistry)
         1
         >>> patchedTypesRegistry[ATFile]

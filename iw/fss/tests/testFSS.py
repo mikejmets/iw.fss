@@ -23,7 +23,8 @@ from common import *
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from StringIO import StringIO
-
+from zope.component import getUtility
+from iw.fss.interfaces import IConf
 
 class TestFSS(FSSTestCase.FSSTestCase):
     def afterSetUp(self):
@@ -32,6 +33,10 @@ class TestFSS(FSSTestCase.FSSTestCase):
         self.portal.invokeFactory(FOLDER_TYPE, id=content_id)
         self.test_folder = getattr(self.portal, content_id)
         self.logout()
+        self.portal_repository = self.portal.portal_repository
+        conf_class = getUtility(IConf, "globalconf")
+        self.conf = conf_class()
+
 
 # #############################################################################
 # ADD
@@ -214,8 +219,8 @@ class TestFSS(FSSTestCase.FSSTestCase):
         old_fss = old_storage.getFSSInfo('file', old_instance)
         new_fss = new_storage.getFSSInfo('file', new_file_content)
 
-        old_brains = self.fss_tool.getStorageBrainsByUID(old_fss.getUID())
-        new_brains = self.fss_tool.getStorageBrainsByUID(new_fss.getUID())
+        old_brains = self.conf.getStorageBrainsByUID(old_fss.getUID())
+        new_brains = self.conf.getStorageBrainsByUID(new_fss.getUID())
 
         st_old = [x for x in old_brains if x['name'] == 'file'][0]
         st_new = [x for x in new_brains if x['name'] == 'file'][0]
@@ -259,7 +264,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         o_cobject = getattr(self.sf, 's%s' % obnum)
         o_storage = o_cobject.getField('image').getStorage()
         o_fssinfo = o_storage.getFSSInfo('image', o_cobject)
-        o_brains = self.fss_tool.getStorageBrainsByUID(o_fssinfo.getUID())
+        o_brains = self.conf.getStorageBrainsByUID(o_fssinfo.getUID())
 
         # copying complete sf folder to test_target_folder
         cb = self.portal.manage_copyObjects(ids=(self.sf.getId(), ))
@@ -281,7 +286,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         n_cobject = getattr(self.cf, 's%s' % obnum)
         n_storage = n_cobject.getField('image').getStorage()
         n_fssinfo = n_storage.getFSSInfo('image', n_cobject)
-        n_brains = self.fss_tool.getStorageBrainsByUID(n_fssinfo.getUID())
+        n_brains = self.conf.getStorageBrainsByUID(n_fssinfo.getUID())
 
         self.assertNotEqual(o_fssinfo.getUID(), n_fssinfo.getUID())
         self.assertNotEqual(len(o_brains), 0, str(o_brains))
@@ -306,12 +311,12 @@ class TestFSS(FSSTestCase.FSSTestCase):
 
         # testing deletion
         old_s1_uid = self.sf.s1.UID()
-        s1_brains = self.fss_tool.getStorageBrainsByUID(old_s1_uid)
+        s1_brains = self.conf.getStorageBrainsByUID(old_s1_uid)
         assert len(s1_brains)>0
 
         self.sf.manage_delObjects(['s1', ])
         assert 's1' not in self.sf.objectIds()
-        s1_brains = self.fss_tool.getStorageBrainsByUID(old_s1_uid)
+        s1_brains = self.conf.getStorageBrainsByUID(old_s1_uid)
         assert len(s1_brains)==0
 
 
@@ -369,8 +374,8 @@ class TestFSS(FSSTestCase.FSSTestCase):
         new_storage = file_field.getStorage()
         new_fss = new_storage.getFSSInfo('file', new_file_content)
 
-        st_old = self.fss_tool.getStorageBrainsByUID(old_fss.getUID())[0]
-        st_new = self.fss_tool.getStorageBrainsByUID(new_fss.getUID())[0]
+        st_old = self.conf.getStorageBrainsByUID(old_fss.getUID())[0]
+        st_new = self.conf.getStorageBrainsByUID(new_fss.getUID())[0]
 
         self.assertEqual(old_fss.getUID(), new_fss.getUID())
         self.assertNotEqual(len(st_old.keys()), 0, str(st_old))
@@ -440,8 +445,8 @@ class TestFSS(FSSTestCase.FSSTestCase):
         new_storage = file_field.getStorage()
         new_fss = new_storage.getFSSInfo('file', new_content)
 
-        st_old = self.fss_tool.getStorageBrainsByUID(old_fss.getUID())[0]
-        st_new = self.fss_tool.getStorageBrainsByUID(new_fss.getUID())[0]
+        st_old = self.conf.getStorageBrainsByUID(old_fss.getUID())[0]
+        st_new = self.conf.getStorageBrainsByUID(new_fss.getUID())[0]
 
         self.assertEqual(old_fss.getUID(), new_fss.getUID())
         self.assertNotEqual(len(st_old.keys()), 0, str(st_old))
@@ -472,19 +477,19 @@ class TestFSS(FSSTestCase.FSSTestCase):
         from FSSTestCase import STORAGE_PATH
 
         self.loginAsPortalOwner()
-        
+
         # Create file
         content_id = 'test_file'
         self.file_content = self.addFileByFileUpload(self.test_folder, content_id)
-        
+
         # One item in storage path
-        self.failUnless(len(os.listdir(STORAGE_PATH))==1)
-        
+        self.failUnlessEqual(len(os.listdir(STORAGE_PATH)), 1)
+
         # Delete file
         self.test_folder.manage_delObjects(ids=[content_id])
-        
+
         # Zero items in storage path
-        self.failUnless(len(os.listdir(STORAGE_PATH))==0)
+        self.failUnlessEqual(len(os.listdir(STORAGE_PATH)), 0)
 
         self.logout()
 
@@ -712,7 +717,55 @@ class TestFSS(FSSTestCase.FSSTestCase):
         req.RESPONSE = resp
         data = file_content.index_html(req, resp)
 
+# #############################################################################
+# Test CMFEditions compliance
+# #############################################################################
 
+    def testCMFEditions(self):
+        self.loginAsPortalOwner()
+        portal_repository = self.portal_repository
+        data_path = self.getDataPath()
+        file1_path = os.path.join(data_path, 'word.doc')
+        file1 = open(file1_path, 'rb').read()
+        file2_path = os.path.join(data_path, 'excel.xls')
+        file2 = open(file2_path, 'rb').read()
+        image1_path = os.path.join(data_path, 'image.jpg')
+        image1 = open(image1_path, 'rb').read()
+
+        content = self.addATFileByFileUpload(self.folder, 'test_file_and_image')
+        portal_repository.applyVersionControl(content, comment='save no 1')
+
+        self.updateContent(content, 'file', file2_path)
+        self.updateContent(content, 'image', image1_path)
+        portal_repository.save(content, comment='save no 2')
+
+        vdata = portal_repository.retrieve(content, 0)
+        obj = vdata.object
+        # Verify
+        file_field = obj.getField('file')
+        file_value = file_field.get(obj)
+        self.assertEquals(file_value.filename, 'word.doc')
+        self.assertEquals(file_value.get_size(), 10240)
+        self.assertEquals(file_field.getContentType(obj), 'application/msword')
+
+        vdata = portal_repository.retrieve(content, 1)
+        obj = vdata.object
+        # Verify
+        file_field = obj.getField('file')
+        file_value = file_field.get(obj)
+        self.assertEquals(file_value.filename, 'excel.xls')
+        self.assertEquals(file_value.get_size(), 13824)
+        self.assertEquals(file_field.getContentType(obj), 'application/vnd.ms-excel')
+
+        portal_repository.revert(content, 0)
+        # Verify
+        file_field = content.getField('file')
+        file_value = file_field.get(content)
+        self.assertEquals(file_value.filename, 'word.doc')
+        self.assertEquals(file_value.get_size(), 10240)
+        self.assertEquals(file_field.getContentType(content), 'application/msword')
+
+        self.logout()
 
 # Test all content metadata
 strategies = (

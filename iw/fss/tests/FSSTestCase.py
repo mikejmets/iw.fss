@@ -27,6 +27,7 @@ import Globals
 import transaction
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
+from zope.component import getUtility
 
 # CMF imports
 from Products.CMFCore.utils import getToolByName
@@ -36,6 +37,7 @@ from Products.PloneTestCase import PloneTestCase
 
 # Products imports
 from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
+from iw.fss.interfaces import IConf
 
 # Globals
 portal_name = 'portal'
@@ -65,7 +67,6 @@ def setup_fss():
     zcml.load_config('meta.zcml', iw.fss)
     zcml.load_config('configure.zcml', iw.fss)
     fiveconfigure.debug_mode = False
-
     ztc.installPackage('iw.fss')
 
 setup_fss()
@@ -84,16 +85,16 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         for base_path in (STORAGE_PATH, BACKUP_PATH):
             if not os.path.exists(base_path):
                 os.mkdir(base_path)
-
-        self.fss_tool = getToolByName(self.portal, 'portal_fss')
+        conf= getUtility(IConf, "globalconf")
+        self.conf = conf()
 
         # Patch getStorageStragegy to test all strategies
         strategy_klass = self.strategy_klass
         def getStorageStrategy(self):
             return strategy_klass(STORAGE_PATH, BACKUP_PATH)
 
-        from iw.fss.FSSTool import FSSTool
-        FSSTool.getStorageStrategy = getStorageStrategy
+        from iw.fss.conffile import ConfFile
+        ConfFile.getStorageStrategy = getStorageStrategy
 
         # Check if fss is switched
         self.use_atct = False
@@ -152,6 +153,41 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         self.updateContent(content, 'image', IMAGE_PATH)
         return content
 
+    ## ATContentTypes based testcases
+
+    def addATFileByString(self, folder, content_id):
+        """Adds a file by string.
+        """
+
+        folder.invokeFactory('ATFSSItem', id=content_id)
+        content = getattr(folder, content_id)
+        transaction.savepoint(optimistic=True)
+        kw = {'file' : CONTENT_TXT}
+        content.edit(**kw)
+        return content
+
+    def addATFileByFileUpload(self, folder, content_id):
+        """Adds a file by file upload.
+        """
+
+        folder.invokeFactory('ATFSSItem', id=content_id)
+        content = getattr(folder, content_id)
+        transaction.savepoint(optimistic=True)
+        self.updateContent(content, 'file', CONTENT_PATH)
+        return content
+
+    def addATImageByFileUpload(self, folder, content_id):
+        """
+        Adding image
+        """
+        folder.invokeFactory('ATFSSItem', id=content_id)
+        content = getattr(folder, content_id)
+        transaction.savepoint(optimistic=True)
+        self.updateContent(content, 'image', IMAGE_PATH)
+        return content
+
+    # Update content for any type
+
     def updateContent(self, content, field, filepath):
         """Updates a field content for a file.
         """
@@ -173,4 +209,5 @@ HAS_ATCT = True
 ZopeTestCase.installProduct('ATContentTypes')
 
 # Setup Plone site
-PloneTestCase.setupPloneSite(products=DEFAULT_PRODUCTS)
+PloneTestCase.setupPloneSite(products=DEFAULT_PRODUCTS, extension_profiles=['iw.fss:testfixtures'])
+

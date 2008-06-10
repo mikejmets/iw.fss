@@ -14,24 +14,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; see the file COPYING. If not, write to the
 # Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""" defines a test class and its Plone Site layer for plone tests
-"""
+
+# $Id$
+
+"""Defines a test class and its Plone Site layer for plone tests"""
 
 import os
+import Globals
 
 from Testing import ZopeTestCase as ztc
 
+from zope.interface import classImplements
 from Products.Five import zcml
 from Products.Five import fiveconfigure
+from Products.CMFPlone.Portal import PloneSite
+from Products.CMFPlone.interfaces import ITestCasePloneSiteRoot
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import PloneSite
 from Products.PloneTestCase.layer import onsetup
 
 import iw.fss
+
+iw.fss.config.ZOPETESTCASE = True
 from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
 
 # Install FSS Example types
 os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
+
+# Make the test fixture extension profile active
+classImplements(PloneSite, ITestCasePloneSiteRoot)
+
+STORAGE_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'unittests_storage')
+BACKUP_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'unittests_backup')
 
 @onsetup
 def setup_fss():
@@ -42,9 +56,23 @@ def setup_fss():
     """
     ztc.installPackage('iw.fss')
 
+def createTemporaryDirs():
+    # Create temporary dirs to run test cases
+    for base_path in (STORAGE_PATH, BACKUP_PATH):
+        if not os.path.exists(base_path):
+            os.mkdir(base_path)
+
+def removeTemporaryDirs():
+    # removes previoulys created dirs
+    import shutil
+    shutil.rmtree(STORAGE_PATH)
+    shutil.rmtree(BACKUP_PATH)
+    return
+
 # setting up plone site
 setup_fss()
-ptc.setupPloneSite(products=['iw.fss'])
+ptc.setupPloneSite(products=['iw.fss'],
+                   extension_profiles=['iw.fss:default', 'iw.fss:testfixtures'])
 
 # fake mailhost
 from Products.MailHost import MailHost
@@ -62,14 +90,13 @@ class TestCase(ptc.FunctionalTestCase):
         @classmethod
         def setUp(cls):
             fiveconfigure.debug_mode = True
-            zcml.load_config('configure.zcml',
-                             iw.fss)
+            zcml.load_config('configure.zcml', iw.fss)
             fiveconfigure.debug_mode = False
             cls._old = MailHost.MailHost
             MailHost.MailHost = TestMailHost
+            createTemporaryDirs()
 
         @classmethod
         def tearDown(cls):
             MailHost.MailHost = cls._old
-
-
+            removeTemporaryDirs()
