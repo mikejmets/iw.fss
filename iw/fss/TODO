@@ -30,3 +30,7 @@ Code cleanup and refactoring
 ############################
 
 * Is Extensions.toolbox useful?
+
+* Testcase: we don't need test types any more for unit tests since we
+  can load "atct.zcml" in tests fixures, then use ATFile and ATImage
+  contents in test cases.
