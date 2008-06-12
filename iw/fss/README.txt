@@ -64,6 +64,12 @@ From this version and later version, iw.fss registers upgrade steps in
 GenericSetup. When upgrading to a newer version of iw.fss, just have a
 look at the "Upgrade" tab of the portal_setup tool in your Plone site.
 
+Warning, due to the removal of the `portal_fss` tool upgrading from
+2.7.1 does not retain the RDF options (activated and specific
+script). If you used RDF with 2.7.1, you need to redo the same RDF
+setting in the FileSystemStorage config panel.
+
+
 Migrating between strategies
 ############################
 
@@ -156,10 +162,12 @@ FSS comes with 4 storage strategies. Each strategy requires two directories:
   storage strategies.
 * You need the best performances: choose the `Flat storage strategy`_
   or `Directory storage strategy`_.
-
 * You need a storage that looks like your Plone site (in example to
   publish the storage directory in a read only samba or NFS share):
   choose the `Site storage strategy 1`_ or the `Site storage strategy 2`_.
+* If you care about CMFEdition support (means that one of the content
+  types using FSS is versioned with CMFEditions), you should *not* use
+  the `Site storage strategy 1`_ or the `Site storage strategy 2`_.
 
 See `FSS main configuration`_ to configure the best suited strategy on
 your Zope instance and Plone sites.
