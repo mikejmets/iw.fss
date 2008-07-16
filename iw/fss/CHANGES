@@ -3,8 +3,8 @@ CHANGES
 #######
 
 
-SVN branch https://svn.plone.org/svn/collective/iw.fss/branches/paris-sprint-2.7.3
-##################################################################################
+2.7.3
+#####
 
 * GenericSetup upgrade step (any version) -> 1.0
   [lenfant]
