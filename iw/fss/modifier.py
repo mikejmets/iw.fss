@@ -58,6 +58,10 @@ class Modifier(object):
 
     def beforeSaveModifier(self, obj, clone):
         for field in obj.Schema().fields():
+            if not hasattr(field, "getStorage"):
+                # For a field that doesn't use storage
+                continue
+
             storage = field.getStorage()
 
             if not isinstance(storage, FileSystemStorage):
