@@ -19,9 +19,14 @@ This module contains the tool of iw.fss
 """
 import os
 from setuptools import setup, find_packages
+from xml.dom import minidom
 
-version = file(os.path.join(os.path.dirname(__file__),
-                            'iw', 'fss', 'version.txt')).read().strip()
+metadata_file = os.path.join(os.path.dirname(__file__),
+                             'iw', 'fss',
+                             'profiles', 'default', 'metadata.xml')
+metadata = minidom.parse(metadata_file)
+version = metadata.getElementsByTagName("version")[0].childNodes[0].nodeValue
+version = str(version).strip()
 
 README = os.path.join(os.path.dirname(__file__),
                       'iw', 'fss', 'README.txt')
