@@ -625,7 +625,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         file_value = file_field.get(file_content)
 
         # Test absolute_url
-        url = '%(instance_url)s/fss_get/%(name)s' % {
+        url = '%(instance_url)s/%(name)s' % {
             'instance_url': file_content.absolute_url(),
             'name': 'file',
             }

@@ -624,7 +624,7 @@ Here's the code::
     portal_path = utool.getPortalObject().getPhysicalPath()
     portal_path_len = len(portal_path)
     rel_path = '/'.join(instance.getPhysicalPath()[portal_path_len:])
-    fss_path = '%s/fss_get/%s' % (rel_path, name)
+    fss_path = '%s/%s' % (rel_path, name)
     rdf_args['field_url'] = fss_path
 
     # Set RDF properties

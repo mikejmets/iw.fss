@@ -201,7 +201,7 @@ class VirtualBinary(VirtualData):
         return self.size
 
     def absolute_url(self):
-        url = '%(instance_url)s/fss_get/%(name)s' % {
+        url = '%(instance_url)s/%(name)s' % {
             'instance_url': self.instance.absolute_url(),
             'name': self.name,
             }
@@ -424,7 +424,7 @@ class FSSInfo(SimpleItem):
         portal_path = utool.getPortalObject().getPhysicalPath()
         portal_path_len = len(portal_path)
         rel_path = '/'.join(instance.getPhysicalPath()[portal_path_len:])
-        fss_path = '%s/fss_get/%s' % (rel_path, name)
+        fss_path = '%s/%s' % (rel_path, name)
         rdf_args['field_url'] = fss_path
 
         # Get field properties
