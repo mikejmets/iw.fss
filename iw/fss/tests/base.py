@@ -30,16 +30,8 @@ from Products.Five import fiveconfigure
 from Products.CMFPlone.Portal import PloneSite
 from Products.CMFPlone.interfaces import ITestCasePloneSiteRoot
 from Products.PloneTestCase import PloneTestCase as ptc
-from Products.PloneTestCase.layer import PloneSite
+from Products.PloneTestCase.layer import PloneSite as PloneSiteLayer
 from Products.PloneTestCase.layer import onsetup
-
-import iw.fss
-
-iw.fss.config.ZOPETESTCASE = True
-from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
-
-# Install FSS Example types
-os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
 
 # Make the test fixture extension profile active
 classImplements(PloneSite, ITestCasePloneSiteRoot)
@@ -54,6 +46,12 @@ def setup_fss():
     The @onsetup decorator causes the execution of this body to be deferred
     until the setup of the Plone site testing layer.
     """
+    import iw.fss
+    iw.fss.customconfig.ZOPETESTCASE = True
+    from iw.fss.customconfig import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
+
+    # Install FSS Example types
+    os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
     ztc.installPackage('iw.fss')
 
 def createTemporaryDirs():
@@ -86,9 +84,10 @@ class TestMailHost(MailHost.MailHost):
 class TestCase(ptc.FunctionalTestCase):
     """test case used in tests"""
 
-    class layer(PloneSite):
+    class layer(PloneSiteLayer):
         @classmethod
         def setUp(cls):
+            import iw.fss
             fiveconfigure.debug_mode = True
             zcml.load_config('configure.zcml', iw.fss)
             fiveconfigure.debug_mode = False

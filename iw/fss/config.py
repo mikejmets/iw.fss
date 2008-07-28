@@ -22,8 +22,6 @@ $Id$
 __author__  = ''
 __docformat__ = 'restructuredtext'
 
-from customconfig import ZOPETESTCASE, INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
-
 PROJECTNAME = 'iw.fss'
 GLOBALS = globals()
 I18N_DOMAIN = PROJECTNAME.lower()
@@ -33,6 +31,7 @@ ZCONFIG, dummy_handler, CONFIG_FILE = None, None, None
 
 def loadConfig():
     """Loads configuration from a ZConfig file"""
+    from customconfig import ZOPETESTCASE
 
     global ZCONFIG, dummy_handler, CONFIG_FILE
 

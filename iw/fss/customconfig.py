@@ -23,6 +23,7 @@ __author__  = 'Gilles Lenfant <gilles.lenfant@ingeniweb.com>'
 __docformat__ = 'restructuredtext'
 
 import os
-ZOPETESTCASE = os.environ.has_key('ZOPE_TESTCASE')
+ZOPETESTCASE = (('ZOPE_TESTCASE' in os.environ)
+                or ('ZOPETESTCASE' in os.environ))
 del os
 INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE = 'FSS_INSTALL_EXAMPLE_TYPES'

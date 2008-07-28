@@ -35,10 +35,6 @@ from Products.CMFCore.utils import getToolByName
 # Plone imports
 from Products.PloneTestCase import PloneTestCase
 
-# Products imports
-from iw.fss.config import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
-from iw.fss.interfaces import IConf
-
 # Globals
 portal_name = 'portal'
 portal_owner = 'portal_owner'
@@ -78,6 +74,10 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
             self[key] = value
 
     def _setup(self):
+        from iw.fss.customconfig import INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE
+        from iw.fss.interfaces import IConf
+        os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
+
         PloneTestCase.PloneTestCase._setup(self)
         self.app.REQUEST['SESSION'] = self.Session()
 
@@ -201,9 +201,6 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         content.edit(**kw)
 
 DEFAULT_PRODUCTS = ['kupu', 'iw.fss'] # 'FileSystemStorage']
-
-# Install FSS Example types
-os.environ[INSTALL_EXAMPLE_TYPES_ENVIRONMENT_VARIABLE] = 'True'
 
 HAS_ATCT = True
 ZopeTestCase.installProduct('ATContentTypes')
