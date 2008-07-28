@@ -2,14 +2,16 @@
 CHANGES
 #######
 
-SVN
-###
+2.7.5
+#####
 
 * removed fss_get in VirtualBinary urls: this old script has been removed with
   skins. This caused problems with content such as plone news item calling
   image.tag().
+  [b_mathieu]
 
 * run tests without shell variable ZOPE_TESTCASE
+  [b_mathieu]
 
 2.7.4
 #####
