@@ -490,7 +490,7 @@ example of `The Python way`_ above::
     ...
     xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:fss="http://namespaces.ingeniweb.com/filesystemstorage"
-    ... />
+    ...>
     ...
     <fss:typeWithFSS
       zcml:condition="installed iw.fss"
