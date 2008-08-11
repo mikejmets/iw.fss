@@ -2,6 +2,12 @@
 CHANGES
 #######
 
+2.7.6
+#####
+
+* fix i18n initialization under win32
+  [bmathieu]
+
 2.7.5
 #####
 

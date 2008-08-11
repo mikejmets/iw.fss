@@ -70,6 +70,7 @@ def initialize(context):
 
     # Provides 'plone' domain translations
     if not ZOPETESTCASE:
-        context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(os.path.dirname(__file__)+'/i18n')
+        i18n_dir = os.path.join(os.path.dirname(__file__), 'i18n')
+        context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(i18n_dir)
 
     return
