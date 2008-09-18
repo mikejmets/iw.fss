@@ -5,6 +5,10 @@ CHANGES
 2.7.6
 #####
 
+* Safety belt against GS irrelevant upgrades.
+  See https://dev.plone.org/plone/ticket/8507
+  [glenfant]
+
 * fix i18n initialization under win32
   [bmathieu]
 

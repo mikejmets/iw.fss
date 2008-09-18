@@ -22,8 +22,10 @@ GS upgrade steps for iw.fss
 __author__  = 'Gilles Lenfant <gilles.lenfant@ingeniweb.com>'
 __docformat__ = 'restructuredtext'
 
+from utils import IfInstalled
 from zope.app.component.hooks import getSite
 
+@IfInstalled()
 def removeFSSTool(setuptool):
     """We don't need it anymore from version 2.7.3"""
     portal = getSite()
@@ -31,6 +33,7 @@ def removeFSSTool(setuptool):
         portal._delObject('portal_fss')
     return
 
+@IfInstalled()
 def addFSSPropertySheet(setuptool):
     """Options are stored in that propertysheet"""
 
