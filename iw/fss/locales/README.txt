@@ -84,3 +84,5 @@ Credits
 * English (en) and French (fr): `Ingeniweb team <support@ingeniweb.com>`_
 * Czeck (cs) translation: `Radim Novotny <novotny.radim@gmail.com>`_
 * Brazilian Portuguese (pt_BR) translation: `Érico Andrei <erico@simplesconsultoria.com.br>`_
+* Basque (eu): `Mikel Larreategi - CodeSyntax <mlarreategi@codesyntax.com>`_
+
