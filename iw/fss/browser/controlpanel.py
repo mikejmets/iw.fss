@@ -62,6 +62,8 @@ class FSSBaseView(BrowserView):
              'template': 'fss_management_form'},
             {'label': _(u'maintenance_tab', default=u"Maintenance"),
              'template': 'fss_maintenance_form'},
+            {'label': _(u'migration_tab', default=u"Migration"),
+             'template': 'fss_migration_form'},
             {'label': _(u'documentation_tab', default=u"Documentation"),
               'template': 'fss_documentation_form'}
             ]
@@ -73,13 +75,30 @@ class FSSBaseView(BrowserView):
                 ti['css_class'] = None
         return tab_infos
 
+
     def rdfEnabled(self):
         return self.conf.rdfEnabled
+
 
     def usesGlobalConfig(self):
         """If this site uses the global configuration"""
 
         return self.conf.usesGlobalConfig()
+
+
+    def patchedTypesInfo(self):
+        """A TALES friendly summary of content types with storage changed to FSS"""
+
+        out = []
+        count = -1
+        for type_class, fields_to_storages in patchedTypesRegistry.items():
+            count += 1
+            feature = {'klass': str(type_class)}
+            feature['fields'] = [{'fieldname': fn, 'storage': str(st.__class__)}
+                                 for fn, st in fields_to_storages.items()]
+            feature['row_css_class'] = ('even', 'odd')[count % 2]
+            out.append(feature)
+        return out
 
 
 
@@ -112,21 +131,6 @@ class FSSManagementView(FSSBaseView):
             'storage_path': ZCONFIG.storagePathForSite(portal_path),
             'backup_path': ZCONFIG.backupPathForSite(portal_path)
             }
-
-
-    def patchedTypesInfo(self):
-        """A TALES friendly summary of content types with storage changed to FSS"""
-
-        out = []
-        count = -1
-        for type_class, fields_to_storages in patchedTypesRegistry.items():
-            count += 1
-            feature = {'klass': str(type_class)}
-            feature['fields'] = [{'fieldname': fn, 'storage': str(st.__class__)}
-                                 for fn, st in fields_to_storages.items()]
-            feature['row_css_class'] = ('even', 'odd')[count % 2]
-            out.append(feature)
-        return out
 
 
     def rdfScript(self):
@@ -240,6 +244,48 @@ class FSSMaintenanceView(FSSBaseView):
         REQUEST.RESPONSE.redirect(REQUEST.URL1)
         return
 
+
+class FSSMigrationView(FSSBaseView):
+
+    def mayMigrate(self):
+        """Have enough conditions to let the admin migrate"""
+
+        return (not self.usesGlobalConfig()) and (len(self.patchedTypesInfo()) > 0)
+
+
+    @postonly
+    def migrateToFSS(self, REQUEST):
+        """Let's migrate all relevant site content fields"""
+
+        really_migrate = REQUEST.get('imsure', None)
+        if not really_migrate:
+            message = _(
+                u'report_no_migration',
+                default=u"You didn't check \"I'm sure\", migration canceled")
+            IStatusMessage(REQUEST).addStatusMessage(message, type='info')
+            REQUEST.RESPONSE.redirect(REQUEST.URL1)
+            return
+
+        # We do it really...
+        do_log = bool(REQUEST.get('logtomigration', False))
+        commit_every = REQUEST.get('transactioncount')
+        migrator = Migrator(getSite(), do_log, commit_every)
+        count = migrator.migrateToFSS()
+        results = {
+            u'count': count}
+        message = _(
+            u'report_migration_to_fss',
+            default=u"${count} content items migrated to FSS",
+            mapping=results)
+        IStatusMessage(REQUEST).addStatusMessage(message, type='info')
+        REQUEST.RESPONSE.redirect(REQUEST.URL1)
+        return
+
+
+    @postonly
+    def migrateFromFSS(self, REQUEST):
+        """Let's return to original storage"""
+        return
 
 
 class FSSDocumentationView(FSSBaseView):

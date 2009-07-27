@@ -47,6 +47,15 @@ $Id$
      />
 
   <browser:page
+     name="fss_migration_form"
+     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+     template="fss_migration_form.pt"
+     class=".controlpanel.FSSMigrationView"
+     permission="cmf.ManagePortal"
+     allowed_attributes="migrateToFSS migrateFromFSS"
+     />
+
+  <browser:page
      name="fss_documentation_form"
      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
      template="fss_documentation_form.pt"
