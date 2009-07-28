@@ -34,10 +34,10 @@ $Id$
 
   <!-- You may uncomment this if you want to store files and images fields
        of ATContentTypes with FSS
-
+       -->
   <include file="atct.zcml" />
 
-  -->
+
 
   <i18n:registerTranslations directory="locales" />
 

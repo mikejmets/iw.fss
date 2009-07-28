@@ -16,7 +16,7 @@ along with this program; see the file COPYING. If not, write to the
 Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 USA.
 ===============================================================
-$Id: configure.zcml 66023 2008-06-02 13:50:56Z glenfant $
+$Id$
 -->
 <configure xmlns="http://namespaces.zope.org/zope"
 	   xmlns:gs="http://namespaces.zope.org/genericsetup"

@@ -36,7 +36,7 @@ from base import TestCase, STORAGE_PATH, BACKUP_PATH
 current_dir = os.path.dirname(__file__)
 
 def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
-    """Returns a test suite, based on doctests found in /doctest."""    
+    """Returns a test suite, based on doctests found in /doctest."""
     suite = []
     if globs is None:
         globs = globals()
@@ -75,14 +75,14 @@ def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
 
 def test_suite():
     """returns the test suite"""
-    
+
     strategies = ('FlatStorageStrategy', 'DirectoryStorageStrategy',
                   'SiteStorageStrategy', 'SiteStorageStrategy2')
-    
+
     def changeStrategy(self):
         strategy_klass = self.globs['strategy_klass'](STORAGE_PATH, BACKUP_PATH)
         ConfFile.getStorageStrategy = lambda x: strategy_klass
-        
+
     # Duplicate doc tests for all strategies
     suite = []
     for strategy_name in strategies:
@@ -90,7 +90,7 @@ def test_suite():
 
         suite.extend(doc_suite(current_dir, globs={'strategy_klass': strategy_klass},
                                             setUp=changeStrategy))
-    
+
     return unittest.TestSuite(suite)
 
 if __name__ == '__main__':

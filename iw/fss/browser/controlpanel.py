@@ -41,6 +41,7 @@ from iw.fss.config import ZCONFIG, CONFIG_FILE
 from iw.fss.utils import FSSMessageFactory as _
 from iw.fss.interfaces import IConf
 from iw.fss.zcml import patchedTypesRegistry
+from iw.fss.migration import Migrator
 
 
 class FSSBaseView(BrowserView):
