@@ -2,6 +2,12 @@
 CHANGES
 #######
 
+SVN trunk
+#########
+
+* Adding migration utility (XStorage -> FSS)
+  [glenfant]
+
 2.7.6
 #####
 

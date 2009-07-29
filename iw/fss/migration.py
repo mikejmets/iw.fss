@@ -85,7 +85,11 @@ class Migrator(object):
                     continue
                 for fieldname, former_storage in patched_fields.items():
                     field = item.getField(fieldname)
-                    value = former_storage.get(fieldname, item)
+                    try:
+                        value = former_storage.get(fieldname, item)
+                    except AttributeError, e:
+                        # Optional empty value
+                        continue
                     filename = getattr(value, 'filename', None) or obj.getId()
                     if isinstance(value, File):
                         unwrapped_value = value.data
