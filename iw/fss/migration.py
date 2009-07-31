@@ -113,7 +113,7 @@ class Migrator(object):
                     former_storage.unset(fieldname, item)
 
                     # Removing empty files
-                    if field.get_size(item):
+                    if field.get_size(item) == 0:
                         field.set(item, 'DELETE_FILE')
                     self.log("Field %s of %s successfully migrated",
                              fieldname, brain.getPath())

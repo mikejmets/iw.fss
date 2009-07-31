@@ -200,7 +200,7 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         kw = {field: fu}
         content.edit(**kw)
 
-DEFAULT_PRODUCTS = ['kupu', 'iw.fss'] # 'FileSystemStorage']
+DEFAULT_PRODUCTS = ['kupu', 'iw.fss']
 
 HAS_ATCT = True
 ZopeTestCase.installProduct('ATContentTypes')

@@ -19,14 +19,19 @@ Testing FSS features
 $Id$
 """
 
-from common import *
+from StringIO import StringIO
+import transaction
+from zope.component import getUtility
+from Products.Five import zcml
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
-from StringIO import StringIO
-from zope.component import getUtility
+import iw.fss
 from iw.fss.interfaces import IConf
+from iw.fss.migration import Migrator
+from common import *
 
 class TestFSS(FSSTestCase.FSSTestCase):
+
     def afterSetUp(self):
         self.loginAsPortalOwner()
         content_id = 'test_folder'
@@ -766,41 +771,91 @@ class TestFSS(FSSTestCase.FSSTestCase):
         self.assertEquals(file_field.getContentType(content), 'application/msword')
 
         self.logout()
+        return
 
-# Test all content metadata
-strategies = (
-    ('FlatStorageStrategy', 'from iw.fss.strategy import FlatStorageStrategy'),
-    ('DirectoryStorageStrategy', 'from iw.fss.strategy import DirectoryStorageStrategy'),
-    ('SiteStorageStrategy', 'from iw.fss.strategy import SiteStorageStrategy'),
-    ('SiteStorageStrategy2', 'from iw.fss.strategy import SiteStorageStrategy2'),
-    )
+    def test_migrations(self):
+        """Testing migrations from natural ATCT storage (Annotation ?)
+        """
+        from iw.fss.zcml import patchedTypesRegistry
+
+        self.loginAsPortalOwner()
+
+        # Install content from zexp
+        zexp_path = os.path.join(self.getDataPath(), 'migration-in.zexp')
+        self.portal._importObjectFromFile(zexp_path)
+        self._checkImportedContent()
+
+        # We apply FSS settings to ATCT
+        zcml.load_config('atct.zcml', iw.fss)
+
+        # We process the migration
+        migrator = Migrator(self.portal)
+        migrator.migrateToFSS()
+
+        # We check we have the same content (AT API pov)
+        self._checkImportedContent()
+
+        # Deleting imported stuff
+        self.portal._delObject('migration-in')
+        patchedTypesRegistry = {}
+        return
 
 
-dynamic_class = """
-%(import)s
+    def _checkImportedContent(self):
+        """Some checks on imported context before and after migration
+        """
+        folder = self.portal['migration-in']
+        self.failUnlessEqual(folder.portal_type, 'Folder')
 
-class Test%(name)s(TestFSS):
-    "Test fss"
+        # We have all expected items
+        expecting = [
+            # item id, field name, size
+            ('Lorem ipsum.pdf', 'file', 31362),
+            ('einsteinphoto.jpg', 'image', 64396),
+            ('news-with-image', 'image', 61054),
+            ('news-without-image', 'image', 0)
+            ]
+        expected_ids = [x[0] for x in expecting]
+        self.failUnlessEqual(set(folder.objectIds()), set(expected_ids))
 
-    strategy_klass = %(name)s
-"""
+        # Inspecting each item
+        for item_id, fieldname, size in expecting:
+            item = folder[item_id]
+            field = item.Schema()[fieldname]
+            self.failUnlessEqual(field.get_size(item), size)
+        return
+
+###
+## Real test classes
+###
+
+from iw.fss.strategy import (
+    DirectoryStorageStrategy, FlatStorageStrategy,
+    SiteStorageStrategy, SiteStorageStrategy2)
+
+class TestDirectoryStorageStrategy(TestFSS):
+
+    strategy_klass = DirectoryStorageStrategy
+
+class TestFlatStorageStrategy(TestFSS):
+
+    strategy_klass = FlatStorageStrategy
+
+class TestSiteStorageStrategy(TestFSS):
+
+    strategy_klass = SiteStorageStrategy
+
+class TestSiteStorageStrategy2(TestFSS):
+
+    strategy_klass = SiteStorageStrategy2
 
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-
-    module = sys.modules[TestFSS.__module__]
-
-    # Build dynamic test cases
-    for strategy in strategies:
-        code = dynamic_class % {
-            'name' : strategy[0],
-            'import' : strategy[1],
-            }
-
-        exec code in module.__dict__
-        suite.addTest(makeSuite(getattr(module, 'Test%s' % strategy[0])))
-
+    suite.addTest(makeSuite(TestDirectoryStorageStrategy))
+    suite.addTest(makeSuite(TestFlatStorageStrategy))
+    suite.addTest(makeSuite(TestSiteStorageStrategy))
+    suite.addTest(makeSuite(TestSiteStorageStrategy2))
     return suite
 
 if __name__ == '__main__':
