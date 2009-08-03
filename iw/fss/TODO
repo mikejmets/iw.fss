@@ -7,6 +7,9 @@ Issues
 
 * Fix CMFEditions support for strategies site1 and site2
 
+* Fix migration unit tests (they work only for the first strategy in
+  the list of tests, wharever's the order).
+
 Features
 ########
 

@@ -19,22 +19,19 @@ This module contains the tool of iw.fss
 """
 import os
 from setuptools import setup, find_packages
-from xml.dom import minidom
 
-metadata_file = os.path.join(os.path.dirname(__file__),
-                             'iw', 'fss',
-                             'profiles', 'default', 'metadata.xml')
-metadata = minidom.parse(metadata_file)
-version = metadata.getElementsByTagName("version")[0].childNodes[0].nodeValue
-version = str(version).strip()
+def _textFromPath(*names):
+    here = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(here, *names)
+    return open(path, 'r').read().strip()
 
-README = os.path.join(os.path.dirname(__file__),
-                      'iw', 'fss', 'README.txt')
+version = _textFromPath('iw', 'fss', 'version.txt')
 
-long_description = open(README).read() + '\n\n'
+long_description = _textFromPath('iw', 'fss', 'README.txt') + '\n\n'
+long_description += _textFromPath('iw', 'fss', 'CHANGES')
 
 tests_require = [
-        'zope.testing',
+    'zope.testing',
     ]
 
 setup(name='iw.fss',

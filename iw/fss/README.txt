@@ -27,7 +27,7 @@ don't use Plone components that may use FSS, such as AttachmentField_.
 Copyright and license
 #####################
 
-Copyright (c) 2005 - 2008 Ingeniweb_ SAS
+Copyright (c) 2005 - 2009 Ingeniweb_ SAS
 
 This software is subject to the provisions of the GNU General Public License,
 Version 2.0 (GPL).  A copy of the GPL should accompany this distribution.
@@ -64,22 +64,10 @@ From this version and later version, iw.fss registers upgrade steps in
 GenericSetup. When upgrading to a newer version of iw.fss, just have a
 look at the "Upgrade" tab of the portal_setup tool in your Plone site.
 
-Warning, due to the removal of the `portal_fss` tool upgrading from
-2.7.1 does not retain the RDF options (activated and specific
-script). If you used RDF with 2.7.1, you need to redo the same RDF
-setting in the FileSystemStorage config panel.
-
-
-Migrating between strategies
-############################
-
-Use the `bin/strategymigrator.py` shell utility that ships with FSS. Get
-more info on this utility using the `--help` option.
-
-Note that only flat -> directory and directory -> flat are available
-today. Sponsorship is welcome - as indicated in `Support and
-feedback`_ - if you need other strategy migrations.
-
+Warning, due to the removal of the `portal_fss` tool upgrading from 2.7.1 does
+not retain the RDF options (activated and specific script). If you used RDF with
+2.7.1, you need to redo the same RDF setting in the FileSystemStorage config
+panel.
 
 Installation
 ############
@@ -442,7 +430,7 @@ Here is a small example that doesn't need much comments::
                 ...
                 storage=FileSystemStorage(),
                 widget=FileWidget(...)
-		),
+                ),
       ...
       ))
    ...
@@ -654,6 +642,62 @@ external utilities based on canonical `DCMES-XML standard`_.
 
 Consider adding your own namespace for your custom extra elements.
 
+Migrating from AttributeStorage or AnnotationStorage
+####################################################
+
+We assume that, at this point, you got :
+
+* A production Plone site filled with contents which storage is supported by the
+  standard AT storages (AttributeStorage or AnnotationStorage).
+
+* A development site with the **same** AT based content types (ATCT plus
+  others), `iw.fss` and a ZCML setup that stores fields of some contents with
+  `iw.fss`. See how to do it `The ZCML way`_ or use the `atct.zcml` file that's
+  included in this package.
+
+Backup your production site
+===========================
+
+Yes, at this early stage, we didn't test migration with lots and lots of content
+types. Only the basic OTB content types have been tested. But this should work
+with any other. Whatever, you should always backup a site before proceeding to a
+deep migration like this one.
+
+Add the `iw.fss` settings
+=========================
+
+Install `iw.fss` and the ZCML settings from your develoment site on your
+production site. Note that at this step, it's safer to deny access to the users
+(use Apache settings or whatever).
+
+Start your Zope instance in forground mode (recommanded if you want to follow
+the migration logging).
+
+Do the migration
+================
+
+Open the FileSystemStorage configlet. Check that the main control panel reports
+the expected settings (storage paths and strategies, supported content types and
+fields).
+
+Click the "migration" tab of this control panel, check the options, and proceed
+to migrations.
+
+Pack the ZODB
+=============
+
+After a successful migration, you may pack immediately the ZODB to appreciate
+the effect of using `iw.fss`.
+
+Migrating between strategies
+############################
+
+Use the `bin/strategymigrator.py` shell utility that ships with FSS. Get
+more info on this utility using the `--help` option.
+
+Note that only flat -> directory and directory -> flat are available
+today. Sponsorship is welcome - as indicated in `Support and
+feedback`_ - if you need other strategy migrations.
 
 Testing
 #######
