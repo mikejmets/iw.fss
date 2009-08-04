@@ -722,7 +722,8 @@ class FileSystemStorage(StorageLayer):
         info = self.getFSSInfo(name, instance)
 
         if info is None:
-            return ''
+            # No image is no image, not an empty one
+            raise AttributeError(name)
 
         strategy = self.getStorageStrategy(name, instance)
         props = self.getStorageStrategyProperties(name, instance, info)
