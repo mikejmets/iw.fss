@@ -1,6 +1,12 @@
 CHANGES
 #######
 
+SVN trunk
+=========
+
+* Fixed an issue on optional (non "required") fields: getting an empty
+  field must raise an AttributeError and not return an empty string.
+  [glenfant]
 
 2.8.0a1
 =======
@@ -40,16 +46,16 @@ CHANGES
 =====
 
 * GenericSetup upgrade step (any version) -> 1.0
-  [lenfant]
+  [glenfant]
 
 * Red warnings when using the default common config in config panels
-  [lenfant]
+  [glenfant]
 
 * Config panel enhancements (config details view, documentation)
-  [lenfant]
+  [glenfant]
 
 * Code cleanup (useless stuffs)
-  [lenfant]
+  [glenfant]
 
 * Fixed test cases
   [cbosse] [glenfant]
@@ -68,7 +74,7 @@ CHANGES
   adding a file, and zero items after deleting it.
   [maikroeder]
 
-* "site1" and "site2" strategies are forfidden as globla strategies
+* "site1" and "site2" strategies are forfidden as global strategies
   [glenfant]
 
 * 100% GenericSetup installation
@@ -133,7 +139,7 @@ CHANGES
 2.7.0 - 2008/02/26
 ==================
 
-
+[glenfant]
 * Convert FileSystemStorage Zope 2 product to iw.fss python package
   [tarek]
 
@@ -156,7 +162,7 @@ CHANGES
 
 * Remove the OSError when moving file into backup
 
-* Plone 3.0 compatibility (GL)
+* Plone 3.0 compatibility [glenfant]
 
 * Do not override Content-Disposition HTTP header if already set in
   VirtualBinary.index_html (zegor)
@@ -169,20 +175,20 @@ CHANGES
 
 * Changed in depth the way we configure FSS with the ZConfig
   way. Changing the storage and backup path, and the storage strategy
-  TTW is disabled (GL)
+  TTW is disabled [glenfant]
 
 * As a consequence, changing the storage strategy doesn't require to
-  hack config.py any more (GL)
+  hack config.py any more [glenfant]
 
 * As a consequence, each Plone site in a Zope instance can have its
-  own storage strategy (GL)
+  own storage strategy [glenfant]
 
-* Configuration view and README.txt view in ZMI (GL)
+* Configuration view and README.txt view in ZMI [glenfant]
 
-* Fixed documentation issues (GL)
+* Fixed documentation issues [glenfant]
 
 * SiteStorageStrategy and SiteStorageStrategy2 didn't work under Win32
-  (GL)
+  [glenfant]
 
 * Make FSS compatible with Plone 2.0 : just rewrite some testcases
 
