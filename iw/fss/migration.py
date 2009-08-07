@@ -90,7 +90,7 @@ class Migrator(object):
                     except AttributeError, e:
                         # Optional empty value
                         continue
-                    filename = getattr(value, 'filename', None) or obj.getId()
+                    filename = getattr(value, 'filename', None) or item.getId()
                     if isinstance(value, File):
                         unwrapped_value = value.data
                     else:
