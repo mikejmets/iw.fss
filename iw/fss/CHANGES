@@ -1,6 +1,12 @@
 CHANGES
 #######
 
+SVN trunk
+=========
+
+* Faster and safer method to guess the mime type when migrating.
+  [glenfant]
+
 2.8.0a3
 =======
 

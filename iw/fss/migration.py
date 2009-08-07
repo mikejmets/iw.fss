@@ -75,16 +75,23 @@ class Migrator(object):
             brains = catalog.searchResults(meta_type=meta_type)
             for brain in brains:
                 item_changed = False
+                brain_path = brain.getPath()
                 try:
                     item = brain.getObject()
                 except Exception, e:
-                    LOG_WARNING("Catalog mismatch on %s", brain.getPath(), exc_info=True)
+                    LOG_WARNING("Catalog mismatch on %s", brain_path, exc_info=True)
                     continue
                 if item is None:
-                    LOG_WARNING("Catalog mismatch on %s", brain.getPath())
+                    LOG_WARNING("Catalog mismatch on %s", brain_path)
                     continue
                 for fieldname, former_storage in patched_fields.items():
                     field = item.getField(fieldname)
+                    try:
+                        mimetype = field.getContentType(item)
+                    except AttributeError, e:
+                        self.log("Can't guess content type of '%s', set to 'application/octet-stream'"
+                                 % brain_path)
+                        mimetype = 'application/octet-stream'
                     try:
                         value = former_storage.get(fieldname, item)
                     except AttributeError, e:
@@ -100,14 +107,14 @@ class Migrator(object):
                         unwrapped_value,
                         instance=item,
                         filename=filename,
-                        mimetype=value.getContentType(),
+                        mimetype=mimetype,
                         )
                     try:
                         field.set(item, data)
                         self.commit()
                     except IOError, e:
                         LOG_ERROR("Migrating %s failed on field %s",
-                                  '/'.join(brain.getPath()), fieldname,
+                                  '/'.join(brain_path), fieldname,
                                   exc_info=True)
                         continue
                     former_storage.unset(fieldname, item)
@@ -116,7 +123,7 @@ class Migrator(object):
                     if field.get_size(item) == 0:
                         field.set(item, 'DELETE_FILE')
                     self.log("Field %s of %s successfully migrated",
-                             fieldname, brain.getPath())
+                             fieldname, brain_path)
                 # /for fieldname...
             # /for brain...
         # /for content_class
