@@ -38,11 +38,12 @@ setup(name='iw.fss',
       version=version,
       description="Archetypes storage for storing fields raw values on the file system.",
       long_description=long_description,
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
+      # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        "Framework :: Plone",
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
+          "Framework :: Plone",
+          "Programming Language :: Python",
+          "Topic :: Software Development :: Libraries :: Python Modules",
+          "Development Status :: 3 - Alpha"
         ],
       keywords='fss plone',
       author='Ingeniweb',

@@ -1,11 +1,14 @@
 CHANGES
 #######
 
-SVN trunk
-=========
+2.8.0a2
+=======
 
 * Fixed an issue on optional (non "required") fields: getting an empty
   field must raise an AttributeError and not return an empty string.
+  [glenfant]
+
+* ATCT settings disabled 
   [glenfant]
 
 2.8.0a1
