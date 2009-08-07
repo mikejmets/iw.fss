@@ -142,7 +142,6 @@ CHANGES
 2.7.0 - 2008/02/26
 ==================
 
-[glenfant]
 * Convert FileSystemStorage Zope 2 product to iw.fss python package
   [tarek]
 
