@@ -1,6 +1,12 @@
 CHANGES
 #######
 
+2.8.0a3
+=======
+
+* Fixed a NameError in migrations that could not be raised by unit tests.
+  [glenfant]
+
 2.8.0a2
 =======
 
