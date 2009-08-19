@@ -40,36 +40,36 @@
           Migrating to FSS
         </legend>
 
-        <h3>Assumptions</h3>
+        <h3 i18n:translate="label_assumptions">Assumptions</h3>
 
-        <p>
+        <p i18n:translate="desc_assumptions">
           At that step we assume that some of your contents in this
           site that have been associated with FSS. See the "Options"
           tab above to see what content types are involved.
         </p>
 
-        <h3>Backup</h3>
+        <h3 i18n:translate="label_backup">Backup</h3>
 
-        <p>
+        <p i18n:translate="desc_backup">
           Always <strong>backup</strong> all storages (ZODB and FSS
           directories) of your instance at this step. You have been
           warned in case of migration failure.
         </p>
 
-        <h3>Shut down public access</h3>
+        <h3 i18n:translate="label_shudown_pub_access">Shut down public access</h3>
 
-        <p>
+        <p i18n:translate="desc_shutdown_pub_access">
           Do not let an user browse or - worse - change any content
           while the migration is running. This may raise
           conflicts and content corruption. Hint: shut down Apache.
         </p>
 
-        <h3>Go...</h3>
+        <h3 i18n:translate="label_go_migrate">Go...</h3>
 
-        <p>
+        <p i18n:translate="desc_go_migrate">
           Check the safety belt "I'm sure" and the "Migrate" button.
         </p>
-        
+
         <form method="post"
               action="#"
               enctype="multipart/form-data"
@@ -81,10 +81,10 @@
               Subtransactions threshold
             </label>
             <div class="formHelp"
-                 i18n:translate="help_transaction_threshol">
+                 i18n:translate="help_transaction_threshold">
               A low threshold will migrate somehow slowly at the cost
               of a low memory footprint. Increasing that threshold may
-              speed up the migration and resuire more memory.
+              speed up the migration and require more memory.
             </div>
             <input type="text"
                    id="form.transactionthreshold_widget"
@@ -140,46 +140,6 @@
         </form>
       </fieldset>
 
-      <fieldset tal:replace="nothing">
-        <legend i18n:translate="label_migrating_from_fss">
-          Migrating from FSS
-        </legend>
-
-        <h3>Assumptions</h3>
-
-        <p>
-          At that step we assume that some of your contents in this
-          site that have been associated with FSS. See the "Options"
-          tab above to see what content types are involved.
-        </p>
-
-        <h3>Backup</h3>
-
-        <p>
-          Always <strong>backup</strong> all storages (ZODB and FSS
-          directories) of your instance at this step. You have been
-          warned in case of migration failure.
-        </p>
-
-        <h3>Shut down public access</h3>
-
-        <p>
-          Do not let an user browse or - worse - change any content
-          while the migration is running. This may raise
-          conflicts and content corruption. Hint: shut down Apache.
-        </p>
-
-        <h3>Remove FSS</h3>
-
-        <p>
-          If you want to see the effect of that reverse migration,
-          shut down you Zope instance <strong>immediately</strong>
-          after this back-migration, remove the iw.fss component and
-          the &lt;fss:typeWithFSS ... /&gt; from the various .zcml
-          files of the instance's components/products. Finally,
-          restart your Zope instance.
-        </p>
-      </fieldset>
-    </tal:block>
+   </tal:block>
   </div>
 </html>

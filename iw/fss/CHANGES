@@ -1,8 +1,14 @@
 CHANGES
 #######
 
-SVN trunk
-=========
+2.8.0b1
+=======
+
+* Upgraded translations (.pot and french translation)
+  [glenfant]
+
+* Fixed issues reported by test users.
+  [glenfant]
 
 * Faster and safer method to guess the mime type when migrating.
   [glenfant]
@@ -20,7 +26,7 @@ SVN trunk
   field must raise an AttributeError and not return an empty string.
   [glenfant]
 
-* ATCT settings disabled 
+* ATCT settings disabled
   [glenfant]
 
 2.8.0a1

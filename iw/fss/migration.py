@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-## Copyright (C) 2008 Ingeniweb
+## Copyright (C) 2009 Ingeniweb
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@ class Migrator(object):
         """Construction params:
         @param portal: portal object to migrate
         @param do_log: log details of migration (bool)
-        @param commit_every: commit subtransaction every n content items changed"""
-
+        @param commit_every: commit subtransaction every n content items changed
+        """
         self.portal = portal
         self.do_log = do_log
         self.commit_every = commit_every
@@ -51,7 +51,8 @@ class Migrator(object):
         return
 
     def commit(self):
-        """Should we commit"""
+        """Should we commit?
+        """
         self.changed_items += 1
         if ((self.commit_every > 0)
             and (self.changed_items % self.commit_every == 0)):
@@ -59,20 +60,26 @@ class Migrator(object):
         return
 
     def log(self, message, *args, **kw):
-        """Logging if option set"""
-
+        """Logging if option set
+        Params: see logging module, info method
+        http://python.org/doc/2.4.4/lib/node341.html
+        """
         if self.do_log:
             LOG(message, *args, **kw)
 
     def migrateToFSS(self):
-        """Do migrations to FSS"""
-
+        """Do migrations to FSS
+        """
         catalog = self.portal.portal_catalog
         self.log("Starting migration to FSS")
+
+        # Looping on relevant content types / fields
         for content_class, patched_fields in patchedTypesRegistry.items():
             meta_type = content_class.meta_type
             self.log("Migrating %s content types", meta_type)
             brains = catalog.searchResults(meta_type=meta_type)
+
+            # Looping on items
             for brain in brains:
                 item_changed = False
                 brain_path = brain.getPath()
@@ -84,6 +91,8 @@ class Migrator(object):
                 if item is None:
                     LOG_WARNING("Catalog mismatch on %s", brain_path)
                     continue
+
+                # Looping on fields
                 for fieldname, former_storage in patched_fields.items():
                     field = item.getField(fieldname)
                     try:
@@ -95,7 +104,7 @@ class Migrator(object):
                     try:
                         value = former_storage.get(fieldname, item)
                     except AttributeError, e:
-                        # Optional empty value
+                        # Optional empty value -> no migration required
                         continue
                     filename = getattr(value, 'filename', None) or item.getId()
                     if isinstance(value, File):
@@ -131,8 +140,10 @@ class Migrator(object):
 
 
     def migrateFromFSS(self):
-        """Do migrations from FSS"""
-
+        """Do migrations from FSS
+        """
+        # Nothing at the moment. In a certain future...
         self.log("Starting migrations from FSS")
+        raise NotImplementedError("Migration from FSS not yet implemented")
         return self.changed_items
 
