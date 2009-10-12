@@ -36,6 +36,8 @@ LOG = logger.info
 LOG_WARNING = logger.warning
 LOG_ERROR = logger.error
 
+UNKNOWN_MIMETYPE = 'application/octet-stream'
+
 class Migrator(object):
 
     def __init__(self, portal, do_log=False, commit_every=0):
@@ -57,6 +59,7 @@ class Migrator(object):
         if ((self.commit_every > 0)
             and (self.changed_items % self.commit_every == 0)):
             transaction.savepoint(optimistic=True)
+            self.log(self.changed_items, "items migrated")
         return
 
     def log(self, message, *args, **kw):
@@ -71,6 +74,7 @@ class Migrator(object):
         """Do migrations to FSS
         """
         catalog = self.portal.portal_catalog
+        mimetypes_registry = self.portal.mimetypes_registry
         self.log("Starting migration to FSS")
 
         # Looping on relevant content types / fields
@@ -91,22 +95,30 @@ class Migrator(object):
                 if item is None:
                     LOG_WARNING("Catalog mismatch on %s", brain_path)
                     continue
-
+                item_changed = False
                 # Looping on fields
                 for fieldname, former_storage in patched_fields.items():
-                    field = item.getField(fieldname)
-                    try:
-                        mimetype = field.getContentType(item)
-                    except AttributeError, e:
-                        self.log("Can't guess content type of '%s', set to 'application/octet-stream'"
-                                 % brain_path)
-                        mimetype = 'application/octet-stream'
                     try:
                         value = former_storage.get(fieldname, item)
                     except AttributeError, e:
                         # Optional empty value -> no migration required
                         continue
+
+                    field = item.getField(fieldname)
+
+                    # Trying to get the mime type
+                    try:
+                        mimetype = field.getContentType(item)
+                    except AttributeError, e:
+                        self.log("Can't guess content type of '%s', set to 'application/octet-stream'"
+                                 % brain_path)
+                        mimetype = UNKNOWN_MIMETYPE
                     filename = getattr(value, 'filename', None) or item.getId()
+                    if filename and (mimetype == UNKNOWN_MIMETYPE):
+                        mti = mimetypes_registry.lookupExtension(filename)
+                        if mti and (len(mti.mimetypes) > 0):
+                            mimetype = mti.mimetypes[0]
+
                     if isinstance(value, File):
                         unwrapped_value = value.data
                     else:
@@ -120,20 +132,28 @@ class Migrator(object):
                         )
                     try:
                         field.set(item, data)
-                        self.commit()
                     except IOError, e:
                         LOG_ERROR("Migrating %s failed on field %s",
                                   '/'.join(brain_path), fieldname,
                                   exc_info=True)
                         continue
+
+                    # Cleaning former storage
                     former_storage.unset(fieldname, item)
+
+                    if mimetype != UNKNOWN_MIMETYPE and hasattr(field, 'setContentType'):
+                        # Sometimes AT sucks, we need to say twice the mimetype
+                        field.setContentType(item, mimetype)
 
                     # Removing empty files
                     if field.get_size(item) == 0:
                         field.set(item, 'DELETE_FILE')
                     self.log("Field %s of %s successfully migrated",
                              fieldname, brain_path)
+                    item_changed = True
                 # /for fieldname...
+                if item_changed:
+                    self.commit()
             # /for brain...
         # /for content_class
         return self.changed_items

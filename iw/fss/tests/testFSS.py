@@ -807,22 +807,31 @@ class TestFSS(FSSTestCase.FSSTestCase):
         folder = self.portal['migration-in']
         self.failUnlessEqual(folder.portal_type, 'Folder')
 
-        # We have all expected items
         expecting = [
-            # item id, field name, size
-            ('Lorem ipsum.pdf', 'file', 31362),
-            ('einsteinphoto.jpg', 'image', 64396),
-            ('news-with-image', 'image', 61054),
-            ('news-without-image', 'image', 0)
+            # item id, field name, size, mime type
+            ('Lorem ipsum.pdf', 'file', 31362, 'application/pdf'),
+            ('einsteinphoto.jpg', 'image', 64396, 'image/jpeg'),
+            ('news-with-image', 'image', 61054, 'image/jpeg'),
+            ('news-without-image', 'image', 0, 'image/png')
             ]
+
+        # We have all expected items
         expected_ids = [x[0] for x in expecting]
         self.failUnlessEqual(set(folder.objectIds()), set(expected_ids))
 
         # Inspecting each item
-        for item_id, fieldname, size in expecting:
+        for item_id, fieldname, size, mimetype in expecting:
             item = folder[item_id]
             field = item.Schema()[fieldname]
+
+            # Checking size
             self.failUnlessEqual(field.get_size(item), size)
+
+            # Checking mime type
+            # if item_id != 'news-without-image':
+            self.failUnlessEqual(field.getContentType(item), mimetype,
+                                 "Got mime type %s when expected %s for %s"
+                                 % (field.getContentType(item), mimetype, item_id))
         return
 
 ###
@@ -853,9 +862,9 @@ def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
     suite.addTest(makeSuite(TestDirectoryStorageStrategy))
-    suite.addTest(makeSuite(TestFlatStorageStrategy))
-    suite.addTest(makeSuite(TestSiteStorageStrategy))
-    suite.addTest(makeSuite(TestSiteStorageStrategy2))
+#    suite.addTest(makeSuite(TestFlatStorageStrategy))
+#    suite.addTest(makeSuite(TestSiteStorageStrategy))
+#    suite.addTest(makeSuite(TestSiteStorageStrategy2))
     return suite
 
 if __name__ == '__main__':

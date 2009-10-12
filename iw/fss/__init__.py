@@ -70,7 +70,14 @@ def initialize(context):
 
     # Provides 'plone' domain translations
     if not ZOPETESTCASE:
-        i18n_dir = os.path.join(os.path.dirname(__file__), 'i18n')
-        context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(i18n_dir)
+        try:
+            i18n_dir = os.path.join(os.path.dirname(__file__), 'i18n')
+            context._ProductContext__app.Control_Panel.TranslationService._load_i18n_dir(i18n_dir)
+        except AttributeError, e:
+            # No translation service obj
+            # FIXME: we should find an alternate solution to push 'plone' domain translations
+            import logging
+            logger = logging.getLogger(PROJECTNAME)
+            logger.warning("'plone' domain translations could'nt be enabled")
 
     return
