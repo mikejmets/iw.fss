@@ -96,6 +96,8 @@ class Migrator(object):
                     LOG_WARNING("Catalog mismatch on %s", brain_path)
                     continue
                 item_changed = False
+                self.log("Will (try to) migrate fields of %s", brain_path)
+                
                 # Looping on fields
                 for fieldname, former_storage in patched_fields.items():
                     try:
@@ -132,7 +134,7 @@ class Migrator(object):
                         )
                     try:
                         field.set(item, data)
-                    except IOError, e:
+                    except Exception, e:
                         LOG_ERROR("Migrating %s failed on field %s",
                                   '/'.join(brain_path), fieldname,
                                   exc_info=True)
