@@ -1,23 +1,23 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: FileSystemStorage\n"
 "POT-Creation-Date: 2009-08-19 10:08+0000\n"
-"PO-Revision-Date: 2009-02-09 12:36+0100\n"
-"Last-Translator: Mikel Larreategi <mlarreategi@codesyntax.com>\n"
+"PO-Revision-Date: 2009-10-21 12:36+0100\n"
+"Last-Translator: Diego Municio <dmunicio@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
+"Language-Code: es\n"
+"Language-Name: Spain\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
+"Domain: iw.fss\n"
 
 #. Default: "Migrate"
 #: ../browser/fss_migration_form.pt:131
 msgid "Migrate"
-msgstr ""
+msgstr "Migrar"
 
 #. Default: "Remove Backup"
 #: ../browser/fss_maintenance_form.pt:140
@@ -32,42 +32,42 @@ msgstr "Actualizar"
 #. Default: "At that step we assume that some of your contents in this site that have been associated with FSS. See the \"Options\" tab above to see what content types are involved."
 #: ../browser/fss_migration_form.pt:45
 msgid "desc_assumptions"
-msgstr ""
+msgstr "En este paso se asume que algunos contenidos en el sitio Web han sido asociados con FSS. Acceda a la pestaña \"Opciones\" para ver qué tipos de contenido están afectados."
 
 #. Default: "Always <strong>backup</strong> all storages (ZODB and FSS directories) of your instance at this step. You have been warned in case of migration failure."
 #: ../browser/fss_migration_form.pt:53
 msgid "desc_backup"
-msgstr ""
+msgstr "Haga siempre <strong>copias de seguridad</strong> de todos los sistemas de almacenamiento (ZODB y directorios de FSS) antes de ejecutar este paso."
 
 #. Default: "Check the safety belt \"I'm sure\" and the \"Migrate\" button."
 #: ../browser/fss_migration_form.pt:69
 msgid "desc_go_migrate"
-msgstr ""
+msgstr "Active el check de seguridad \"Estoy seguro\" y el botón \"Migrar\""
 
 #. Default: "Do not let an user browse or - worse - change any content while the migration is running. This may raise conflicts and content corruption. Hint: shut down Apache."
 #: ../browser/fss_migration_form.pt:61
 msgid "desc_shutdown_pub_access"
-msgstr ""
+msgstr "No permita que un usuario acceda o (lo que es peor) modifique ningún contenido mientras se ejecuta la migración. Esto puede provocar conflictos y que se corrompa el contenido. Consejo: detenga Apache."
 
 #. Default: "All backups, older than the number of days, will be removed."
 #: ../browser/fss_maintenance_form.pt:128
 msgid "description_fss_maintenance_remove_backup"
-msgstr "Todas las copias de seguridad anteriores al número de días indicado, serán eliminadas"
+msgstr "Todas las copias de seguridad anteriores al número de días indicado, serán eliminadas."
 
 #. Default: "Updating FileSystem storage, move not valid files to backup and move not valid backups in file storage."
 #: ../browser/fss_maintenance_form.pt:100
 msgid "description_fss_maintenance_update"
-msgstr "Al actualizar FSS, se moverán los archivos no válidos a la copia de seguridad y se eliminarán las copias de seguridad no válidas"
+msgstr "Al actualizar FSS, se moverán los archivos no válidos a la copia de seguridad y se eliminarán las copias de seguridad no válidas."
 
 #. Default: "Check all FSS files and link them to RDF files."
 #: ../browser/fss_maintenance_form.pt:163
 msgid "description_rdf_update"
-msgstr "Comprobar todos los archivos de FSS y unirlos a los archivos RDF"
+msgstr "Comprobar todos los archivos de FSS y unirlos a los archivos RDF."
 
 #. Default: "Documentation"
 #: ../browser/controlpanel.py:68
 msgid "documentation_tab"
-msgstr ""
+msgstr "Documentación"
 
 #. Default: "FSS Maintenance"
 #: ../browser/fss_maintenance_form.pt:15
@@ -82,32 +82,32 @@ msgstr "Gestión de FSS"
 #. Default: "I clearly understand the above information and know what I'm doing when clicking the \"Migrate\" button below."
 #: ../browser/fss_migration_form.pt:123
 msgid "help_imsure"
-msgstr ""
+msgstr "Entiendo perfectamente la información mostrada más arriba y sé lo que estoy haciendo al activar el botón \"Migrar\" de más abajo."
 
 #. Default: "Record migration details in the Zope event log file."
 #: ../browser/fss_migration_form.pt:107
 msgid "help_log_migration"
-msgstr ""
+msgstr "Capturar los detalles de la migración en el fichero del registro de eventos de Zope."
 
 #. Default: "Enabling RDF will create RDF files in the storage. Read the documentation on usage of RDF files."
 #: ../browser/fss_management_form.pt:145
 msgid "help_rdf_enabled"
-msgstr ""
+msgstr "Permitir RDF creará ficheros RDF en el sistema de almacenamiento. Lea la documentación acerca del uso de ficheros RDF."
 
 #. Default: "Name of the RDF customization script (might be in the \"custom\" layer). Read the documentation about RDF customization. Leave this field empty if you don't need or understand RDF customization."
 #: ../browser/fss_management_form.pt:156
 msgid "help_rdf_script"
-msgstr ""
+msgstr "El nombre del script personalizado de RDF (puede estar en la carpeta \"custom\"). Lea la documentación acerca de la personalización de RDF. Deje este campo vacío si no necesita o no entiende la personalización de RDF."
 
 #. Default: "A low threshold will migrate somehow slowly at the cost of a low memory footprint. Increasing that threshold may speed up the migration and require more memory."
 #: ../browser/fss_migration_form.pt:83
 msgid "help_transaction_threshold"
-msgstr ""
+msgstr "Un umbral bajo implica una migración más lenta y requiere menos memoria. Incrementar el umbral puede aumentar la velocidad de la migración a costa de más memoria."
 
 #. Default: "Assumptions"
 #: ../browser/fss_migration_form.pt:43
 msgid "label_assumptions"
-msgstr ""
+msgstr "Asunciones"
 
 #. Default: "Average size"
 #: ../browser/fss_maintenance_form.pt:56
@@ -117,7 +117,7 @@ msgstr "Tamaño medio"
 #. Default: "Backup"
 #: ../browser/fss_migration_form.pt:51
 msgid "label_backup"
-msgstr ""
+msgstr "Copia de seguridad"
 
 #. Default: "Backup path"
 #: ../browser/fss_management_form.pt:53
@@ -137,17 +137,17 @@ msgstr ""
 #. Default: "Global (default) configuration"
 #: ../browser/fss_management_form.pt:62
 msgid "label_global_configuration"
-msgstr ""
+msgstr "Configuración global (por defecto)"
 
 #. Default: "Go..."
 #: ../browser/fss_migration_form.pt:67
 msgid "label_go_migrate"
-msgstr ""
+msgstr "Realizar..."
 
 #. Default: "I'm sure"
 #: ../browser/fss_migration_form.pt:119
 msgid "label_imsure"
-msgstr ""
+msgstr "Estoy seguro"
 
 #. Default: "Largest size"
 #: ../browser/fss_maintenance_form.pt:52
@@ -162,7 +162,7 @@ msgstr ""
 #. Default: "Migrating to FSS"
 #: ../browser/fss_migration_form.pt:39
 msgid "label_migrating_to_fss"
-msgstr ""
+msgstr "Migrando a FSS"
 
 #. Default: "Not Valid backups"
 #: ../browser/fss_maintenance_form.pt:32
@@ -177,12 +177,12 @@ msgstr "Archivos no válidos"
 #. Default: "Options"
 #: ../browser/fss_management_form.pt:126
 msgid "label_options_settings"
-msgstr ""
+msgstr "Opciones"
 
 #. Default: "Patched types"
 #: ../browser/fss_management_form.pt:87
 msgid "label_patched_types"
-msgstr ""
+msgstr "Tipos de contenido parcheados"
 
 #. Default: "RDF enabled"
 #: ../browser/fss_management_form.pt:141
@@ -202,7 +202,7 @@ msgstr ""
 #. Default: "Site specific configuration"
 #: ../browser/fss_management_form.pt:36
 msgid "label_site_configuration"
-msgstr ""
+msgstr "Configuración específica del sitio Web"
 
 #. Default: "Smallest size"
 #: ../browser/fss_maintenance_form.pt:54
@@ -227,7 +227,7 @@ msgstr "Tamaño total"
 #. Default: "Subtransactions threshold"
 #: ../browser/fss_migration_form.pt:79
 msgid "label_transaction_threshold"
-msgstr ""
+msgstr "Umbral de subtransacciones"
 
 #. Default: "Valid backups"
 #: ../browser/fss_maintenance_form.pt:28
@@ -282,55 +282,54 @@ msgstr "Propiedades modificadas"
 #. Default: "Migration"
 #: ../browser/controlpanel.py:66
 msgid "migration_tab"
-msgstr ""
+msgstr "Migración"
 
 #. Default: "${not_valid_files} files for invalid content moved to backup. ${not_valid_backups} files for invalid backups moved to storage."
 #: ../browser/controlpanel.py:219
 msgid "report_fss_updated"
-msgstr ""
+msgstr "Los archivos ${not_valid_files} han sido movidos a la carpeta de backup por tener contenido no válido. Los archivos ${not_valid_backups} han sido movidos a la carpeta storage por tener una copia de seguridad no válida."
 
 #. Default: "${count} content items migrated to FSS"
 #: ../browser/controlpanel.py:277
 msgid "report_migration_to_fss"
-msgstr ""
+msgstr "Se han migrado a FSS ${count} elementos"
 
 #. Default: "You didn't check \"I'm sure\", migration canceled"
 #: ../browser/controlpanel.py:263
 msgid "report_no_migration"
-msgstr ""
+msgstr "Usted no activó el check \"Estoy seguro\", por lo que la migración se ha cancelado"
 
 #. Default: "Old backups have been removed."
 #: ../browser/controlpanel.py:234
 msgid "report_old_backups_removed"
-msgstr ""
+msgstr "Se han eliminado las copias de seguridad antiguas."
 
 #. Default: "RDF files have been updated."
 #: ../browser/controlpanel.py:243
 msgid "report_rdf_updated"
-msgstr ""
+msgstr "Se han actualizado los ficheros RDF."
 
 #. Default: "You are about to do something potentially harmful. Please read carefully the instructions below before clicking any button here."
 #: ../browser/fss_migration_form.pt:32
 msgid "warning_before_migrating"
-msgstr ""
+msgstr "Está a punto de realizar algo potencialmente dañino. Por favor, lea cuidadosamente las instrucción que se muestran a continuación antes de activar ningún botón en esta pantalla."
 
 #. Default: "THE MIGRATION IS DISABLES BECAUSE THIS SITE ACTUALLY USES THE FSS COMMON DEFAULT CONFIGURATION. MIGRATING IN SUCH SITUATION COULD LOSE CONTENT. PLEASE FIX THE CONFIGURATION AND COME BACK HERE."
 #: ../browser/fss_migration_form.pt:16
 msgid "warning_migrations_disabled"
-msgstr ""
+msgstr "LA MIGRACIÓN ESTÁ DESHABILITADA PORQUE EL SITIO EMPLEA LA CONFIGURACIÓN POR DEFECTO DE FSS. LA MIGRACIÓN EN DICHA SITUACIÓN PUEDE CONDUCIR A LA PÉRDIDA DE CONTENIDO. POR FAVOR, CORRIJA LA CONFIGURACIÓN Y VUELVA AQUÍ."
 
 #. Default: "You didn't configure any content type with FSS. Migrating doesn't make sense."
 #: ../browser/fss_migration_form.pt:24
 msgid "warning_no_type_configured"
-msgstr ""
+msgstr "Usted no ha configurado ningún tipo de contenido para FSS. En tal caso, la migración no tiene sentido."
 
 #. Default: "THIS SITE USES THE COMMON DEFAULT CONFIGURATION AND STORAGE AREA. AS A CONSEQUENCE, THIS SITE MAY SHARE ITS STORAGE AND BACKUP SPACES WITH OTHER SITES. IN THAT CASE, USING THE FORMS BELOW MAY RESULT IN DATA LOSS ON THE OTHER SITES OF THIS INSTANCE USING THE COMMON STORAGE AND BACKUP AREA. YOU HAVE BEEN WARNED."
 #: ../browser/fss_maintenance_form.pt:80
 msgid "warning_using_global_config1"
-msgstr ""
+msgstr "ESTE SITIO EMPLEA LA CONFIGURACIÓN Y EL ÁREA DE ALMACENAMIENTO POR DEFECTO. COMO CONSECUENCIA, ESTE SITIO PUEDE COMPARTIR SU ALMACENAMIENTO Y ESPACIO PARA COPIAS DE SEGURIDAD CON OTROS SITIOS. EN ESE CASO, EMPLEAR LOS FORMULARIOS QUE SE MUESTRAN A CONTINUACIÓN PUEDE CONDUCIR A UNA PÉRDIDA DE DATOS EN LOS SITIOS DISTINTOS A ESTA INSTANCIA QUE ESTÉN UTILIZANDO EL MISMO SISTEMA DE ALMACENAMIENTO Y UNA ZONA DE COPIAS DE SEGURIDAD IDENTICOS. USTED HA SIDO ADVERTIDO."
 
 #. Default: "THIS SITE USES THE COMMON DEFAULT CONFIGURATION AND STORAGE AREA. IF THIS DOES NOT MATTER ON DEVELOPMENT SITES, YOU SHOULD NEVER DO THIS IN A PRODUCTION SITE. PLEASE FIX THE CONFIGURATION AS DESCRIBE IN THE DOCUMENTATION BEFORE ADDING ANY CONTENT IN THAT CASE."
 #: ../browser/fss_management_form.pt:17
 msgid "warning_using_global_config2"
-msgstr ""
-
+msgstr "ESTE SITIO EMPLEA LA CONFIGURACIÓN Y EL ÁREA DE ALMACENAMIENTO POR DEFECTO. AUNQUE ESTO NO ES PROBLEMA EN ENTORNOS DE DESARROLLO, NO DEBERÍA NUNCA HACER ESTO EN UN ENTORNO DE PRODUCCIÓN. POR FAVOR, EN ESE CASO CORRIJA LA CONFIGURACIÓN TAL Y COMO SE DESCRIBE EN LA DOCUMENTACIÓN ANTERIOR ANTES DE AÑADIR CONTENIDO." 
