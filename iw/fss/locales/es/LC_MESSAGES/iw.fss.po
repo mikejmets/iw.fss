@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "Language-Code: es\n"
 "Language-Name: Spain\n"
 "Preferred-Encodings: utf-8 latin1\n"
@@ -127,12 +127,12 @@ msgstr "Carpeta de la copia de seguridad"
 #. Default: "Content class"
 #: ../browser/fss_management_form.pt:93
 msgid "label_content_class"
-msgstr ""
+msgstr "Clase del tipo de contenido"
 
 #. Default: "Fields and original storages"
 #: ../browser/fss_management_form.pt:96
 msgid "label_fields_storages"
-msgstr ""
+msgstr "Campos y sistemas de almacenamientos originales"
 
 #. Default: "Global (default) configuration"
 #: ../browser/fss_management_form.pt:62
