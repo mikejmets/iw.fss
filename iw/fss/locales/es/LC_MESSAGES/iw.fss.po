@@ -32,7 +32,7 @@ msgstr "Actualizar"
 #. Default: "At that step we assume that some of your contents in this site that have been associated with FSS. See the \"Options\" tab above to see what content types are involved."
 #: ../browser/fss_migration_form.pt:45
 msgid "desc_assumptions"
-msgstr "En este paso se asume que algunos contenidos en el sitio Web han sido asociados con FSS. Acceda a la pestaña \"Opciones\" para ver qué tipos de contenido están afectados."
+msgstr "En este paso se asume que algunos contenidos en el sitio Web han sido asociados con FSS. Acceda a la pestaña \"Gestión\" para ver qué tipos de contenido están afectados."
 
 #. Default: "Always <strong>backup</strong> all storages (ZODB and FSS directories) of your instance at this step. You have been warned in case of migration failure."
 #: ../browser/fss_migration_form.pt:53
@@ -107,7 +107,7 @@ msgstr "Un umbral bajo implica una migración más lenta y requiere menos memori
 #. Default: "Assumptions"
 #: ../browser/fss_migration_form.pt:43
 msgid "label_assumptions"
-msgstr "Asunciones"
+msgstr "Presuposiciones"
 
 #. Default: "Average size"
 #: ../browser/fss_maintenance_form.pt:56
@@ -157,7 +157,7 @@ msgstr "Archivo más grande"
 #. Default: "Log migration"
 #: ../browser/fss_migration_form.pt:103
 msgid "label_log_migration"
-msgstr ""
+msgstr "Almacenar el progreso de la migración en el log"
 
 #. Default: "Migrating to FSS"
 #: ../browser/fss_migration_form.pt:39
@@ -197,7 +197,7 @@ msgstr "Script RDF"
 #. Default: "Shut down public access"
 #: ../browser/fss_migration_form.pt:59
 msgid "label_shudown_pub_access"
-msgstr ""
+msgstr "Cerrar el acceso público"
 
 #. Default: "Site specific configuration"
 #: ../browser/fss_management_form.pt:36
