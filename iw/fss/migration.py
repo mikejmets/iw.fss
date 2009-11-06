@@ -59,7 +59,7 @@ class Migrator(object):
         if ((self.commit_every > 0)
             and (self.changed_items % self.commit_every == 0)):
             transaction.savepoint(optimistic=True)
-            self.log(self.changed_items, "items migrated")
+            self.log("%s items migrated. Commiting...", self.changed_items)
         return
 
     def log(self, message, *args, **kw):
@@ -85,7 +85,6 @@ class Migrator(object):
 
             # Looping on items
             for brain in brains:
-                item_changed = False
                 brain_path = brain.getPath()
                 try:
                     item = brain.getObject()
@@ -97,7 +96,7 @@ class Migrator(object):
                     continue
                 item_changed = False
                 self.log("Will (try to) migrate fields of %s", brain_path)
-                
+
                 # Looping on fields
                 for fieldname, former_storage in patched_fields.items():
                     try:
@@ -158,6 +157,7 @@ class Migrator(object):
                     self.commit()
             # /for brain...
         # /for content_class
+        self.log("Migration ends. %s items migrated", self.changed_items)
         return self.changed_items
 
 

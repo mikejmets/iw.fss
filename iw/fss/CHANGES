@@ -1,6 +1,19 @@
 CHANGES
 #######
 
+Trunk
+=====
+
+* Fixed bad mime type setting when migrating.
+  [glenfant]
+
+* Fixed loss of text when migrating News items with image
+  [glenfant]
+
+* Fixed logging on transaction when migrating and show the total migrated
+  items in the log too.
+  [glenfant]
+
 2.8.0b1
 =======
 
