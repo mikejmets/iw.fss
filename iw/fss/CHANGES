@@ -1,8 +1,8 @@
 CHANGES
 #######
 
-Trunk
-=====
+2.8.0b2
+=======
 
 * Fixed bad mime type setting when migrating.
   [glenfant]
