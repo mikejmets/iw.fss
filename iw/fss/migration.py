@@ -111,8 +111,8 @@ class Migrator(object):
                     try:
                         mimetype = field.getContentType(item)
                     except AttributeError, e:
-                        self.log("Can't guess content type of '%s', set to 'application/octet-stream'"
-                                 % brain_path)
+                        self.log("Can't guess content type of '%s', set to '%s'",
+                                 brain_path, UNKNOWN_MIMETYPE)
                         mimetype = UNKNOWN_MIMETYPE
                     filename = getattr(value, 'filename', None) or item.getId()
                     if filename and (mimetype == UNKNOWN_MIMETYPE):
@@ -124,13 +124,21 @@ class Migrator(object):
                         unwrapped_value = value.data
                     else:
                         unwrapped_value = str(value)
-                    data = BaseUnit(
-                        fieldname,
-                        unwrapped_value,
-                        instance=item,
-                        filename=filename,
-                        mimetype=mimetype,
-                        )
+                    try:
+                        # Making a BaseUnit may fail when AT stupidly tries to
+                        # guess the text encoding of a binary file!!
+                        data = BaseUnit(
+                            fieldname,
+                            unwrapped_value,
+                            instance=item,
+                            filename=filename,
+                            mimetype=mimetype,
+                            )
+                    except Exception, e:
+                        LOG_ERROR("Migrating %s failed on field %s trying to create its BAseUnit",
+                                  '/'.join(brain_path), fieldname,
+                                exc_info=True)
+                        continue
                     try:
                         field.set(item, data)
                     except Exception, e:
@@ -168,4 +176,3 @@ class Migrator(object):
         self.log("Starting migrations from FSS")
         raise NotImplementedError("Migration from FSS not yet implemented")
         return self.changed_items
-

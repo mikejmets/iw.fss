@@ -1,6 +1,16 @@
 CHANGES
 #######
 
+2.8.0rc1
+========
+
+* Worked around (and cancel migration) when AT tries (and fails) stupidly to
+  guess the charset of a binary data.
+  [glenfant]
+
+* Spanish translation is up to date
+  [dmunicio]
+
 2.8.0b2
 =======
 
