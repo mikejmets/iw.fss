@@ -135,15 +135,15 @@ class Migrator(object):
                             mimetype=mimetype,
                             )
                     except Exception, e:
-                        LOG_ERROR("Migrating %s failed on field %s trying to create its BAseUnit",
-                                  '/'.join(brain_path), fieldname,
-                                exc_info=True)
+                        LOG_ERROR("Migrating %s failed on field %s trying to create its BaseUnit",
+                                  brain_path, fieldname,
+                                  exc_info=True)
                         continue
                     try:
                         field.set(item, data)
                     except Exception, e:
                         LOG_ERROR("Migrating %s failed on field %s",
-                                  '/'.join(brain_path), fieldname,
+                                  brain_path, fieldname,
                                   exc_info=True)
                         continue
 
