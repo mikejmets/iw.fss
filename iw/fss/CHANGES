@@ -1,6 +1,14 @@
 CHANGES
 #######
 
+trunk
+=====
+
+* Change behaviour of VirtualData class. Now VirtualData work as OFS.image ie to acces data you MUST pass by a chained list (FSSPdata) that contain only a block of data. This block of data is getting by a filestream iterator. So no more memmory consuption (max 65536 , a block of data). This is an important change because when Products.Archetype.Field.FileField get metatada of a File old version of fss get all file data for this (ie myField.getFilename() -> you have your all data in memory !!). Also when you invoke Field.download(instance, no_output = True) you get now a filestream iterator (There is a patch to this method because of dowload must set content-length header for the publisher) [yboussard]
+
+* fix content_type retreving for migration process. [yboussard]
+
+
 2.8.0rc2
 ========
 

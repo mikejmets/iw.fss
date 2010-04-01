@@ -34,6 +34,7 @@ from Products.CMFEditions.Modifiers import ConditionalTalesModifier
 from iw.fss.modifier import manage_addModifier
 from iw.fss.modifier import modifierAddForm
 from iw.fss.modifier import MODIFIER_ID
+from iw.fss import patches
 
 def initialize(context):
 

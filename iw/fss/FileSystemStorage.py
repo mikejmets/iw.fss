@@ -23,8 +23,8 @@ __docformat__ = 'restructuredtext'
 
 # Python imports
 import os
+import cStringIO
 from Acquisition import aq_base
-from StringIO import StringIO
 from types import StringType, UnicodeType
 
 # Zope imports
@@ -34,6 +34,7 @@ from OFS.Image import File
 from OFS.SimpleItem import SimpleItem
 from ZPublisher.Iterators import filestream_iterator
 from zope.component import getUtility
+from webdav.common import rfc1123_date
 
 #from Shared.DC.ZRDB.TM import TM
 
@@ -49,8 +50,8 @@ from Products.Archetypes.Field import Image # Changes since AT1.3.4
 
 # Products imports
 from iw.fss.rdf import RDFWriter
-from iw.fss.utils import copy_file
 from iw.fss.interfaces import IConf
+from iw.fss.utils import copy_file
 
 from ZPublisher.Iterators import IStreamIterator
 from ZPublisher.HTTPRangeSupport import parseRange
@@ -133,53 +134,111 @@ class range_filestream_iterator(file):
 
         return size
 
+class FSSPdata(object):
 
-class VirtualData:
+    data = None
+        
+    def __init__(self, g):
+        """
+        As Pdata in OFS.File , a struct with data and next
+        next is chaining to an another FSSPdata, data containing the x bytes
+        of the genrator. If you want all data of the file call __str__ method
+        @param g : generator to a file
+               l : len of the file
+        """
+        self.__g = g
+        self.__l = len(g)
+        self.__stop__ = False
+        try:
+            self.data = self.__g.next()
+        except StopIteration:
+            self.data = ''
+            self.__stop__ = True
+        
+
+    @property
+    def next(self):
+        if self.__stop__:
+            return
+        try:
+            return FSSPdata(self.__g)
+        except StopIteration:
+            return
+    
+    def __len__(self):
+        return self.__l
+
+    def __str__(self):
+        """ return all data , dont use this for big file !!"""
+        cur_pos = self.__g.tell()
+        self.__g.seek(0, 0) ## begin of file
+        data = ''.join((str(x) for x in self.__g))
+        self.__g.seek(cur_pos, 0) ## back to the current position
+        return data
+    
+    def __getslice__(self, start, end):
+        """ I know it is deprecatead but its so easy to implements
+        x[start:end] that i use it
+        This method is called when there is a multiple range
+        I dont use mmap because mmap is mutable and we must have a write access
+        on file 
+        """
+        cur_pos = self.__g.tell()
+        if end > len(self):
+            end = len(self)
+        if start > end:
+            return ''
+        cur_pos = self.__g.tell()
+        self.__g.seek(start, 0) ## begin of start
+        data = self.__g.read(end - start)
+        self.__g.seek(cur_pos, 0) ## back to the current position        
+        return data
+
+
+class VirtualData(object):
     """
     Base abstract class for data stored on filesystem.
     Subclasses must have a docstring if they are to be published (like images)
     """
     __allow_access_to_unprotected_subobjects__ = 1
+    __implements__  = (IStreamIterator,)
 
     def __init__(self, name, instance, path):
         self.name = name
         self.instance = instance
         self.path = path
         self.__name__ = name
+        self.__data__ = None
 
+    
     def getData(self):
-        """
-            Returns data (as a string) stored on filesystem.
-        """
+        if os.path.exists(self.path):
+            return FSSPdata(filestream_iterator(self.path, mode='rb'))
+        else:
+            ## simulate an empty iterator
+            return FSSPdata(xrange(0))
 
-        # Use StringIO for large files
-        virtual_file = StringIO()
-        value = ''
+    ## for OFS.Image.File.update_data
+    def setData(self, value):
+        copy_file(cStringIO.StringIO(str(value)), self.path)
 
-        # Make sure file exists. If not returns empty string
-        if not os.path.exists(self.path) or os.path.getsize(self.path) == 0:
-            return ''
-
-        # Copy all data in one pass
-        try:
-            copy_file(self.path, virtual_file)
-            virtual_file.seek(0)
-            value = virtual_file.getvalue()
-        finally:
-            virtual_file.close()
-
-        return value
+    data = property(getData, setData)
+                  
 
     def __str__(self):
         return str(self.getData())
 
     def __len__(self):
-        return len(str(self))
-
-    def __getattr__(self, key):
-        if key == 'data':
-            return self.getData()
-
+        return len(self.getData())
+    
+    def next(self):
+        """
+        return data by file iterator
+        """
+        if self.__data__ is None:
+            self.__data__ = filestream_iterator(self.path, mode='rb')
+        return self.__data__.next()
+    
     read = __str__
 
 InitializeClass(VirtualData)
@@ -232,20 +291,28 @@ class VirtualBinary(VirtualData):
                 ## call normally OFS.image with data
                 return self.__content_class__.index_html(self, REQUEST, RESPONSE)
             else:
-                ## call OFS.image with no data
-                setattr(self, 'data', '')
-                self.__content_class__.index_html(self, REQUEST, RESPONSE)
-                delattr(self, 'data')
+                ### now we deal correctly with 304 header
+                if self._if_modified_since_request_handler(REQUEST, RESPONSE):
+                    self.ZCacheable_set(None)
+                    return ''
+                ### set correctly header
+                RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
+                RESPONSE.setHeader('Content-Type', self.content_type)
+                RESPONSE.setHeader('Content-Length', self.size)
+                RESPONSE.setHeader('Accept-Ranges', 'bytes')
+                self.ZCacheable_set(None)
 
             # This is a default header that can be bypassed by other products
             # such as attachment field.
-            if RESPONSE.getHeader('content-disposition') is None: # headers are in lower case in HTTPResponse
+            if RESPONSE.getHeader('content-disposition') is None:
+                # headers are in lower case in HTTPResponse
                 RESPONSE.setHeader(
                     'Content-Disposition',
                     'inline; filename="%s"' % self.filename
                     )
         if ranges and len(ranges) == 1:
-            ## is an range request with one range , return an iterator with this range
+            ## is an range request with one range ,
+            ## return an iterator with this range
             [(start,end)] = ranges
             iterator = range_filestream_iterator(self.path,start, end,  mode='rb')
             return iterator
@@ -287,6 +354,8 @@ class VirtualBinary(VirtualData):
         cmd = getattr(self, cmd_name)
         return cmd(**kwargs)
 
+    
+    
 InitializeClass(VirtualBinary)
 
 
@@ -301,15 +370,21 @@ class VirtualFile(VirtualBinary, File):
     def __init__(self, name, instance, path, filename, mimetype, size):
         VirtualBinary.__init__(self, name, instance, path, filename, mimetype, size)
 
-    def __getattr__(self, key):
-        if key == 'data':
-            return self.getData()
+
+    #def __getattr__(self, key):
+    #    if key == 'data':
+    #        return self.getData()
         ### useless since __getattr__ is only called when no attribute is found
         ### in this class but also in parent classes. So if we are here, neither
         ### VirtualFile nor VirtualBinary and File have the requested attribute
         ### Moreover, File class has no __getattr__ method...
         # return File.__getattr__(self, key)
-        raise AttributeError(key)
+    #    raise AttributeError(key)
+
+
+    
+
+
 
 InitializeClass(VirtualFile)
 
@@ -741,7 +816,6 @@ class FileSystemStorage(StorageLayer):
         initializing = kwargs.get('_initializing_', False)
         if initializing:
             return
-
         # Remove acquisition wrappers
         value = aq_base(value)
 

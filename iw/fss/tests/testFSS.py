@@ -19,12 +19,14 @@ Testing FSS features
 $Id$
 """
 
-from StringIO import StringIO
 import transaction
+import Products
+from StringIO import StringIO
 from zope.component import getUtility
 from Products.Five import zcml
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
+from ZPublisher.Iterators import IStreamIterator
 import iw.fss
 from iw.fss.interfaces import IConf
 from iw.fss.migration import Migrator
@@ -80,7 +82,11 @@ class TestFSS(FSSTestCase.FSSTestCase):
         ftp_value = self.file_content.manage_FTPget()
         self.failIf(ftp_value is None)
         self.assertEquals(len(ftp_value), 10)
-        self.assertEquals(ftp_value, """mytestfile""")
+        # ftp_value is an PdataStreamIterator
+        self.failUnless(isinstance(ftp_value,
+                  Products.Archetypes.WebDAVSupport.PdataStreamIterator))
+        
+        self.assertEquals(ftp_value.next(), """mytestfile""")
         self.logout()
 
     def _testDefaultContentFromUploadedFile(self):
@@ -723,6 +729,30 @@ class TestFSS(FSSTestCase.FSSTestCase):
         data = file_content.index_html(req, resp)
 
 # #############################################################################
+# Test donwload patches
+# #############################################################################
+
+    def testPatched(self):
+        self.loginAsPortalOwner()
+
+        # Create content
+        content_id = 'test_file'
+        file_content = self.addFileByFileUpload(self.test_folder, content_id)
+        # Get file field
+        file_field = file_content.getField('file')
+        response = file_field.download(file_content, no_output = True)
+        self.assertEqual(IStreamIterator.isImplementedBy(response), 1)
+        HTTP_RESPONSE = file_content.REQUEST.RESPONSE
+        self.failUnless(HTTP_RESPONSE.headers.has_key('content-length'))
+        ## reinit response headers
+        file_content.REQUEST.RESPONSE.headers = {}
+        response = file_field.download(file_content)
+        self.assertEqual(IStreamIterator.isImplementedBy(response), 1)
+        self.failUnless(HTTP_RESPONSE.headers.has_key('content-length'))
+        
+        
+
+# #############################################################################
 # Test CMFEditions compliance
 # #############################################################################
 
@@ -776,6 +806,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
     def test_migrations(self):
         """Testing migrations from natural ATCT storage (Annotation ?)
         """
+
         from iw.fss.zcml import patchedTypesRegistry
 
         self.loginAsPortalOwner()
@@ -793,7 +824,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         migrator.migrateToFSS()
 
         # We check we have the same content (AT API pov)
-        self._checkImportedContent()
+        self._checkImportedContent(1)
 
         # Deleting imported stuff
         self.portal._delObject('migration-in')
@@ -801,17 +832,17 @@ class TestFSS(FSSTestCase.FSSTestCase):
         return
 
 
-    def _checkImportedContent(self):
+    def _checkImportedContent(self, step=0):
         """Some checks on imported context before and after migration
         """
         folder = self.portal['migration-in']
         self.failUnlessEqual(folder.portal_type, 'Folder')
-
+        
         expecting = [
             # item id, field name, size, mime type
-            ('Lorem ipsum.pdf', 'file', 31362, 'application/pdf'),
-            ('einsteinphoto.jpg', 'image', 64396, 'image/jpeg'),
-            ('news-with-image', 'image', 61054, 'image/jpeg'),
+            ('Lorem ipsum.pdf', 'file', 0, 'application/octet-stream'),
+            ('einsteinphoto.jpg', 'image', 17794, 'image/jpeg'),
+            ('news-with-image', 'image', 17794, 'image/jpeg'),
             ('news-without-image', 'image', 0, 'image/png')
             ]
 
@@ -825,13 +856,14 @@ class TestFSS(FSSTestCase.FSSTestCase):
             field = item.Schema()[fieldname]
 
             # Checking size
-            self.failUnlessEqual(field.get_size(item), size)
+            #
+            self.failUnlessEqual(field.getBaseUnit(item).size, size)
 
             # Checking mime type
             # if item_id != 'news-without-image':
-            self.failUnlessEqual(field.getContentType(item), mimetype,
+            self.failUnlessEqual(field.getBaseUnit(item).mimetype, mimetype,
                                  "Got mime type %s when expected %s for %s"
-                                 % (field.getContentType(item), mimetype, item_id))
+                                 % (field.getBaseUnit(item).mimetype, mimetype, item_id))
         return
 
 ###
