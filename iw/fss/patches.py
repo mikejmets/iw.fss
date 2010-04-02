@@ -20,9 +20,6 @@ from ZPublisher.Iterators import IStreamIterator
 from Products.Archetypes.Field import FileField
 from Acquisition import aq_get
 
-import logging
-logger = logging.getLogger('iw.fss.patches')
-
 old_download =  FileField.download
 
 def new_download(self, instance, REQUEST=None, RESPONSE=None,
