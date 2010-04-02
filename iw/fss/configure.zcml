@@ -26,6 +26,8 @@ $Id$
 
   <five:registerPackage package="." initialize=".initialize" />
 
+  <include file="patches.zcml" />
+
   <include package=".browser" />
 
   <include file="profiles.zcml" />

@@ -27,7 +27,8 @@ old_download =  FileField.download
 
 def new_download(self, instance, REQUEST=None, RESPONSE=None,
                  no_output=False):
-    """ patch download for return an iterator instead of a string """
+    """Patch download for return an iterator instead of a string
+    """
     file = self.get(instance, raw=True)
     if not REQUEST:
         REQUEST = aq_get(instance, 'REQUEST')
@@ -38,8 +39,5 @@ def new_download(self, instance, REQUEST=None, RESPONSE=None,
         if IStreamIterator.isImplementedBy(file):
             RESPONSE.setHeader("content-length", len(file))
     return old_download(self, instance, REQUEST=None, RESPONSE=None,
-                 no_output=False)
+                        no_output=False)
 
-## patch file field
-logger.info('iw.fss patch Products.Archetypes.Field.FileField.download')
-FileField.download = new_download
