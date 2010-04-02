@@ -34,36 +34,39 @@ tests_require = [
     'zope.testing',
     ]
 
-setup(name='iw.fss',
-      version=version,
-      description="Archetypes storage for storing fields raw values on the file system.",
-      long_description=long_description,
-      # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[
-          "Framework :: Plone",
-          "Programming Language :: Python",
-          "Topic :: Software Development :: Libraries :: Python Modules",
-          "Development Status :: 3 - Alpha"
+setup(
+    name='iw.fss',
+    version=version,
+    description="Archetypes storage for storing fields raw values on the file system.",
+    long_description=long_description,
+    # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[
+        "Framework :: Plone",
+        "Programming Language :: Python",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Development Status :: 5 - Production/Stable"
         ],
-      keywords='fss plone',
-      author='Ingeniweb',
-      author_email='support@ingeniweb.com',
-      url='http://svn.plone.org/svn/collective/iw.fss/',
-      license='GPL',
-      packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['iw'],
-      include_package_data=True,
-      zip_safe=False,
-      # uncomment this to be able to run tests with setup.py
-      #test_suite = "iw.fss.tests.test_fssdocs.test_suite",
-      tests_require=tests_require,
-      extras_require=dict(test=tests_require),
-      install_requires=[
-          'setuptools',
-          # -*- Extra requirements: -*-
-      ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
-      )
-
+    keywords='fss plone',
+    author='Ingeniweb',
+    author_email='support@ingeniweb.com',
+    url='http://svn.plone.org/svn/collective/iw.fss/',
+    license='GPL',
+    packages=find_packages(exclude=['ez_setup']),
+    namespace_packages=['iw'],
+    include_package_data=True,
+    zip_safe=False,
+    # uncomment this to be able to run tests with setup.py
+    #test_suite = "iw.fss.tests.test_fssdocs.test_suite",
+    tests_require=tests_require,
+    extras_require=dict(test=tests_require),
+    install_requires=[
+        'setuptools',
+        # -*- Extra requirements: -*-
+        'collective.monkeypatcher'
+        ],
+    entry_points="""
+    # -*- Entry points: -*-
+    [z3c.autoinclude.plugin]
+    target = plone
+    """,
+    )
