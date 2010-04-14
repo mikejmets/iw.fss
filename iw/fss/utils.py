@@ -118,12 +118,13 @@ def copy_file(infile, outfile):
         outstream = outfile
     try:
         blocksize = 2<<16
+        instream.seek(0, 0)
         block = instream.read(blocksize)
         outstream.write(block)
         while len(block)==blocksize:
             block = instream.read(blocksize)
             outstream.write(block)
-        instream.seek(0)
+        instream.seek(0,0)
     finally:
         if close_in: instream.close()
         if close_out: outstream.close()

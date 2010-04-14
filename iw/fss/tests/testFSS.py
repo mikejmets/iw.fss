@@ -89,6 +89,35 @@ class TestFSS(FSSTestCase.FSSTestCase):
         self.assertEquals(ftp_value.next(), """mytestfile""")
         self.logout()
 
+
+    def testSetByInvokeFactory(self):
+        self.loginAsPortalOwner()
+        self.portal.invokeFactory(type_name='FSSItem', id="dummy",
+                                  title="Foo title", text="Foo text")
+        self.assertEquals(self.portal['dummy'].getText(), 'Foo text')
+
+    def testAddAnBigImage(self):
+        self.loginAsPortalOwner()
+        content_id = 'testbigimage'
+        
+        self.file_content = self.addBigImageByFileUpload(self.test_folder,
+                                                         content_id)
+        # Get file field
+        file_field = self.file_content.getField('image')
+
+        # Get file value
+        file_value = file_field.get(self.file_content)
+
+        # Test value
+        self.assertEquals(len(file_value.data), 247207)
+
+        # Test using BaseUnit
+        bu = file_field.getBaseUnit(self.file_content)
+        bu_value = bu.getRaw()
+        self.assertEquals(len(bu_value), 1 << 16)
+        self.logout()
+
+
     def _testDefaultContentFromUploadedFile(self):
         # Get file field
         file_field = self.file_content.getField('file')

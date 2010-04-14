@@ -301,9 +301,16 @@ class FlatStorageStrategy(BaseStorageStrategy):
         """Copy file value on filesystem"""
 
         # Put value in buffer
-        buffer = StringIO(value)
-        copy_file(buffer, self.getValueFilePath(**kwargs))
-        buffer.close()
+        buffer = value
+        if type(value) is type(''):
+            # Put value in buffer
+            buffer = StringIO(value)
+        
+        if hasattr(buffer, 'read') and hasattr(buffer, 'seek'):
+            copy_file(buffer, self.getValueFilePath(**kwargs))
+        else:
+            raise ValueError('%s is not a file' % type(buffer))
+        
 
     def unsetValueFile(self, **kwargs):
         """Remove file value if exists"""

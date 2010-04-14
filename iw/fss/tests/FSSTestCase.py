@@ -47,6 +47,7 @@ BACKUP_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'unittests_backup')
 DATA_PATH = os.path.join(os.path.dirname(__file__), 'data')
 CONTENT_PATH = os.path.join(DATA_PATH, 'word.doc')
 IMAGE_PATH = os.path.join(DATA_PATH, 'image.jpg')
+BIG_IMAGE_PATH = os.path.join(DATA_PATH, 'bigimage.png')
 CONTENT_TXT = """mytestfile"""
 
 
@@ -152,6 +153,18 @@ class FSSTestCase(PloneTestCase.PloneTestCase):
         transaction.savepoint(optimistic=True)
         self.updateContent(content, 'image', IMAGE_PATH)
         return content
+
+    def addBigImageByFileUpload(self, folder, content_id):
+        """
+        Adding image
+        """
+        folder.invokeFactory('FSSItem', id=content_id)
+        content = getattr(folder, content_id)
+        transaction.savepoint(optimistic=True)
+        self.updateContent(content, 'image', BIG_IMAGE_PATH)
+        return content
+
+
 
     ## ATContentTypes based testcases
 

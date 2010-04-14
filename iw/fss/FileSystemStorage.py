@@ -23,6 +23,7 @@ __docformat__ = 'restructuredtext'
 
 # Python imports
 import os
+import tempfile
 import cStringIO
 from Acquisition import aq_base
 from types import StringType, UnicodeType
@@ -31,6 +32,8 @@ from types import StringType, UnicodeType
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from OFS.Image import File
+from OFS.Image import Pdata
+
 from OFS.SimpleItem import SimpleItem
 from ZPublisher.Iterators import filestream_iterator
 from zope.component import getUtility
@@ -42,7 +45,7 @@ from webdav.common import rfc1123_date
 from Products.CMFCore.utils import getToolByName
 
 # Archetypes imports
-from Products.Archetypes.interfaces.field import IObjectField
+from Products.Archetypes.interfaces.field import IObjectField, IImageField
 from Products.Archetypes.Storage import StorageLayer
 from Products.Archetypes.interfaces.base import IBaseUnit
 from Products.Archetypes.Field import ImageField
@@ -52,9 +55,11 @@ from Products.Archetypes.Field import Image # Changes since AT1.3.4
 from iw.fss.rdf import RDFWriter
 from iw.fss.interfaces import IConf
 from iw.fss.utils import copy_file
+from iw.fss.utils import rm_file
 
 from ZPublisher.Iterators import IStreamIterator
 from ZPublisher.HTTPRangeSupport import parseRange
+from ZPublisher.HTTPRequest import FileUpload
 
 class range_filestream_iterator(file):
     """
@@ -134,6 +139,34 @@ class range_filestream_iterator(file):
 
         return size
 
+class FileUploadIterator(object):
+
+    def __init__(self, file, streamsize=1<<16):
+        """ this is an file upload """
+        self.__file = file
+        self.streamsize = streamsize
+        self.name = None ## fake file
+        
+    def next(self):
+        data = self.read(self.streamsize)
+        if not data:
+            raise StopIteration
+        return data
+
+    def __len__(self):
+        cur_pos = self.tell()
+        self.seek(0, 2)
+        size = self.tell()
+        self.seek(cur_pos, 0)
+    
+        return size
+
+    def __getattr__(self, value):
+        if hasattr(self.__file, value):
+            return getattr(self.__file,value)
+        raise AttributeError(value)
+    
+
 class FSSPdata(object):
 
     data = None
@@ -147,15 +180,16 @@ class FSSPdata(object):
                l : len of the file
         """
         self.__g = g
-        self.__l = len(g)
         self.__stop__ = False
         try:
             self.data = self.__g.next()
         except StopIteration:
             self.data = ''
             self.__stop__ = True
-        
 
+    def getPath(self):
+        return self.__g.name
+            
     @property
     def next(self):
         if self.__stop__:
@@ -165,16 +199,27 @@ class FSSPdata(object):
         except StopIteration:
             return
     
-    def __len__(self):
-        return self.__l
 
     def __str__(self):
         """ return all data , dont use this for big file !!"""
         cur_pos = self.__g.tell()
         self.__g.seek(0, 0) ## begin of file
-        data = ''.join((str(x) for x in self.__g))
+        data = self.__g.read()
         self.__g.seek(cur_pos, 0) ## back to the current position
         return data
+
+    def read(self, blocksize = None):
+        return self.__g.read(blocksize)
+
+    def seek(self, pos, end):
+        self.__g.seek(pos, end)
+
+    def __len__(self):
+        curpos = self.__g.tell()
+        self.__g.seek(0,2)
+        s= self.__g.tell()
+        self.__g.seek(curpos,0)
+        return s
     
     def __getslice__(self, start, end):
         """ I know it is deprecatead but its so easy to implements
@@ -193,6 +238,7 @@ class FSSPdata(object):
         data = self.__g.read(end - start)
         self.__g.seek(cur_pos, 0) ## back to the current position        
         return data
+
 
 
 class VirtualData(object):
@@ -216,14 +262,36 @@ class VirtualData(object):
             return FSSPdata(filestream_iterator(self.path, mode='rb'))
         else:
             ## simulate an empty iterator
-            return FSSPdata(xrange(0))
+            return FSSPdata(FileUploadIterator(cStringIO.StringIO('')))
 
     ## for OFS.Image.File.update_data
     def setData(self, value):
-        copy_file(cStringIO.StringIO(str(value)), self.path)
+        """ @param : value """
+        if type(value) is StringType:
+            value = cStringIO.StringIO(value)
+        if hasattr(value, 'read') and hasattr(value, 'seek'):
+            value.seek(0,0)
+            copy_file(value, self.path)
+        else:
+            raise ValueError('%s is not a file' % type(value))
 
     data = property(getData, setData)
-                  
+
+
+    def _read_data(self, file):
+        """
+        @param file: an string or a File
+        @return FSSPdata, size """
+        
+        if type(file) is StringType:
+            file = cStringIO.StringIO(file)
+        if isinstance(file, FileUpload) and not file:
+            raise ValueError, 'File not specified'
+        
+        data = FSSPdata(FileUploadIterator(file))
+        
+        return (data, len(data)) 
+
 
     def __str__(self):
         return str(self.getData())
@@ -238,8 +306,10 @@ class VirtualData(object):
         if self.__data__ is None:
             self.__data__ = filestream_iterator(self.path, mode='rb')
         return self.__data__.next()
-    
+
+
     read = __str__
+
 
 InitializeClass(VirtualData)
 
@@ -369,22 +439,6 @@ class VirtualFile(VirtualBinary, File):
 
     def __init__(self, name, instance, path, filename, mimetype, size):
         VirtualBinary.__init__(self, name, instance, path, filename, mimetype, size)
-
-
-    #def __getattr__(self, key):
-    #    if key == 'data':
-    #        return self.getData()
-        ### useless since __getattr__ is only called when no attribute is found
-        ### in this class but also in parent classes. So if we are here, neither
-        ### VirtualFile nor VirtualBinary and File have the requested attribute
-        ### Moreover, File class has no __getattr__ method...
-        # return File.__getattr__(self, key)
-    #    raise AttributeError(key)
-
-
-    
-
-
 
 InitializeClass(VirtualFile)
 
@@ -821,7 +875,6 @@ class FileSystemStorage(StorageLayer):
 
         # Create File System Storage Info
         info = self.setFSSInfo(name, instance, value, **kwargs)
-
         # Wrap value
         if IObjectField.isImplementedBy(value):
             value = value.getRaw(self.instance)
@@ -835,7 +888,33 @@ class FileSystemStorage(StorageLayer):
         # Copy file on filesystem
         strategy = self.getStorageStrategy(name, instance)
         props = self.getStorageStrategyProperties(name, instance, info)
-        strategy.setValueFile(value, **props)
+        
+        if isinstance(value, FSSPdata):
+            ## put all in temporory file
+            fd, pathtemp = tempfile.mkstemp(prefix="tempfss")
+            copy_file(value, pathtemp)
+            value = filestream_iterator(pathtemp, mode='rb')
+            strategy.setValueFile(value, **props)
+            value.close()
+            os.close(fd)
+            rm_file(pathtemp)
+        elif isinstance(value, Pdata):
+            fd, pathtemp = tempfile.mkstemp(prefix="tempfss")
+            f = open(pathtemp,'wb')
+            data = value
+            while data is not None:
+                f.write(data.data)
+                data = data.next
+            f.seek(0, 0)
+            f.close()
+            f = open(pathtemp,'rb')
+            strategy.setValueFile(f, **props)
+            f.close()
+            os.close(fd)
+            rm_file(pathtemp)
+        else:
+            strategy.setValueFile(value, **props)
+
 
         # Create RDF file
         conf = self.getConf()
