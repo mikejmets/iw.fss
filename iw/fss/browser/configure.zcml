@@ -68,4 +68,13 @@ $Id$
      image="fss_tool.gif"
      />
 
+  <!-- debug view to check where are the files for an item -->
+
+  <browser:view
+     name="fss_where_are_my_files"
+     for="*"
+     class=".utils.FilesFinder"
+     permission="cmf.ManagePortal"
+     />
+
 </configure>
