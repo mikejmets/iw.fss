@@ -689,8 +689,11 @@ Pack the ZODB
 After a successful migration, you may pack immediately the ZODB to appreciate
 the effect of using `iw.fss`.
 
+FAQ
+###
+
 Migrating between strategies
-############################
+============================
 
 Use the `bin/strategymigrator.py` shell utility that ships with FSS. Get
 more info on this utility using the `--help` option.
@@ -698,6 +701,13 @@ more info on this utility using the `--help` option.
 Note that only flat -> directory and directory -> flat are available
 today. Sponsorship is welcome - as indicated in `Support and
 feedback`_ - if you need other strategy migrations.
+
+Where are the files for this item?
+==================================
+
+Sometimes we need to know what files store the fields of a content item. For
+this, login as site manager and browse to
+http://my.site.tld/where/is/my/content/@@fss_where_are_my_files
 
 Testing
 #######

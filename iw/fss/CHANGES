@@ -4,7 +4,14 @@ CHANGES
 trunk
 =====
 
-* Change the behaviour of upload on fss. No more memory consuption for that now. We use always use fileiterator when inspecting big file. To achieve to that, VirtualDate override _read_data of OFS.Image.File to construct an clean FSSPdata. 
+* Added a view for content items that allows managers to see where in the file
+  system the fields are stored.
+  [glenfant]
+
+* Change the behaviour of upload on fss. No more memory consuption for that
+  now. We use always use fileiterator when inspecting big file. To achieve to
+  that, VirtualDate override _read_data of OFS.Image.File to construct an clean
+  FSSPdata.
 
 * Monkey patching with collective.monkeypatcher. All monkey patches should be
   made that way.
