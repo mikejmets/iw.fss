@@ -90,8 +90,7 @@
                    id="form.transactionthreshold_widget"
                    class="textType"
                    value="50"
-                   name="transactioncount:int"
-                   tal:attributes="tabindex tabindex/next" />
+                   name="transactioncount:int" />
           </div>
 
           <div class="field">
@@ -129,12 +128,10 @@
 
           <div class="formControls">
             <input class="context"
-                   tabindex=""
                    type="submit"
                    value="Migrate"
                    name="migrateToFSS:method"
-                   i18n:attributes="value"
-                   tal:attributes="tabindex tabindex/next" />
+                   i18n:attributes="value" />
           </div>
 
         </form>

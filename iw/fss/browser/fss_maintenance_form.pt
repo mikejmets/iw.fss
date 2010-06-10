@@ -104,12 +104,10 @@
 
         <div class="formControls">
           <input class="context"
-                 tabindex=""
                  type="submit"
                  value="Update"
                  name="updateFSS:method"
-                 i18n:attributes="value"
-                 tal:attributes="tabindex tabindex/next" />
+                 i18n:attributes="value" />
         </div>
 
       </fieldset>
@@ -133,17 +131,14 @@
                id="days"
                name="max_days:int"
                value="0"
-               size="4"
-               tal:attributes="tabindex tabindex/next;" />
+               size="4" />
 
         <div class="formControls">
           <input class="context"
-                 tabindex=""
                  type="submit"
                  value="Remove Backup"
                  name="removeBackups:method"
-                 i18n:attributes="value"
-                 tal:attributes="tabindex tabindex/next;" />
+                 i18n:attributes="value" />
         </div>
 
       </fieldset>
@@ -166,12 +161,10 @@
 
         <div class="formControls">
           <input class="context"
-                 tabindex=""
                  type="submit"
                  value="Update"
                  name="updateRDF:method"
-                 i18n:attributes="value"
-                 tal:attributes="tabindex tabindex/next;" />
+                 i18n:attributes="value" />
         </div>
       </fieldset>
     </form>
