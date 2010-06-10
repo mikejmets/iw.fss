@@ -729,8 +729,6 @@ InitializeClass(FileSystemStorageInfo)
 
 class FileSystemStorage(StorageLayer):
 
-    __implements__ = StorageLayer.__implements__
-
     security = ClassSecurityInfo()
 
 
@@ -1112,5 +1110,10 @@ class FileSystemStorage(StorageLayer):
             fss_info_name = self.getFSSInfoVarname(name)
             setattr(instance, fss_info_name, info)
 
+
+from Products.CMFPlone.utils import getFSVersionTuple
+
+if getFSVersionTuple() < (4,):
+    FileSystemStorage.__implements__ = StorageLayer.__implements__
 
 InitializeClass(FileSystemStorage)
