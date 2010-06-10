@@ -194,3 +194,20 @@ class IfInstalled(object):
         wrapper.__module__ = func.__module__
         return wrapper
 
+###
+## Zope2 vs Zope3 interfaces
+###
+
+# Since Plone 4, Archetypes provides only Zope3 style interfaces, since the
+# (deprecated) Interface package has gone with Zope 2.12
+# Then we must add this to support both Zope 2 and Zope 3 interfaces transparently.
+# In addition, we can't use Zope version API because buildout breaks the
+# App/version.txt file (known but not yet fixed bug)
+
+
+from zope.interface import Interface as Z3Interface
+def objectImplements(interf, obj):
+    if isinstance(interf, Z3Interface):
+        return interf.providedBy(obj)
+    else:
+        return interf.isImplementedBy(obj)
