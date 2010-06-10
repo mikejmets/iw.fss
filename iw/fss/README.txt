@@ -42,7 +42,8 @@ See the `LICENSE` file that comes with this product.
 Requirements
 ############
 
-* `Plone 3.0+ bundle <http://plone.org/>`_
+* Plone 3.0+ bundle
+* or Plone 4.0 bundle
 
 
 Upgrading
@@ -330,10 +331,6 @@ comments.
 
 Inconsistent configuration features raise explicit error messages at
 Zope startup.
-
-Note that we didn't include this in `zope.conf` in order to keep Zope
-2.7 and Zope 2.8 compatibility.
-
 
 Configuration panel
 ###################
