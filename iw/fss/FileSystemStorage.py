@@ -56,6 +56,7 @@ from iw.fss.rdf import RDFWriter
 from iw.fss.interfaces import IConf
 from iw.fss.utils import copy_file
 from iw.fss.utils import rm_file
+from iw.fss.utils import objectImplements
 
 from ZPublisher.Iterators import IStreamIterator
 from ZPublisher.HTTPRangeSupport import parseRange
@@ -146,7 +147,7 @@ class FileUploadIterator(object):
         self.__file = file
         self.streamsize = streamsize
         self.name = None ## fake file
-        
+
     def next(self):
         data = self.read(self.streamsize)
         if not data:
@@ -158,19 +159,19 @@ class FileUploadIterator(object):
         self.seek(0, 2)
         size = self.tell()
         self.seek(cur_pos, 0)
-    
+
         return size
 
     def __getattr__(self, value):
         if hasattr(self.__file, value):
             return getattr(self.__file,value)
         raise AttributeError(value)
-    
+
 
 class FSSPdata(object):
 
     data = None
-        
+
     def __init__(self, g):
         """
         As Pdata in OFS.File , a struct with data and next
@@ -189,7 +190,7 @@ class FSSPdata(object):
 
     def getPath(self):
         return self.__g.name
-            
+
     @property
     def next(self):
         if self.__stop__:
@@ -198,7 +199,7 @@ class FSSPdata(object):
             return FSSPdata(self.__g)
         except StopIteration:
             return
-    
+
 
     def __str__(self):
         """ return all data , dont use this for big file !!"""
@@ -220,13 +221,13 @@ class FSSPdata(object):
         s= self.__g.tell()
         self.__g.seek(curpos,0)
         return s
-    
+
     def __getslice__(self, start, end):
         """ I know it is deprecatead but its so easy to implements
         x[start:end] that i use it
         This method is called when there is a multiple range
         I dont use mmap because mmap is mutable and we must have a write access
-        on file 
+        on file
         """
         cur_pos = self.__g.tell()
         if end > len(self):
@@ -236,7 +237,7 @@ class FSSPdata(object):
         cur_pos = self.__g.tell()
         self.__g.seek(start, 0) ## begin of start
         data = self.__g.read(end - start)
-        self.__g.seek(cur_pos, 0) ## back to the current position        
+        self.__g.seek(cur_pos, 0) ## back to the current position
         return data
 
 
@@ -256,7 +257,7 @@ class VirtualData(object):
         self.__name__ = name
         self.__data__ = None
 
-    
+
     def getData(self):
         if os.path.exists(self.path):
             return FSSPdata(filestream_iterator(self.path, mode='rb'))
@@ -282,15 +283,15 @@ class VirtualData(object):
         """
         @param file: an string or a File
         @return FSSPdata, size """
-        
+
         if type(file) is StringType:
             file = cStringIO.StringIO(file)
         if isinstance(file, FileUpload) and not file:
             raise ValueError, 'File not specified'
-        
+
         data = FSSPdata(FileUploadIterator(file))
-        
-        return (data, len(data)) 
+
+        return (data, len(data))
 
 
     def __str__(self):
@@ -298,7 +299,7 @@ class VirtualData(object):
 
     def __len__(self):
         return len(self.getData())
-    
+
     def next(self):
         """
         return data by file iterator
@@ -424,8 +425,8 @@ class VirtualBinary(VirtualData):
         cmd = getattr(self, cmd_name)
         return cmd(**kwargs)
 
-    
-    
+
+
 InitializeClass(VirtualBinary)
 
 
@@ -876,9 +877,9 @@ class FileSystemStorage(StorageLayer):
         # Create File System Storage Info
         info = self.setFSSInfo(name, instance, value, **kwargs)
         # Wrap value
-        if IObjectField.isImplementedBy(value):
+        if objectImplements(IObjectField, value):
             value = value.getRaw(self.instance)
-        if IBaseUnit.isImplementedBy(value):
+        if objectImplements(IBaseUnit, value):
             value = value.getRaw()
         elif isinstance(value, File):
             value = value.data
@@ -888,7 +889,7 @@ class FileSystemStorage(StorageLayer):
         # Copy file on filesystem
         strategy = self.getStorageStrategy(name, instance)
         props = self.getStorageStrategyProperties(name, instance, info)
-        
+
         if isinstance(value, FSSPdata):
             ## put all in temporory file
             fd, pathtemp = tempfile.mkstemp(prefix="tempfss")

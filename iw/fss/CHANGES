@@ -6,6 +6,11 @@ CHANGES
 
 Plone 4 support
 
+* AT moved from Zope2 style to Zope3 style interfaces since the old Zope 2
+  "Interfaces" package has gone away with Zope 2.12. We have a workaround that
+  supports both styles.
+  [glenfant]
+
 * (Deprecated) tabindex removed from all templates.
   [glenfant]
 

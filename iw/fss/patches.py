@@ -20,13 +20,15 @@ from ZPublisher.Iterators import IStreamIterator
 from Products.Archetypes.Field import FileField
 from Acquisition import aq_get
 
+from iw.fss.utils import objectImplements
+
 old_download =  FileField.download
 
 def new_download(self, instance, REQUEST=None, RESPONSE=None,
                  no_output=False):
     """Patch download for return an iterator instead of a string
     """
-    
+
     file = self.get(instance, raw=True)
     if not REQUEST:
         REQUEST = aq_get(instance, 'REQUEST')
@@ -34,7 +36,7 @@ def new_download(self, instance, REQUEST=None, RESPONSE=None,
         RESPONSE = REQUEST.RESPONSE
     RESPONSE = REQUEST.RESPONSE
     if no_output:
-        if IStreamIterator.isImplementedBy(file):
+        if objectImplements(IStreamIterator, file):
             RESPONSE.setHeader("content-length", len(file))
     return old_download(self, instance, REQUEST, RESPONSE,
                         no_output)

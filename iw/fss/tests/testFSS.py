@@ -30,6 +30,8 @@ from ZPublisher.Iterators import IStreamIterator
 import iw.fss
 from iw.fss.interfaces import IConf
 from iw.fss.migration import Migrator
+from iw.fss.utils import objectImplements
+
 from common import *
 
 class TestFSS(FSSTestCase.FSSTestCase):
@@ -85,7 +87,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         # ftp_value is an PdataStreamIterator
         self.failUnless(isinstance(ftp_value,
                   Products.Archetypes.WebDAVSupport.PdataStreamIterator))
-        
+
         self.assertEquals(ftp_value.next(), """mytestfile""")
         self.logout()
 
@@ -99,7 +101,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
     def testAddAnBigImage(self):
         self.loginAsPortalOwner()
         content_id = 'testbigimage'
-        
+
         self.file_content = self.addBigImageByFileUpload(self.test_folder,
                                                          content_id)
         # Get file field
@@ -770,16 +772,16 @@ class TestFSS(FSSTestCase.FSSTestCase):
         # Get file field
         file_field = file_content.getField('file')
         response = file_field.download(file_content, no_output = True)
-        self.assertEqual(IStreamIterator.isImplementedBy(response), 1)
+        self.assertEqual(bool(objectImplements(IStreamIterator, response)), True)
         HTTP_RESPONSE = file_content.REQUEST.RESPONSE
         self.failUnless(HTTP_RESPONSE.headers.has_key('content-length'))
         ## reinit response headers
         file_content.REQUEST.RESPONSE.headers = {}
         response = file_field.download(file_content)
-        self.assertEqual(IStreamIterator.isImplementedBy(response), 1)
+        self.assertEqual(bool(objectImplements(IStreamIterator, response)), True)
         self.failUnless(HTTP_RESPONSE.headers.has_key('content-length'))
-        
-        
+
+
 
 # #############################################################################
 # Test CMFEditions compliance
@@ -866,7 +868,7 @@ class TestFSS(FSSTestCase.FSSTestCase):
         """
         folder = self.portal['migration-in']
         self.failUnlessEqual(folder.portal_type, 'Folder')
-        
+
         expecting = [
             # item id, field name, size, mime type
             ('Lorem ipsum.pdf', 'file', 0, 'application/octet-stream'),
