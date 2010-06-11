@@ -206,8 +206,9 @@ class IfInstalled(object):
 
 
 from zope.interface import Interface as Z3Interface
+from zope.interface.interface import InterfaceClass as Z3InterfaceClass
 def objectImplements(interf, obj):
-    if isinstance(interf, Z3Interface):
+    if isinstance(interf, Z3Interface) or isinstance(interf, Z3InterfaceClass):
         return interf.providedBy(obj)
     else:
         return interf.isImplementedBy(obj)
