@@ -6,6 +6,9 @@ CHANGES
 
 Plone 4 support
 
+* "from Globals import InitializeClass" <- "from App.class_init ..." closes
+  deprecation warning.
+
 * AT moved from Zope2 style to Zope3 style interfaces since the old Zope 2
   "Interfaces" package has gone away with Zope 2.12. We have a workaround that
   supports both styles.

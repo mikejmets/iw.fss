@@ -29,7 +29,7 @@ from Acquisition import aq_base
 from types import StringType, UnicodeType
 
 # Zope imports
-from Globals import InitializeClass
+from App.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from OFS.Image import File
 from OFS.Image import Pdata
