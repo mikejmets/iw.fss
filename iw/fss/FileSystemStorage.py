@@ -90,8 +90,6 @@ class range_filestream_iterator(file):
 
     """
 
-    __implements__ = (IStreamIterator,)
-
     def __init__(self, name, start, end,mode='r', bufsize=-1, streamsize=1<<16):
         """
         @param :
@@ -248,7 +246,6 @@ class VirtualData(object):
     Subclasses must have a docstring if they are to be published (like images)
     """
     __allow_access_to_unprotected_subobjects__ = 1
-    __implements__  = (IStreamIterator,)
 
     def __init__(self, name, instance, path):
         self.name = name
@@ -1027,8 +1024,10 @@ class FileSystemStorage(StorageLayer):
             # Copy/Paste
             # Get source object
             atool= getToolByName(instance, 'archetype_tool')
+            ref_catalog = getToolByName(instance, 'reference_catalog')
             utool = getToolByName(instance, 'portal_url')
-            src_obj = atool.getObject(src_uid)
+            # FIXME: deprecated src_obj = atool.getObject(src_uid)
+            src_obj = ref_catalog.lookupObject(src_uid)
 
             if src_obj is not None:
                 src_path = '/'.join(utool.getRelativeContentPath(src_obj))
@@ -1110,10 +1109,19 @@ class FileSystemStorage(StorageLayer):
             fss_info_name = self.getFSSInfoVarname(name)
             setattr(instance, fss_info_name, info)
 
+InitializeClass(FileSystemStorage)
 
 from Products.CMFPlone.utils import getFSVersionTuple
 
+# We switched to full Zope 3 style interfaces since Plone 4
 if getFSVersionTuple() < (4,):
+    # Plone 3.x
     FileSystemStorage.__implements__ = StorageLayer.__implements__
+    VirtualData.__implements__ = (IStreamIterator,)
+    range_filestream_iterator.__implements__ = (IStreamIterator,)
+else:
+    # Plone 4.x
+    from zope.interface import classImplements
+    classImplements(VirtualData, IStreamIterator)
+    classImplements(range_filestream_iterator, IStreamIterator)
 
-InitializeClass(FileSystemStorage)
