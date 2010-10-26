@@ -382,7 +382,11 @@ class VirtualBinary(VirtualData):
             ## is an range request with one range ,
             ## return an iterator with this range
             [(start,end)] = ranges
-            iterator = range_filestream_iterator(self.path,start, end,  mode='rb')
+
+            if end is None:
+                end = self.size
+
+            iterator = range_filestream_iterator(self.path, start, end, mode='rb')
             return iterator
         else:
             return filestream_iterator(self.path, mode='rb')
