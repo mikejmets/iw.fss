@@ -856,10 +856,12 @@ class FileSystemStorage(StorageLayer):
 
         strategy = self.getStorageStrategy(name, instance)
         props = self.getStorageStrategyProperties(name, instance, info)
-
-        # Restore backup if exists
-        strategy.restoreValueFile(**props)
         path = strategy.getValueFilePath(**props)
+
+        # Restore backup if path does not exist
+        if not os.path.exists(path):
+            strategy.restoreValueFile(**props)
+
         return info.getValue(name, instance, path)
 
     security.declarePrivate('set')

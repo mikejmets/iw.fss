@@ -3,6 +3,9 @@ CHANGES
 
 In next release ...
 
+* Fixed a critical issue where an image would be attempted restored at
+  every request. [malthe]
+
 * Fixed an issue where the AT tool for scaling images would pass a
   unicode file path which would result in a bug because the code was
   only looking for a regular string (else deciding that it's a stream
