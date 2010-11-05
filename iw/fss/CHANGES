@@ -1,6 +1,13 @@
 CHANGES
 #######
 
+In next release ...
+
+* Fixed an issue with HTTP range leading to a missing file size. With
+  some clients (seen in Firefox 3.6), the ``end`` value is trivial and
+  must be explicitly set to the file size before returning the
+  iterator. [malthe]
+
 2.8.0rc4
 ========
 
