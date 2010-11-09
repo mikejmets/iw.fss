@@ -1,7 +1,8 @@
 CHANGES
 #######
 
-In next release ...
+2.8.0rc5
+========
 
 * Fixed a critical issue where an image would be attempted restored at
   every request. [malthe]

@@ -43,7 +43,7 @@ Requirements
 ############
 
 * Plone 3.0+ bundle
-* or Plone 4.0 bundle
+* or Plone 4.0+ bundle
 
 
 Upgrading
