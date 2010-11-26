@@ -99,7 +99,8 @@ class range_filestream_iterator(file):
         """
         self.end = end
         file.__init__(self, name, mode, bufsize)
-        self.seek(start, 0)
+        if start is not None:
+            self.seek(start, 0)
         self.streamsize = streamsize
 
     def next(self):

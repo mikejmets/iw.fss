@@ -1,6 +1,10 @@
 CHANGES
 #######
 
+* Fixed an issue with HTTP range where some clients will send a
+  trivial ``start`` value (observed with HTTP_USER_AGENT 'MLBot
+  (www.metadatalabs.com/mlbot)'). [malthe]
+
 2.8.0rc5
 ========
 
