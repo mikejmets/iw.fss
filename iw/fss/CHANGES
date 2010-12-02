@@ -1,6 +1,12 @@
 CHANGES
 #######
 
+SVN trunk
+=========
+
+* Fixed issue in migration -> fss where an unknown content type
+  could re-raise an AttribureError. [glenfant]
+
 * Fixed an issue with HTTP range where some clients will send a
   trivial ``start`` value (observed with HTTP_USER_AGENT 'MLBot
   (www.metadatalabs.com/mlbot)'). [malthe]

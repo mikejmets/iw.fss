@@ -117,11 +117,10 @@ class Migrator(object):
                         self.log("Can't guess content type of '%s', set to '%s'",
                                  brain_path, UNKNOWN_MIMETYPE)
                         mimetype = UNKNOWN_MIMETYPE
-                    
-                        mimetype = value.content_type
+
                     filename = getattr(value, 'filename', None) or item.getId()
                     if filename and (mimetype == UNKNOWN_MIMETYPE):
-                        
+
                         mti = mimetypes_registry.lookupExtension(filename)
                         if mti and (len(mti.mimetypes) > 0):
                             mimetype = mti.mimetypes[0]

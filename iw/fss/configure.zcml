@@ -35,9 +35,10 @@ $Id$
   <include file="upgrades.zcml" />
 
   <!-- You may uncomment this if you want to store files and images fields
-       of ATContentTypes with FSS
+       of ATContentTypes with FSS.
+       Otherwise you may add it in your site policy component
 
-  <include file="atct.zcml" />
+  <include package="iw.fss" file="atct.zcml" />
  
   -->
 
