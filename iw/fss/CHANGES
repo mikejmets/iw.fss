@@ -2,6 +2,14 @@
 CHANGES
 #######
 
+2.7.6rt1
+########
+
+* Backporting the fix "Fixed an issue where the AT tool for scaling images would pass a unicode file path which would result in a bug because the code was only looking for a regular string (else deciding that it's a stream object). [malthe]" from 2.8.0rc5 [alert]
+
+* fix i18n initialization under win32
+  [bmathieu]
+
 2.7.6
 #####
 
