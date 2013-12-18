@@ -161,7 +161,10 @@ def create_file(contents_file, target_filepath):
 #  def someUpgradeScript(setuptool):
 #      # Usual upgrade script
 
-from zope.app.component.hooks import getSite
+try:
+    from zope.app.component.hooks import getSite
+except ImportError:
+    from zope.component.hooks import getSite
 
 class NotInstalledComponent(LookupError):
     def __init__(self, cpt_name):

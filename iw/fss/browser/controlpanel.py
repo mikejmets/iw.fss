@@ -27,7 +27,10 @@ import os
 import urlparse
 
 # Zope imports
-from zope.app.component.hooks import getSite
+try:
+    from zope.app.component.hooks import getSite
+except ImportError:
+    from zope.component.hooks import getSite
 from zope.component import getUtility
 from reStructuredText import HTML
 from AccessControl.requestmethod import postonly

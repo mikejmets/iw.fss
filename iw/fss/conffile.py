@@ -29,7 +29,10 @@ import time
 # Zope imports
 from zope.interface import implements
 #getSite return the context-dependent plone site
-from zope.app.component.hooks import getSite
+try:
+    from zope.app.component.hooks import getSite
+except ImportError:
+    from zope.component.hooks import getSite
 # CMF imports
 from Products.CMFCore.utils import getToolByName
 
