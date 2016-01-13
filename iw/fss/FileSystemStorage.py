@@ -211,8 +211,19 @@ class FSSPdata(object):
     def read(self, blocksize = None):
         return self.__g.read(blocksize)
 
-    def seek(self, pos, end):
-        self.__g.seek(pos, end)
+    def seek(self, pos, end=0):
+        try:
+            self.__g.seek(pos, end)
+        except Exception, e:
+            print pos 
+            print end
+            import pdb; pdb.set_trace()
+
+    def tell(self):
+        return self.__g.tell()
+
+    def readline(self):
+        return self.__g.readline()
 
     def __len__(self):
         curpos = self.__g.tell()
